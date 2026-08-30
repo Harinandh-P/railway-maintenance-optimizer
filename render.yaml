@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: railway-maintenance-optimizer-api
+    env: python
+    buildCommand: pip install -r requirements.txt && python backend/scripts/migrate_csv_to_postgres.py
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true

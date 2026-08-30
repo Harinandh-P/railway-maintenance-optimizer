@@ -1,0 +1,10 @@
+mapping_id,corridor_id,section_id,section_name,start_station_code,start_station_name,start_km,end_station_code,end_station_name,end_km,direction,line_name,track_id
+KM001,C1,C1-S1,Salem-Station_A,SLM,Salem,292,SA,Station_A,270,A-B,Main Line,T1
+KM002,C1,C1-S2,Station_A-Station_B,SA,Station_A,270,SB,Station_B,250,A-B,Main Line,T1
+KM003,C1,C1-S3,Station_B-Station_C,SB,Station_B,250,SC,Station_C,223,A-B,Main Line,T1
+KM004,C1,C1-S4,Station_C-Chennai,SC,Station_C,223,MAS,Chennai,0,A-B,Main Line,T1
+KM005,COR001,COR001-S1,Station_A-Station_B,SA,Station_A,130,SB,Station_B,120,A-B,Branch Line,T1
+KM006,COR001,COR001-S2,Station_B-Station_C,SB,Station_B,120,SC,Station_C,110,A-B,Branch Line,T1
+KM007,COR002,COR002-S1,Station_C-Station_D,SC,Station_C,140,SD,Station_D,130,A-B,Branch Line,T1
+KM008,COR002,COR002-S2,Station_D-Station_E,SD,Station_D,130,SE,Station_E,120,A-B,Branch Line,T1
+KM009,COR003,COR003-S1,Station_E-Station_F,SE,Station_E,150,SF,Station_F,140,A-B,Branch Line,T1

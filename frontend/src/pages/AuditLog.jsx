@@ -1,0 +1,46 @@
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+import { DataGrid } from '../components/DataGrid';
+
+export const AuditLog = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const res = await api.get('/audit-log');
+      setData(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const columns = [
+    { key: 'log_id', label: 'Log ID' },
+    { key: 'timestamp', label: 'Timestamp' },
+    { key: 'username', label: 'User' },
+    { key: 'role', label: 'Role' },
+    { key: 'action', label: 'Action' },
+    { key: 'dataset', label: 'Dataset' },
+    { key: 'details', label: 'Details' }
+  ];
+
+  if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Audit Logs...</div>;
+
+  return (
+    <div>
+      <DataGrid
+        title="System Security & Modification Audit Logs"
+        columns={columns}
+        data={data}
+        readOnly={true}
+      />
+    </div>
+  );
+};

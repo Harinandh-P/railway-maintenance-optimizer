@@ -1,0 +1,181 @@
+equipment_id,equipment_name,equipment_type,equipment_category,equipment_model,quantity,condition,operational,corridor,location,date,available,status,availability_start,availability_end,current_assignment,maintenance_due_date,calibration_due_date,operator_required,required_operator_skill,mobilization_time_minutes
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-09-28,2026-10-28,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-08-28,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-09-29,2026-10-29,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-09-30,2026-10-30,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-08-28,True,Available,08:00,16:00,None,2026-10-01,2026-10-31,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-08-28,True,Available,08:00,16:00,None,2026-10-02,2026-11-01,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-03,2026-11-02,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-08-28,True,Available,08:00,16:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-08-28,True,Available,08:00,16:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-09,2026-11-08,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-10,2026-11-09,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-08-28,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-11,2026-11-10,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-08-28,True,Available,08:00,16:00,None,2026-10-12,2026-11-11,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-08-28,True,Available,08:00,16:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-08-28,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-16,2026-11-15,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-08-28,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-18,2026-11-17,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-19,2026-11-18,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-21,2026-11-20,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-08-28,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-08-28,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-08-28,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C2,2026-10-24,2026-11-23,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-25,2026-11-24,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-08-28,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-08-28,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-10-27,2026-11-26,True,Electrical,0
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-08-29,True,Available,08:00,16:00,None,2026-09-29,2026-10-29,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-08-29,True,Available,08:00,16:00,None,2026-09-30,2026-10-30,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-08-29,True,Available,08:00,16:00,None,2026-10-01,2026-10-31,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-08-29,True,Available,08:00,16:00,None,2026-10-02,2026-11-01,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-08-29,True,Available,08:00,16:00,None,2026-10-03,2026-11-02,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-08-29,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-08-29,False,Maintenance,00:00,00:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-08-29,True,Available,08:00,16:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-08-29,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-08-29,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-08-29,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-09,2026-11-08,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-08-29,True,Available,09:00,15:00,None,2026-10-10,2026-11-09,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-08-29,True,Available,08:00,16:00,None,2026-10-11,2026-11-10,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-08-29,True,Available,08:00,16:00,None,2026-10-12,2026-11-11,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-08-29,True,Available,08:00,16:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-08-29,False,Calibration,00:00,00:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-08-29,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-08-29,True,Available,08:00,16:00,None,2026-10-16,2026-11-15,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-08-29,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-08-29,True,Available,08:00,16:00,None,2026-10-18,2026-11-17,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-08-29,True,Available,08:00,16:00,None,2026-10-19,2026-11-18,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-08-29,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-08-29,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-21,2026-11-20,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-08-29,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-08-29,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-08-29,True,Available,08:00,16:00,None,2026-10-24,2026-11-23,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-08-29,True,Available,08:00,16:00,None,2026-10-25,2026-11-24,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-08-29,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-08-29,True,Available,08:00,16:00,None,2026-10-27,2026-11-26,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-08-29,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-10-28,2026-11-27,True,Electrical,0
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-08-30,True,Available,10:00,16:00,None,2026-09-30,2026-10-30,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-08-30,True,Available,08:00,16:00,None,2026-10-01,2026-10-31,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-08-30,False,Calibration,00:00,00:00,None,2026-10-02,2026-11-01,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-08-30,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-03,2026-11-02,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-08-30,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-08-30,True,Available,08:00,16:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-08-30,False,Maintenance,00:00,00:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-08-30,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-08-30,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-08-30,True,Available,08:00,16:00,None,2026-10-09,2026-11-08,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-08-30,True,Available,08:00,16:00,None,2026-10-10,2026-11-09,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-08-30,True,Available,08:00,16:00,None,2026-10-11,2026-11-10,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-08-30,True,Available,08:00,16:00,None,2026-10-12,2026-11-11,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-08-30,True,Available,08:00,16:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-08-30,True,Available,08:00,16:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-08-30,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-08-30,True,Available,08:00,16:00,None,2026-10-16,2026-11-15,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-08-30,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-08-30,True,Available,08:00,16:00,None,2026-10-18,2026-11-17,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-08-30,True,Available,08:00,16:00,None,2026-10-19,2026-11-18,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-08-30,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-08-30,True,Available,08:00,16:00,None,2026-10-21,2026-11-20,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-08-30,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-08-30,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-08-30,True,Available,08:00,16:00,None,2026-10-24,2026-11-23,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-08-30,True,Available,08:00,16:00,None,2026-10-25,2026-11-24,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-08-30,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-08-30,False,Maintenance,00:00,00:00,None,2026-10-27,2026-11-26,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-08-30,True,Available,12:00,16:00,None,2026-10-28,2026-11-27,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-08-30,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-10-29,2026-11-28,True,Electrical,0
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-08-31,True,Available,08:00,16:00,None,2026-10-01,2026-10-31,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-08-31,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-02,2026-11-01,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-08-31,True,Available,08:00,16:00,None,2026-10-03,2026-11-02,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-08-31,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-08-31,True,Available,08:00,16:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-08-31,True,Available,08:00,16:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-08-31,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-08-31,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-08-31,True,Available,08:00,16:00,None,2026-10-09,2026-11-08,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-08-31,True,Available,08:00,16:00,None,2026-10-10,2026-11-09,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-08-31,True,Available,08:00,16:00,None,2026-10-11,2026-11-10,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-08-31,True,Available,08:00,16:00,None,2026-10-12,2026-11-11,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-08-31,False,Maintenance,00:00,00:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-08-31,True,Available,08:00,16:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-08-31,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-08-31,True,Available,08:00,16:00,None,2026-10-16,2026-11-15,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-08-31,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-08-31,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C2,2026-10-18,2026-11-17,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-08-31,True,Available,08:00,16:00,None,2026-10-19,2026-11-18,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-08-31,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-08-31,True,Available,08:00,16:00,None,2026-10-21,2026-11-20,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-08-31,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-08-31,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-08-31,True,Available,08:00,12:00,None,2026-10-24,2026-11-23,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-08-31,True,Available,08:00,16:00,None,2026-10-25,2026-11-24,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-08-31,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-08-31,True,Available,08:00,16:00,None,2026-10-27,2026-11-26,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-08-31,True,Available,08:00,16:00,None,2026-10-28,2026-11-27,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-08-31,True,Available,08:00,16:00,None,2026-10-29,2026-11-28,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-08-31,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-10-30,2026-11-29,True,Electrical,0
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-09-01,True,Available,08:00,16:00,None,2026-10-02,2026-11-01,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-09-01,True,Available,08:00,16:00,None,2026-10-03,2026-11-02,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-09-01,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-09-01,True,Available,08:00,16:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-09-01,True,Available,08:00,13:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-09-01,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-09-01,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-09-01,False,Calibration,00:00,00:00,None,2026-10-09,2026-11-08,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-09-01,True,Available,08:00,16:00,None,2026-10-10,2026-11-09,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-09-01,True,Available,08:00,16:00,None,2026-10-11,2026-11-10,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-09-01,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-12,2026-11-11,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-09-01,True,Available,08:00,16:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-09-01,True,Available,08:00,16:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-09-01,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-09-01,True,Available,08:00,16:00,None,2026-10-16,2026-11-15,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-09-01,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-09-01,True,Available,08:00,16:00,None,2026-10-18,2026-11-17,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-09-01,True,Available,08:00,16:00,None,2026-10-19,2026-11-18,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-09-01,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-09-01,False,Maintenance,00:00,00:00,None,2026-10-21,2026-11-20,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-09-01,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-09-01,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-09-01,True,Available,08:00,16:00,None,2026-10-24,2026-11-23,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-09-01,True,Available,08:00,16:00,None,2026-10-25,2026-11-24,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-09-01,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-09-01,True,Available,08:00,16:00,None,2026-10-27,2026-11-26,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-09-01,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C2,2026-10-28,2026-11-27,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-09-01,True,Available,08:00,16:00,None,2026-10-29,2026-11-28,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-09-01,True,Available,08:00,16:00,None,2026-10-30,2026-11-29,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-09-01,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-10-31,2026-11-30,True,Electrical,0
+EQ001,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Excellent,True,C1,C1-KM125,2026-09-02,True,Available,08:00,16:00,None,2026-10-03,2026-11-02,True,Signal,0
+EQ002,Signal Tester,Signal,Testing Equipment,ST-RLY-100,1,Good,True,C1,C1-KM140,2026-09-02,True,Available,08:00,16:00,None,2026-10-04,2026-11-03,True,Signal,0
+EQ003,Signal Tester,Signal,Testing Equipment,ST-RLY-200,1,Excellent,True,C2,C2-KM130,2026-09-02,True,Available,08:00,16:00,None,2026-10-05,2026-11-04,True,Signal,0
+EQ004,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Good,True,C1,C1-KM155,2026-09-02,True,Available,08:00,16:00,None,2026-10-06,2026-11-05,True,Signal,0
+EQ005,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-210,1,Excellent,True,C3,C3-KM118,2026-09-02,True,Available,08:00,16:00,None,2026-10-07,2026-11-06,True,Signal,0
+EQ006,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Good,True,C2,C2-KM145,2026-09-02,True,Available,08:00,16:00,None,2026-10-08,2026-11-07,True,Signal,0
+EQ007,Point Machine Tester,Signal,Point Machine Testing,PMT-300,1,Maintenance Required,True,C3,C3-KM135,2026-09-02,True,Available,08:00,16:00,None,2026-10-09,2026-11-08,True,Signal,0
+EQ008,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Excellent,True,C1,C1-KM170,2026-09-02,True,Available,08:00,16:00,None,2026-10-10,2026-11-09,True,Signal,0
+EQ009,Insulation Tester,Signal,Insulation Testing,IT-SIG-450,1,Good,True,C2,C2-KM160,2026-09-02,True,Available,08:00,16:00,None,2026-10-11,2026-11-10,True,Signal,0
+EQ010,Signal Maintenance Kit,Signal,Maintenance Kit,SMK-500,1,Excellent,True,C3,C3-KM150,2026-09-02,True,Available,08:00,16:00,None,2026-10-12,2026-11-11,False,None,0
+EQ011,Tamping Machine,Track,Track Maintenance,TM-900,1,Excellent,True,C1,C1-KM125,2026-09-02,True,Available,08:00,16:00,None,2026-10-13,2026-11-12,True,Track,0
+EQ012,Tamping Machine,Track,Track Maintenance,TM-900,1,Good,True,C2,C2-KM130,2026-09-02,True,Available,08:00,16:00,None,2026-10-14,2026-11-13,True,Track,0
+EQ013,Tamping Machine,Track,Track Maintenance,TM-950,1,Excellent,True,C3,C3-KM135,2026-09-02,True,Available,08:00,16:00,None,2026-10-15,2026-11-14,True,Track,0
+EQ014,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Good,True,C1,C1-KM140,2026-09-02,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-16,2026-11-15,True,Track,0
+EQ015,Rail Grinding Machine,Track,Rail Grinding,RGM-700,1,Excellent,True,C3,C3-KM118,2026-09-02,True,Available,08:00,16:00,None,2026-10-17,2026-11-16,True,Track,0
+EQ016,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Excellent,True,C1,C1-KM155,2026-09-02,True,Available,08:00,16:00,None,2026-10-18,2026-11-17,True,Track,0
+EQ017,Track Geometry Trolley,Track,Track Inspection,TGT-410,1,Good,True,C2,C2-KM145,2026-09-02,True,Available,11:00,16:00,None,2026-10-19,2026-11-18,True,Track,0
+EQ018,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Excellent,True,C2,C2-KM160,2026-09-02,True,Available,08:00,16:00,None,2026-10-20,2026-11-19,True,Track,0
+EQ019,Rail Inspection Trolley,Track,Rail Inspection,RIT-220,1,Good,True,C3,C3-KM150,2026-09-02,True,Available,08:00,16:00,None,2026-10-21,2026-11-20,True,Track,0
+EQ020,Hydraulic Rail Jack,Track,Rail Handling,HRJ-80,1,Good,True,C1,C1-KM170,2026-09-02,True,Available,08:00,16:00,None,2026-10-22,2026-11-21,False,None,0
+EQ021,Rail Cutting Machine,Track,Rail Cutting,RCM-320,1,Excellent,True,C2,C2-KM130,2026-09-02,True,Available,08:00,16:00,None,2026-10-23,2026-11-22,True,Track,0
+EQ022,Track Tools Kit,Track,Maintenance Tools,TTK-600,1,Excellent,True,C3,C3-KM135,2026-09-02,True,Available,08:00,16:00,None,2026-10-24,2026-11-23,False,None,0
+EQ023,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Excellent,True,C1,C1-KM125,2026-09-02,False,Assigned,08:00,16:00,Existing Maintenance Assignment - C1,2026-10-25,2026-11-24,True,Electrical,0
+EQ024,Electrical Tester,Electrical,Electrical Testing,ET-100,1,Good,True,C2,C2-KM130,2026-09-02,True,Available,08:00,16:00,None,2026-10-26,2026-11-25,True,Electrical,0
+EQ025,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Excellent,True,C1,C1-KM140,2026-09-02,False,Calibration,00:00,00:00,None,2026-10-27,2026-11-26,True,Electrical,0
+EQ026,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-500,1,Good,True,C3,C3-KM118,2026-09-02,True,Available,08:00,16:00,None,2026-10-28,2026-11-27,True,Electrical,0
+EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True,C2,C2-KM145,2026-09-02,True,Available,08:00,16:00,None,2026-10-29,2026-11-28,True,Electrical,0
+EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-09-02,False,Maintenance,00:00,00:00,None,2026-10-30,2026-11-29,True,Electrical,0
+EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-09-02,True,Available,08:00,16:00,None,2026-10-31,2026-11-30,False,None,0
+EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-09-02,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-11-01,2026-12-01,True,Electrical,0

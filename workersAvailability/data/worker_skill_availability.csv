@@ -1,0 +1,235 @@
+date,corridor,worker_type,skill,available_workers
+2026-08-28,C1,Electrical,Cable Maintenance,1
+2026-08-28,C1,Electrical,Electrical Testing,1
+2026-08-28,C1,Signal,Interlocking Technician,1
+2026-08-28,C1,Signal,Relay Technician,1
+2026-08-28,C1,Signal,Signal Technician,1
+2026-08-28,C1,Signal,Signal Testing,1
+2026-08-28,C1,Signal,Signalling Maintenance,1
+2026-08-28,C1,Track,Track Alignment,1
+2026-08-28,C1,Track,Track Maintenance,1
+2026-08-28,C1,Track,Track Renewal,1
+2026-08-28,C2,Electrical,Cable Maintenance,1
+2026-08-28,C2,Electrical,Electrical Inspection,1
+2026-08-28,C2,Electrical,Electrical Technician,1
+2026-08-28,C2,Electrical,Power Supply,1
+2026-08-28,C2,Electrical,Traction Electrical,1
+2026-08-28,C2,Signal,Electronic Signalling,1
+2026-08-28,C2,Signal,Interlocking Technician,1
+2026-08-28,C2,Signal,Relay Technician,1
+2026-08-28,C2,Signal,Signal Technician,1
+2026-08-28,C2,Signal,Signal Testing,1
+2026-08-28,C2,Signal,Signalling Maintenance,1
+2026-08-28,C2,Track,Rail Inspection,1
+2026-08-28,C2,Track,Tamping,1
+2026-08-28,C2,Track,Track Alignment,1
+2026-08-28,C2,Track,Track Maintenance,1
+2026-08-28,C3,Electrical,Electrical Inspection,1
+2026-08-28,C3,Electrical,Electrical Technician,1
+2026-08-28,C3,Electrical,Electrical Testing,1
+2026-08-28,C3,Electrical,Power Supply,1
+2026-08-28,C3,Electrical,Traction Electrical,1
+2026-08-28,C3,Signal,Electronic Signalling,1
+2026-08-28,C3,Signal,Point Machine Technician,1
+2026-08-28,C3,Signal,Relay Technician,1
+2026-08-28,C3,Signal,Signal Technician,1
+2026-08-28,C3,Signal,Signalling Maintenance,1
+2026-08-28,C3,Track,Permanent Way,1
+2026-08-28,C3,Track,Rail Inspection,1
+2026-08-28,C3,Track,Tamping,1
+2026-08-28,C3,Track,Track Renewal,1
+2026-08-28,C3,Track,Track Technician,1
+2026-08-29,C1,Electrical,Cable Maintenance,1
+2026-08-29,C1,Electrical,Electrical Inspection,1
+2026-08-29,C1,Electrical,Electrical Technician,1
+2026-08-29,C1,Electrical,Railway Electrical Maintenance,1
+2026-08-29,C1,Signal,Interlocking Technician,1
+2026-08-29,C1,Signal,Point Machine Technician,1
+2026-08-29,C1,Signal,Signal Technician,1
+2026-08-29,C1,Signal,Signal Testing,1
+2026-08-29,C1,Signal,Signalling Maintenance,1
+2026-08-29,C1,Track,Permanent Way,1
+2026-08-29,C1,Track,Rail Inspection,1
+2026-08-29,C1,Track,Tamping,1
+2026-08-29,C1,Track,Track Alignment,1
+2026-08-29,C1,Track,Track Maintenance,1
+2026-08-29,C1,Track,Track Renewal,1
+2026-08-29,C2,Electrical,Cable Maintenance,1
+2026-08-29,C2,Electrical,Electrical Inspection,1
+2026-08-29,C2,Electrical,Electrical Technician,1
+2026-08-29,C2,Electrical,Power Supply,1
+2026-08-29,C2,Electrical,Railway Electrical Maintenance,1
+2026-08-29,C2,Electrical,Traction Electrical,1
+2026-08-29,C2,Signal,Electronic Signalling,1
+2026-08-29,C2,Signal,Interlocking Technician,1
+2026-08-29,C2,Signal,Relay Technician,1
+2026-08-29,C2,Signal,Signal Testing,1
+2026-08-29,C2,Signal,Signalling Maintenance,1
+2026-08-29,C2,Track,Rail Inspection,1
+2026-08-29,C2,Track,Tamping,1
+2026-08-29,C2,Track,Track Alignment,1
+2026-08-29,C2,Track,Track Maintenance,1
+2026-08-29,C2,Track,Track Technician,1
+2026-08-29,C3,Electrical,Electrical Testing,1
+2026-08-29,C3,Electrical,Power Supply,1
+2026-08-29,C3,Signal,Relay Technician,1
+2026-08-29,C3,Signal,Signal Technician,1
+2026-08-29,C3,Track,Tamping,1
+2026-08-29,C3,Track,Track Alignment,1
+2026-08-29,C3,Track,Track Renewal,1
+2026-08-30,C1,Electrical,Cable Maintenance,1
+2026-08-30,C1,Electrical,Electrical Inspection,1
+2026-08-30,C1,Electrical,Electrical Technician,1
+2026-08-30,C1,Electrical,Electrical Testing,1
+2026-08-30,C1,Electrical,Railway Electrical Maintenance,1
+2026-08-30,C1,Signal,Interlocking Technician,1
+2026-08-30,C1,Signal,Point Machine Technician,1
+2026-08-30,C1,Signal,Signal Technician,1
+2026-08-30,C1,Signal,Signal Testing,1
+2026-08-30,C1,Signal,Signalling Maintenance,1
+2026-08-30,C1,Track,Permanent Way,1
+2026-08-30,C1,Track,Rail Inspection,1
+2026-08-30,C1,Track,Tamping,1
+2026-08-30,C1,Track,Track Alignment,1
+2026-08-30,C1,Track,Track Maintenance,1
+2026-08-30,C1,Track,Track Renewal,1
+2026-08-30,C2,Electrical,Electrical Technician,1
+2026-08-30,C2,Electrical,Power Supply,1
+2026-08-30,C2,Electrical,Railway Electrical Maintenance,1
+2026-08-30,C2,Signal,Electronic Signalling,1
+2026-08-30,C2,Signal,Interlocking Technician,1
+2026-08-30,C2,Signal,Relay Technician,1
+2026-08-30,C2,Signal,Signal Technician,1
+2026-08-30,C2,Signal,Signal Testing,1
+2026-08-30,C2,Track,Rail Inspection,1
+2026-08-30,C2,Track,Tamping,1
+2026-08-30,C2,Track,Track Alignment,1
+2026-08-30,C2,Track,Track Technician,1
+2026-08-30,C3,Electrical,Electrical Inspection,1
+2026-08-30,C3,Electrical,Electrical Technician,1
+2026-08-30,C3,Electrical,Electrical Testing,1
+2026-08-30,C3,Electrical,Power Supply,1
+2026-08-30,C3,Electrical,Traction Electrical,1
+2026-08-30,C3,Signal,Electronic Signalling,1
+2026-08-30,C3,Signal,Point Machine Technician,1
+2026-08-30,C3,Signal,Relay Technician,1
+2026-08-30,C3,Signal,Signal Technician,1
+2026-08-30,C3,Track,Permanent Way,1
+2026-08-30,C3,Track,Rail Inspection,1
+2026-08-30,C3,Track,Tamping,1
+2026-08-30,C3,Track,Track Alignment,1
+2026-08-30,C3,Track,Track Renewal,1
+2026-08-30,C3,Track,Track Technician,1
+2026-08-31,C1,Electrical,Electrical Inspection,1
+2026-08-31,C1,Electrical,Electrical Technician,1
+2026-08-31,C1,Electrical,Railway Electrical Maintenance,1
+2026-08-31,C1,Signal,Interlocking Technician,1
+2026-08-31,C1,Signal,Point Machine Technician,1
+2026-08-31,C1,Signal,Relay Technician,1
+2026-08-31,C1,Signal,Signal Technician,1
+2026-08-31,C1,Track,Permanent Way,1
+2026-08-31,C1,Track,Rail Inspection,1
+2026-08-31,C1,Track,Tamping,1
+2026-08-31,C2,Electrical,Cable Maintenance,1
+2026-08-31,C2,Electrical,Electrical Inspection,1
+2026-08-31,C2,Electrical,Electrical Technician,1
+2026-08-31,C2,Electrical,Power Supply,1
+2026-08-31,C2,Electrical,Railway Electrical Maintenance,1
+2026-08-31,C2,Electrical,Traction Electrical,1
+2026-08-31,C2,Signal,Electronic Signalling,1
+2026-08-31,C2,Signal,Interlocking Technician,1
+2026-08-31,C2,Signal,Relay Technician,1
+2026-08-31,C2,Signal,Signal Testing,1
+2026-08-31,C2,Signal,Signalling Maintenance,1
+2026-08-31,C2,Track,Rail Inspection,1
+2026-08-31,C2,Track,Tamping,1
+2026-08-31,C2,Track,Track Alignment,1
+2026-08-31,C2,Track,Track Maintenance,1
+2026-08-31,C2,Track,Track Technician,1
+2026-08-31,C3,Electrical,Electrical Technician,1
+2026-08-31,C3,Electrical,Electrical Testing,1
+2026-08-31,C3,Electrical,Power Supply,1
+2026-08-31,C3,Electrical,Traction Electrical,1
+2026-08-31,C3,Signal,Electronic Signalling,1
+2026-08-31,C3,Signal,Point Machine Technician,1
+2026-08-31,C3,Signal,Relay Technician,1
+2026-08-31,C3,Signal,Signal Technician,1
+2026-08-31,C3,Signal,Signalling Maintenance,1
+2026-08-31,C3,Track,Permanent Way,1
+2026-08-31,C3,Track,Rail Inspection,1
+2026-08-31,C3,Track,Tamping,1
+2026-08-31,C3,Track,Track Alignment,1
+2026-08-31,C3,Track,Track Renewal,1
+2026-08-31,C3,Track,Track Technician,1
+2026-09-01,C1,Electrical,Cable Maintenance,1
+2026-09-01,C1,Electrical,Electrical Inspection,1
+2026-09-01,C1,Electrical,Electrical Technician,1
+2026-09-01,C1,Electrical,Electrical Testing,1
+2026-09-01,C1,Electrical,Railway Electrical Maintenance,1
+2026-09-01,C1,Signal,Interlocking Technician,1
+2026-09-01,C1,Signal,Point Machine Technician,1
+2026-09-01,C1,Signal,Relay Technician,1
+2026-09-01,C1,Signal,Signal Technician,1
+2026-09-01,C1,Signal,Signal Testing,1
+2026-09-01,C1,Signal,Signalling Maintenance,1
+2026-09-01,C1,Track,Permanent Way,1
+2026-09-01,C1,Track,Rail Inspection,1
+2026-09-01,C1,Track,Tamping,1
+2026-09-01,C1,Track,Track Alignment,1
+2026-09-01,C1,Track,Track Renewal,1
+2026-09-01,C2,Electrical,Cable Maintenance,1
+2026-09-01,C2,Electrical,Electrical Inspection,1
+2026-09-01,C2,Electrical,Electrical Technician,1
+2026-09-01,C2,Electrical,Power Supply,1
+2026-09-01,C2,Electrical,Railway Electrical Maintenance,1
+2026-09-01,C2,Electrical,Traction Electrical,1
+2026-09-01,C2,Signal,Relay Technician,1
+2026-09-01,C2,Signal,Signal Technician,1
+2026-09-01,C2,Signal,Signal Testing,1
+2026-09-01,C2,Signal,Signalling Maintenance,1
+2026-09-01,C2,Track,Rail Inspection,1
+2026-09-01,C2,Track,Tamping,1
+2026-09-01,C2,Track,Track Alignment,1
+2026-09-01,C2,Track,Track Maintenance,1
+2026-09-01,C2,Track,Track Technician,1
+2026-09-01,C3,Electrical,Electrical Inspection,1
+2026-09-01,C3,Electrical,Electrical Technician,1
+2026-09-01,C3,Electrical,Traction Electrical,1
+2026-09-01,C3,Signal,Point Machine Technician,1
+2026-09-01,C3,Track,Permanent Way,1
+2026-09-01,C3,Track,Rail Inspection,1
+2026-09-02,C1,Electrical,Cable Maintenance,1
+2026-09-02,C1,Electrical,Electrical Inspection,1
+2026-09-02,C1,Electrical,Electrical Technician,1
+2026-09-02,C1,Electrical,Electrical Testing,1
+2026-09-02,C1,Electrical,Railway Electrical Maintenance,1
+2026-09-02,C1,Signal,Relay Technician,1
+2026-09-02,C1,Signal,Signalling Maintenance,1
+2026-09-02,C1,Track,Permanent Way,1
+2026-09-02,C1,Track,Rail Inspection,1
+2026-09-02,C1,Track,Tamping,1
+2026-09-02,C1,Track,Track Alignment,1
+2026-09-02,C1,Track,Track Maintenance,1
+2026-09-02,C1,Track,Track Renewal,1
+2026-09-02,C2,Electrical,Cable Maintenance,1
+2026-09-02,C2,Electrical,Electrical Inspection,1
+2026-09-02,C2,Electrical,Traction Electrical,1
+2026-09-02,C2,Signal,Electronic Signalling,1
+2026-09-02,C2,Signal,Interlocking Technician,1
+2026-09-02,C2,Track,Track Maintenance,1
+2026-09-02,C2,Track,Track Technician,1
+2026-09-02,C3,Electrical,Electrical Inspection,1
+2026-09-02,C3,Electrical,Electrical Technician,1
+2026-09-02,C3,Electrical,Electrical Testing,1
+2026-09-02,C3,Electrical,Power Supply,1
+2026-09-02,C3,Electrical,Traction Electrical,1
+2026-09-02,C3,Signal,Electronic Signalling,1
+2026-09-02,C3,Signal,Point Machine Technician,1
+2026-09-02,C3,Signal,Relay Technician,1
+2026-09-02,C3,Signal,Signal Technician,1
+2026-09-02,C3,Track,Permanent Way,1
+2026-09-02,C3,Track,Rail Inspection,1
+2026-09-02,C3,Track,Tamping,1
+2026-09-02,C3,Track,Track Alignment,1
+2026-09-02,C3,Track,Track Renewal,1
+2026-09-02,C3,Track,Track Technician,1

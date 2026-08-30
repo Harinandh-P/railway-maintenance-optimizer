@@ -1,0 +1,6 @@
+asset_id,asset_type,location,point_a,point_b,corridor_id,asset_criticality,asset_age_years,asset_condition,traffic_importance,normal_daily_train_count,total_failure_count,last_failure_date
+TRK001,Track,KM 125/4,Station A,Station B,COR001,High,18,Deteriorating,High,42,3,2026-06-20
+SIG001,Signal,KM 130/2,Station B,Station C,COR001,High,10,Degraded,High,38,3,2026-07-10
+OHE001,OHE,KM 132/7,Station C,Station D,COR002,High,15,Fair,High,45,2,2026-06-14
+TRK002,Track,KM 140/1,Station D,Station E,COR002,Medium,8,Good,Medium,25,1,2026-01-12
+SIG002,Signal,KM 145/3,Station E,Station F,COR003,High,12,Degraded,High,35,1,2026-06-25

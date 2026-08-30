@@ -1,0 +1,11 @@
+task_id,asset_id,location,department,maintenance_type,defect_type,defect_reason,severity,planned_duration_hours,actual_duration_hours,previous_failure,failure_date,maintenance_date,next_scheduled_maintenance,overdue_days,previous_priority,train_operational_impact,workers_used,equipment_used,materials_used
+TASK001,TRK001,KM 125/4,Engineering,Corrective,Rail Crack,Fatigue,High,3.0,3.2,Yes,2026-02-10,2026-02-10,2026-05-10,0,8,Medium,7,Track Machine,Rail;Fasteners
+TASK002,TRK001,KM 125/4,Engineering,Corrective,Rail Crack,Fatigue,Critical,3.0,3.1,Yes,2026-04-18,2026-04-18,2026-07-18,5,9,High,8,Track Machine;Inspection Vehicle,Rail;Fasteners
+TASK003,TRK001,KM 125/4,Engineering,Corrective,Rail Crack,Vehicle Impact,Medium,2.5,2.6,Yes,2026-06-20,2026-06-20,2026-09-20,0,6,Medium,6,Track Machine,Rail Section
+TASK004,SIG001,KM 130/2,S&T,Corrective,Signal Failure,Electrical Fault,High,2.0,2.1,Yes,2026-03-15,2026-03-15,2026-06-15,3,8,High,4,Signal Testing Kit,Cables;Connectors
+TASK005,SIG001,KM 130/2,S&T,Corrective,Signal Failure,Electrical Fault,High,2.0,2.3,Yes,2026-05-20,2026-05-20,2026-08-20,4,8,High,4,Signal Testing Kit,Cables;Connectors
+TASK006,SIG001,KM 130/2,S&T,Preventive,Signal Degradation,Component Aging,Medium,1.5,1.6,No,2026-07-10,2026-07-10,2026-10-10,0,5,Low,3,Signal Testing Kit,Relay
+TASK007,OHE001,KM 132/7,Traction,Corrective,Insulator Damage,Aging,Medium,2.5,2.7,Yes,2026-03-08,2026-03-08,2026-06-08,2,6,Medium,6,Tower Wagon,Insulator;Clamps
+TASK008,OHE001,KM 132/7,Traction,Corrective,Insulator Damage,Mechanical Wear,High,3.0,3.2,Yes,2026-06-14,2026-06-14,2026-09-14,0,7,Medium,7,Tower Wagon,Insulator;Clamps
+TASK009,TRK002,KM 140/1,Engineering,Preventive,Track Wear,Normal Wear,Medium,4.0,4.1,No,2026-01-12,2026-01-12,2026-07-12,0,5,Low,10,Track Machine,Rails;Fasteners
+TASK010,SIG002,KM 145/3,S&T,Corrective,Signal Failure,Component Aging,High,1.5,1.7,Yes,2026-06-25,2026-06-25,2026-08-25,2,8,High,3,Signal Testing Kit,Relay;Cables

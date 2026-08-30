@@ -1,0 +1,19 @@
+maintenance_type,task_type,equipment_name,equipment_type,required_quantity,operator_required,required_skill
+Signal Maintenance,Signal,Signal Tester,Signal,1,True,Signal
+Signal Maintenance,Relay Testing,Relay Testing Kit,Signal,1,True,Signal
+Signal Maintenance,Point Machine Maintenance,Point Machine Tester,Signal,1,True,Signal
+Signal Maintenance,Signal Insulation Testing,Insulation Tester,Signal,1,True,Signal
+Signal Maintenance,General Signal Work,Signal Maintenance Kit,Signal,1,False,None
+Track Maintenance,Track Tamping,Tamping Machine,Track,1,True,Track
+Track Maintenance,Rail Grinding,Rail Grinding Machine,Track,1,True,Track
+Track Maintenance,Track Geometry Inspection,Track Geometry Trolley,Track,1,True,Track
+Track Maintenance,Rail Inspection,Rail Inspection Trolley,Track,1,True,Track
+Track Maintenance,Rail Lifting,Hydraulic Rail Jack,Track,1,False,None
+Track Maintenance,Rail Cutting,Rail Cutting Machine,Track,1,True,Track
+Track Maintenance,General Track Work,Track Tools Kit,Track,1,False,None
+Electrical Maintenance,Electrical Testing,Electrical Tester,Electrical,1,True,Electrical
+Electrical Maintenance,Insulation Testing,Insulation Resistance Tester,Electrical,1,True,Electrical
+Electrical Maintenance,Power Analysis,Portable Power Analyzer,Electrical,1,True,Electrical
+Electrical Maintenance,Cable Testing,Cable Fault Locator,Electrical,1,True,Electrical
+Electrical Maintenance,Electrical Measurement,Multimeter Kit,Electrical,1,False,None
+Electrical Maintenance,Earth Testing,Earth Resistance Tester,Electrical,1,True,Electrical

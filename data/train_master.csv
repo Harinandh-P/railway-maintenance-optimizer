@@ -1,0 +1,9 @@
+train_id,train_number,train_name,train_type,traffic_type,origin,destination,direction,running_days,frequency_per_hour,priority_class,operational_status
+T101,12601,Salem-Chennai Superfast,Express Passenger,Passenger,Salem,Chennai,A-B,Daily,5,1,Active
+T102,12602,Chennai-Salem Express,Passenger,Passenger,Chennai,Salem,B-A,Daily,5,2,Active
+T103,66001,Salem Freight Express,Goods,Goods,Salem,Chennai,A-B,Daily,4,3,Active
+T104,12604,Chennai Intercity,Express Passenger,Passenger,Chennai,Salem,B-A,Daily,3,1,Active
+T105,66002,Local Passenger,Passenger,Passenger,Salem,Station_C,A-B,Daily,2,2,Active
+T106,66003,Coal Freight,Goods,Goods,Chennai,Salem,B-A,Daily,3,3,Active
+T107,12607,Kaveri Express,Express Passenger,Passenger,Salem,Chennai,A-B,Daily,5,1,Active
+T108,12608,West Coast Express,Passenger,Passenger,Chennai,Salem,B-A,Daily,4,2,Active

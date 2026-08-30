@@ -1,0 +1,109 @@
+date,equipment_type,equipment_name,total_quantity,available_quantity,assigned_quantity,maintenance_quantity,calibration_quantity,unavailable_quantity
+2026-08-28,Signal,Insulation Tester,2,2,0,0,0,0
+2026-08-28,Signal,Point Machine Tester,2,2,0,0,0,0
+2026-08-28,Signal,Relay Testing Kit,2,2,0,0,0,0
+2026-08-28,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-08-28,Signal,Signal Tester,3,2,1,0,0,0
+2026-08-28,Track,Hydraulic Rail Jack,1,1,0,0,0,0
+2026-08-28,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-08-28,Track,Rail Grinding Machine,2,1,1,0,0,0
+2026-08-28,Track,Rail Inspection Trolley,2,2,0,0,0,0
+2026-08-28,Track,Tamping Machine,3,3,0,0,0,0
+2026-08-28,Track,Track Geometry Trolley,2,2,0,0,0,0
+2026-08-28,Track,Track Tools Kit,1,1,0,0,0,0
+2026-08-28,Electrical,Cable Fault Locator,1,1,0,0,0,0
+2026-08-28,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-08-28,Electrical,Electrical Tester,2,2,0,0,0,0
+2026-08-28,Electrical,Insulation Resistance Tester,2,2,0,0,0,0
+2026-08-28,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-08-28,Electrical,Portable Power Analyzer,1,0,1,0,0,0
+2026-08-29,Signal,Insulation Tester,2,2,0,0,0,0
+2026-08-29,Signal,Point Machine Tester,2,1,0,1,0,0
+2026-08-29,Signal,Relay Testing Kit,2,2,0,0,0,0
+2026-08-29,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-08-29,Signal,Signal Tester,3,3,0,0,0,0
+2026-08-29,Track,Hydraulic Rail Jack,1,1,0,0,0,0
+2026-08-29,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-08-29,Track,Rail Grinding Machine,2,2,0,0,0,0
+2026-08-29,Track,Rail Inspection Trolley,2,2,0,0,0,0
+2026-08-29,Track,Tamping Machine,3,2,1,0,0,0
+2026-08-29,Track,Track Geometry Trolley,2,1,0,0,1,0
+2026-08-29,Track,Track Tools Kit,1,1,0,0,0,0
+2026-08-29,Electrical,Cable Fault Locator,1,1,0,0,0,0
+2026-08-29,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-08-29,Electrical,Electrical Tester,2,1,1,0,0,0
+2026-08-29,Electrical,Insulation Resistance Tester,2,2,0,0,0,0
+2026-08-29,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-08-29,Electrical,Portable Power Analyzer,1,1,0,0,0,0
+2026-08-30,Signal,Insulation Tester,2,2,0,0,0,0
+2026-08-30,Signal,Point Machine Tester,2,1,0,1,0,0
+2026-08-30,Signal,Relay Testing Kit,2,1,1,0,0,0
+2026-08-30,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-08-30,Signal,Signal Tester,3,2,0,0,1,0
+2026-08-30,Track,Hydraulic Rail Jack,1,1,0,0,0,0
+2026-08-30,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-08-30,Track,Rail Grinding Machine,2,2,0,0,0,0
+2026-08-30,Track,Rail Inspection Trolley,2,2,0,0,0,0
+2026-08-30,Track,Tamping Machine,3,3,0,0,0,0
+2026-08-30,Track,Track Geometry Trolley,2,2,0,0,0,0
+2026-08-30,Track,Track Tools Kit,1,1,0,0,0,0
+2026-08-30,Electrical,Cable Fault Locator,1,0,0,1,0,0
+2026-08-30,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-08-30,Electrical,Electrical Tester,2,2,0,0,0,0
+2026-08-30,Electrical,Insulation Resistance Tester,2,2,0,0,0,0
+2026-08-30,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-08-30,Electrical,Portable Power Analyzer,1,1,0,0,0,0
+2026-08-31,Signal,Insulation Tester,2,2,0,0,0,0
+2026-08-31,Signal,Point Machine Tester,2,2,0,0,0,0
+2026-08-31,Signal,Relay Testing Kit,2,2,0,0,0,0
+2026-08-31,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-08-31,Signal,Signal Tester,3,2,1,0,0,0
+2026-08-31,Track,Hydraulic Rail Jack,1,1,0,0,0,0
+2026-08-31,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-08-31,Track,Rail Grinding Machine,2,2,0,0,0,0
+2026-08-31,Track,Rail Inspection Trolley,2,1,1,0,0,0
+2026-08-31,Track,Tamping Machine,3,2,0,1,0,0
+2026-08-31,Track,Track Geometry Trolley,2,2,0,0,0,0
+2026-08-31,Track,Track Tools Kit,1,1,0,0,0,0
+2026-08-31,Electrical,Cable Fault Locator,1,1,0,0,0,0
+2026-08-31,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-08-31,Electrical,Electrical Tester,2,2,0,0,0,0
+2026-08-31,Electrical,Insulation Resistance Tester,2,2,0,0,0,0
+2026-08-31,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-08-31,Electrical,Portable Power Analyzer,1,1,0,0,0,0
+2026-09-01,Signal,Insulation Tester,2,1,0,0,1,0
+2026-09-01,Signal,Point Machine Tester,2,2,0,0,0,0
+2026-09-01,Signal,Relay Testing Kit,2,2,0,0,0,0
+2026-09-01,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-09-01,Signal,Signal Tester,3,3,0,0,0,0
+2026-09-01,Track,Hydraulic Rail Jack,1,0,0,1,0,0
+2026-09-01,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-09-01,Track,Rail Grinding Machine,2,2,0,0,0,0
+2026-09-01,Track,Rail Inspection Trolley,2,2,0,0,0,0
+2026-09-01,Track,Tamping Machine,3,2,1,0,0,0
+2026-09-01,Track,Track Geometry Trolley,2,2,0,0,0,0
+2026-09-01,Track,Track Tools Kit,1,1,0,0,0,0
+2026-09-01,Electrical,Cable Fault Locator,1,1,0,0,0,0
+2026-09-01,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-09-01,Electrical,Electrical Tester,2,2,0,0,0,0
+2026-09-01,Electrical,Insulation Resistance Tester,2,2,0,0,0,0
+2026-09-01,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-09-01,Electrical,Portable Power Analyzer,1,0,1,0,0,0
+2026-09-02,Signal,Insulation Tester,2,2,0,0,0,0
+2026-09-02,Signal,Point Machine Tester,2,2,0,0,0,0
+2026-09-02,Signal,Relay Testing Kit,2,2,0,0,0,0
+2026-09-02,Signal,Signal Maintenance Kit,1,1,0,0,0,0
+2026-09-02,Signal,Signal Tester,3,3,0,0,0,0
+2026-09-02,Track,Hydraulic Rail Jack,1,1,0,0,0,0
+2026-09-02,Track,Rail Cutting Machine,1,1,0,0,0,0
+2026-09-02,Track,Rail Grinding Machine,2,1,1,0,0,0
+2026-09-02,Track,Rail Inspection Trolley,2,2,0,0,0,0
+2026-09-02,Track,Tamping Machine,3,3,0,0,0,0
+2026-09-02,Track,Track Geometry Trolley,2,2,0,0,0,0
+2026-09-02,Track,Track Tools Kit,1,1,0,0,0,0
+2026-09-02,Electrical,Cable Fault Locator,1,0,0,1,0,0
+2026-09-02,Electrical,Earth Resistance Tester,1,0,0,0,0,1
+2026-09-02,Electrical,Electrical Tester,2,1,1,0,0,0
+2026-09-02,Electrical,Insulation Resistance Tester,2,1,0,0,1,0
+2026-09-02,Electrical,Multimeter Kit,1,1,0,0,0,0
+2026-09-02,Electrical,Portable Power Analyzer,1,1,0,0,0,0

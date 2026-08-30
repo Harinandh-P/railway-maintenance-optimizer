@@ -1,0 +1,51 @@
+worker_id,worker_name,worker_type,skill,skill_level,qualification_level,experience_years,corridor,location,date,maximum_daily_hours,shift_start,shift_end,available,status,current_assignment,emergency_available
+W001,Arun Velan,Signal,Signal Technician,4,Senior Technician,15,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W002,Kavin Raj,Signal,Signal Technician,4,Senior Technician,13,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W003,Naveen Kumar,Signal,Signal Technician,1,Technician,20,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W004,Sanjay Dev,Signal,Signal Technician,5,Technician,4,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W005,Vikram Rao,Signal,Signal Technician,3,Senior Technician,16,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W006,Rithik Anand,Signal,Signal Technician,1,Technician,3,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W007,Mohan Das,Signal,Signal Technician,4,Senior Technician,15,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,False
+W008,Pranav Iyer,Signal,Signal Technician,1,Technician,9,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,True
+W009,Suresh Mani,Signal,Signal Technician,2,Technician,5,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W010,Aditya Sen,Signal,Signal Technician,2,Technician,6,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W011,Rohit Nair,Signal,Signal Technician,4,Senior Technician,17,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W012,Dinesh Kumar,Signal,Signal Technician,5,Supervisor,18,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W013,Hari Prasad,Signal,Signal Technician,5,Supervisor,18,C1,C1-KM125,2026-08-28,8,00:00,00:00,True,Available,,False
+W014,Manoj Arav,Signal,Signal Technician,4,Senior Technician,11,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W015,Vishal Dev,Signal,Signal Technician,1,Technician,19,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,True
+W016,Karthik Bose,Signal,Electrical Technician,5,Technician,2,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W017,Ajay Raman,Signal,Electrical Technician,3,Senior Technician,10,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W018,Bala Murugan,Track,Electrical Technician,4,Senior Technician,7,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W019,Gokul Raj,Track,Electrical Technician,3,Technician,5,C1,C1-KM125,2026-08-28,8,00:00,00:00,True,Available,,False
+W020,Mithun Das,Track,Electrical Technician,2,Technician,15,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W021,Surya Prakash,Track,Electrical Technician,2,Technician,12,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W022,Nikhil Varma,Track,Electrical Technician,3,Technician,1,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,True
+W023,Aravind Raj,Track,Electrical Technician,3,Senior Technician,10,C2,C2-KM110,2026-08-28,8,00:00,00:00,True,Available,,False
+W024,Deepak Sen,Track,Electrical Technician,2,Technician,19,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W025,Rakesh Kumar,Track,Electrical Technician,4,Technician,3,C1,C1-KM125,2026-08-28,8,00:00,00:00,True,Available,,False
+W026,Vijay Anand,Track,Electrical Technician,4,Senior Technician,16,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W027,Sathish Rao,Track,Electrical Technician,5,Supervisor,19,C3,C3-KM90,2026-08-28,8,00:00,00:00,True,Available,,False
+W028,Lokesh Mani,Track,Electrical Technician,4,Technician,2,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W029,Rahul Dev,Track,Electrical Technician,4,Senior Technician,8,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,True
+W030,Pradeep Nair,Track,Electrical Technician,4,Senior Technician,18,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W031,Ganesh Iyer,Track,Track Technician,1,Technician,5,C1,C1-KM125,2026-08-28,8,09:00,17:00,True,Available,Technical safety training,False
+W032,Tarun Bose,Track,Track Technician,2,Technician,16,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W033,Yuvan Kumar,Track,Track Technician,2,Technician,9,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W034,Ashwin Das,Track,Track Technician,5,Supervisor,17,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W035,Meera Nair,Electrical,Track Technician,2,Technician,18,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W036,Ananya Rao,Electrical,Track Technician,3,Technician,5,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,True
+W037,Divya Sen,Electrical,Track Technician,5,Senior Technician,6,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,Substation inspection,False
+W038,Kavya Mani,Electrical,Track Technician,2,Technician,9,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W039,Ishita Das,Electrical,Track Technician,5,Senior Technician,10,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W040,Pooja Kumar,Electrical,Track Technician,4,Senior Technician,17,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W041,Riya Anand,Electrical,Track Technician,2,Technician,1,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W042,Nandini Bose,Electrical,Track Technician,1,Technician,1,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W043,Asha Dev,Electrical,Track Technician,1,Technician,9,C1,C1-KM125,2026-08-28,8,09:00,17:00,True,Available,Technical safety training,False
+W044,Keerthi Raj,Electrical,Track Technician,3,Senior Technician,6,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,Traction power maintenance,False
+W045,Lavanya Iyer,Electrical,Track Technician,2,Technician,11,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W046,Shruti Nair,Electrical,Signal Technician,3,Technician,4,C1,C1-KM125,2026-08-28,8,10:00,18:00,True,Available,,False
+W047,Maya Prasad,Electrical,Electrical Technician,1,Technician,16,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W048,Tanvi Rao,Electrical,Track Technician,4,Senior Technician,8,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W049,Sneha Kumar,Electrical,Signal Technician,3,Senior Technician,8,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,Substation inspection,False
+W050,Ira Das,Electrical,Electrical Technician,3,Technician,3,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,True

@@ -1,0 +1,25 @@
+# Secrets & Local Environment Variables
+.env
+*.env.local
+
+# Python Build & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Local SQLite & Databases
+*.db
+*.sqlite3
+
+# Node & Frontend Build
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# System Files
+.DS_Store
+Thumbs.db
