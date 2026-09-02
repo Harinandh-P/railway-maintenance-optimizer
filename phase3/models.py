@@ -223,3 +223,8 @@ class AllocatedBlock:
     deadline_status: str
 
     reasons: List[str] = field(default_factory=list)
+
+    assigned_worker_ids: List[str] = field(default_factory=list)
+    assigned_worker_details: List[dict] = field(default_factory=list)
+    assigned_equipment_details: List[dict] = field(default_factory=list)
+    workers_assigned_count: int = 0

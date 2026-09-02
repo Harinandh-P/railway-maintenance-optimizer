@@ -132,24 +132,26 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
     workers_list = phase3_main.load_worker_data(railway_gaps)
     print(f"[PHASE 3] Worker availability loaded: {len(workers_list)} slots")
 
-    # Load equipment objects matching EquipmentAvailability schema
-    equipment_list = []
-    dates = ["2026-08-28", "2026-08-29", "2026-08-30"]
-    eq_types = [
-        "Signal Tester", "Tamping Machine", "Inspection Vehicle",
-        "Track Machine", "Electrical Tester", "Signal Testing Kit",
-        "Tower Wagon", "Relay Testing Kit", "Insulation Tester"
-    ]
+    # Load master databases for real detail enrichment
+    worker_db = pd.read_csv(AppConfig.WORKER_DB_CSV).to_dict(orient="records") if AppConfig.WORKER_DB_CSV.exists() else []
+    equip_db = pd.read_csv(AppConfig.EQUIPMENT_DB_CSV).to_dict(orient="records") if AppConfig.EQUIPMENT_DB_CSV.exists() else []
 
-    for date in dates:
-        for eq_t in eq_types:
-            equipment_list.append(EquipmentAvailability(
-                date=date,
-                start=0,
-                end=1440,
-                equipment_name=eq_t,
-                quantity=5
-            ))
+    # Build real equipment_list for optimizer with corridor field
+    equipment_list = []
+    for eq in equip_db:
+        equipment_list.append(SimpleNamespace(
+            equipment_id=str(eq.get("equipment_id", "")),
+            equipment_name=str(eq.get("equipment_name", "")),
+            equipment_type=str(eq.get("equipment_type", "")),
+            corridor=str(eq.get("corridor", "C1")),
+            date=str(eq.get("date", "2026-08-28")),
+            start=0,
+            end=1440,
+            available=str(eq.get("available", "True")).lower() == "true",
+            operational=str(eq.get("operational", "True")).lower() == "true",
+            status=str(eq.get("status", "Available")),
+            quantity=int(float(eq.get("quantity", 1)))
+        ))
 
     print(f"[PHASE 3] Equipment availability loaded: {len(equipment_list)} slots")
 
@@ -163,11 +165,18 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
 
     checks = validate_allocations(allocations, groups, railway_gaps, workers_list, equipment_list)
 
-    # Load master databases for real detail enrichment
-    worker_db = pd.read_csv(AppConfig.WORKER_DB_CSV).to_dict(orient="records") if AppConfig.WORKER_DB_CSV.exists() else []
-    equip_db = pd.read_csv(AppConfig.EQUIPMENT_DB_CSV).to_dict(orient="records") if AppConfig.EQUIPMENT_DB_CSV.exists() else []
-
     assigned_worker_ids_used = set()
+    assigned_equipment_ids_used = set()
+
+    def normalize_c(c_str):
+        if not c_str: return "C1"
+        c = str(c_str).strip().upper()
+        return {"COR001":"C1", "COR1":"C1", "C1":"C1", "COR002":"C2", "COR2":"C2", "C2":"C2", "COR003":"C3", "COR3":"C3", "C3":"C3"}.get(c, c)
+
+    def normalize_s(s_str):
+        if not s_str: return "TRACK"
+        s = str(s_str).strip().upper()
+        return {"ENGINEERING":"TRACK", "TRACK":"TRACK", "S&T":"SIGNAL", "SIGNAL":"SIGNAL", "TRACTION":"OHE", "ELECTRICAL":"OHE", "OHE":"OHE"}.get(s, "TRACK")
 
     # Helper function to generate group work summaries
     def build_group_work(group_tasks):
@@ -186,15 +195,15 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
     # Build detailed final block plan and track allocated group IDs
     formatted_blocks = []
     allocated_group_ids = set()
+    unallocated_blocks = []
+    unallocated_reasons_map = {}
 
     for block in allocations:
         grp_id = getattr(block, 'group_id', 'G1')
-        allocated_group_ids.add(grp_id)
-
         start_min = getattr(block, 'start', 0)
         end_min = getattr(block, 'end', 180)
         dur_min = getattr(block, 'required_duration', end_min - start_min)
-        corridor = getattr(block, 'corridor', 'C1')
+        corridor = normalize_c(getattr(block, 'corridor', 'C1'))
         work_area = getattr(block, 'work_area', 'KM 125/4')
         req_workers_cnt = getattr(block, 'workers_required', 4)
 
@@ -205,15 +214,53 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
         b_tasks = getattr(block, 'tasks', [])
         req_ids, group_work_summary, request_details = build_group_work(b_tasks)
 
-        # Match real assigned worker details
-        assigned_worker_details = []
-        matching_workers = [w for w in worker_db if w.get("corridor") == corridor and str(w.get("worker_id")) not in assigned_worker_ids_used]
-        if len(matching_workers) < req_workers_cnt:
-            matching_workers += [w for w in worker_db if str(w.get("worker_id")) not in assigned_worker_ids_used and w not in matching_workers]
+        is_block_valid = True
+        validation_reasons = []
 
-        for w in matching_workers[:req_workers_cnt]:
+        # Sector worker breakdown needed
+        sec_reqs = {}
+        for t in b_tasks:
+            dept = getattr(t, 'department', 'Engineering')
+            sec = normalize_s(dept)
+            w_cnt = getattr(t, 'workers_required', 4)
+            sec_reqs[sec] = sec_reqs.get(sec, 0) + w_cnt
+
+        assigned_worker_details = []
+        # Find matching workers strictly in the block's corridor
+        c_workers = [
+            w for w in worker_db
+            if normalize_c(w.get("corridor")) == corridor
+            and str(w.get("available", "True")).strip().lower() in ("true", "1")
+            and str(w.get("status", "Available")).strip().lower() in ("available", "")
+            and str(w.get("worker_id")) not in assigned_worker_ids_used
+        ]
+
+        assigned_w_objects = []
+        for sec, req_cnt in sec_reqs.items():
+            avail_sec = [w for w in c_workers if normalize_s(w.get("worker_type")) == sec and w not in assigned_w_objects]
+            if len(avail_sec) >= req_cnt:
+                assigned_w_objects.extend(avail_sec[:req_cnt])
+            else:
+                assigned_w_objects.extend(avail_sec)
+                needed_extra = req_cnt - len(avail_sec)
+                avail_other = [w for w in c_workers if w not in assigned_w_objects]
+                if len(avail_other) >= needed_extra:
+                    assigned_w_objects.extend(avail_other[:needed_extra])
+                else:
+                    assigned_w_objects.extend(avail_other)
+                    is_block_valid = False
+                    validation_reasons.append(f"Required {req_workers_cnt} C-{corridor} workers but only {len(assigned_w_objects)} available")
+
+        # Check worker count rule (or 1-short extra time extension rule)
+        if len(assigned_w_objects) < req_workers_cnt:
+            if len(assigned_w_objects) == req_workers_cnt - 1 and dur_min > 180:
+                validation_reasons.append(f"Shortage of 1 worker compensated by +30m block duration ({dur_min}m)")
+                is_block_valid = True
+            else:
+                is_block_valid = False
+
+        for w in assigned_w_objects:
             w_id = str(w.get("worker_id"))
-            assigned_worker_ids_used.add(w_id)
             assigned_worker_details.append({
                 "worker_id": w_id,
                 "worker_name": str(w.get("worker_name", f"Worker {w_id}")),
@@ -224,19 +271,29 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
                 "experience_years": str(w.get("experience_years", "5")),
                 "corridor": str(w.get("corridor", corridor)),
                 "status": str(w.get("status", "Available")),
-                "assigned_date": "2026-08-28",
+                "assigned_date": str(getattr(block, 'date', '2026-08-28')),
                 "assigned_start": start_time_str,
                 "assigned_end": end_time_str
             })
 
-        # Match real assigned equipment details
+        # Match real assigned equipment details strictly in block's corridor
         eq_used = getattr(block, 'equipment_used', [])
         if isinstance(eq_used, str):
             eq_used = [e.strip() for e in eq_used.split(";") if e.strip()]
 
         assigned_equip_details = []
         for eq_item in eq_used:
-            match = next((eq for eq in equip_db if str(eq.get("equipment_name")).strip().lower() == eq_item.lower()), None)
+            match = next((
+                eq for eq in equip_db
+                if normalize_c(eq.get("corridor")) == corridor
+                and str(eq.get("equipment_id")) not in assigned_equipment_ids_used
+                and (
+                    str(eq.get("equipment_name")).strip().lower() == eq_item.lower()
+                    or str(eq.get("equipment_type")).strip().lower() == eq_item.lower()
+                    or normalize_s(eq.get("equipment_type")) == normalize_s(eq_item)
+                )
+            ), None)
+
             if match:
                 assigned_equip_details.append({
                     "equipment_id": str(match.get("equipment_id", "EQ001")),
@@ -246,55 +303,55 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
                     "condition": str(match.get("condition", "Good")),
                     "corridor": str(match.get("corridor", corridor)),
                     "status": "Assigned to Maintenance Block",
-                    "assigned_date": "2026-08-28",
+                    "assigned_date": str(getattr(block, 'date', '2026-08-28')),
                     "assigned_start": start_time_str,
                     "assigned_end": end_time_str
                 })
             else:
-                assigned_equip_details.append({
-                    "equipment_id": f"EQ-{eq_item.replace(' ', '')}",
-                    "equipment_name": eq_item,
-                    "equipment_type": "Specialized Equipment",
-                    "condition": "Good",
-                    "corridor": corridor,
-                    "status": "Assigned to Maintenance Block",
-                    "assigned_date": "2026-08-28",
-                    "assigned_start": start_time_str,
-                    "assigned_end": end_time_str
-                })
+                is_block_valid = False
+                validation_reasons.append(f"Required equipment '{eq_item}' missing or unavailable in corridor {corridor}")
 
-        block_record = {
-            "block_id": f"BLK-{grp_id}",
-            "group_id": grp_id,
-            "corridor": corridor,
-            "work_area": work_area,
-            "date": getattr(block, 'date', '2026-08-28'),
-            "allocated_start_minutes": start_min,
-            "allocated_end_minutes": end_min,
-            "block_start": start_time_str,
-            "block_end": end_time_str,
-            "allocated_duration_minutes": dur_min,
-            "status": "ALLOCATED",
-            "allocated_tasks": req_ids,
-            "group_work_summary": group_work_summary,
-            "group_task_count": len(req_ids),
-            "requests_in_group": req_ids,
-            "request_details_in_group": request_details,
-            "workers_required": req_workers_cnt,
-            "workers_available": getattr(block, 'workers_available', req_workers_cnt + 9),
-            "workers_assigned_count": len(assigned_worker_details),
-            "assigned_workers": [w["worker_id"] for w in assigned_worker_details],
-            "assigned_worker_details": assigned_worker_details,
-            "assigned_equipment": [e["equipment_name"] for e in assigned_equip_details],
-            "assigned_equipment_details": assigned_equip_details,
-            "priority": getattr(block, 'priority', 5),
-            "risk_score": getattr(block, 'risk_score', 5),
-            "score": getattr(block, 'score', 0.0),
-            "deadline_status": getattr(block, 'deadline_status', 'BEFORE DUE DATE'),
-            "reasons": getattr(block, 'reasons', ["All constraints satisfied."]),
-            "reason": "All priority, risk, train gap, worker, and equipment constraints satisfied."
-        }
-        formatted_blocks.append(block_record)
+        if is_block_valid:
+            allocated_group_ids.add(grp_id)
+            for w in assigned_worker_details:
+                assigned_worker_ids_used.add(w["worker_id"])
+            for eq in assigned_equip_details:
+                assigned_equipment_ids_used.add(eq["equipment_id"])
+
+            block_record = {
+                "block_id": f"BLK-{grp_id}",
+                "group_id": grp_id,
+                "corridor": corridor,
+                "work_area": work_area,
+                "date": getattr(block, 'date', '2026-08-28'),
+                "allocated_start_minutes": start_min,
+                "allocated_end_minutes": end_min,
+                "block_start": start_time_str,
+                "block_end": end_time_str,
+                "allocated_duration_minutes": dur_min,
+                "status": "ALLOCATED",
+                "allocated_tasks": req_ids,
+                "group_work_summary": group_work_summary,
+                "group_task_count": len(req_ids),
+                "requests_in_group": req_ids,
+                "request_details_in_group": request_details,
+                "workers_required": req_workers_cnt,
+                "workers_available": len(c_workers),
+                "workers_assigned_count": len(assigned_worker_details),
+                "assigned_workers": [w["worker_id"] for w in assigned_worker_details],
+                "assigned_worker_details": assigned_worker_details,
+                "assigned_equipment": [e["equipment_name"] for e in assigned_equip_details],
+                "assigned_equipment_details": assigned_equip_details,
+                "priority": getattr(block, 'priority', 5),
+                "risk_score": getattr(block, 'risk_score', 5),
+                "score": getattr(block, 'score', 0.0),
+                "deadline_status": getattr(block, 'deadline_status', 'BEFORE DUE DATE'),
+                "reasons": [f"[OK] {len(assigned_worker_details)} valid C-{corridor} workers assigned."] + validation_reasons + [f"[OK] Required equipment satisfied: {', '.join(e['equipment_name'] for e in assigned_equip_details)}"],
+                "reason": f"All priority, risk, train gap, worker ({len(assigned_worker_details)}/{req_workers_cnt}), and equipment constraints satisfied in C-{corridor}."
+            }
+            formatted_blocks.append(block_record)
+        else:
+            unallocated_reasons_map[grp_id] = "; ".join(validation_reasons) if validation_reasons else "Resource validation failed"
 
     # Identify and build unallocated groups
     unallocated_blocks = []
@@ -313,7 +370,7 @@ def run_phase3(phase2_file: Path = None, output_file: Path = None) -> dict:
                 "requests_in_group": req_ids,
                 "request_details_in_group": request_details,
                 "status": "UNALLOCATED",
-                "reason": "No feasible train gap or resource window available before due date."
+                "reason": unallocated_reasons_map.get(grp_id, "No feasible train gap or resource window available before due date.")
             })
 
     total_groups_count = len(groups)

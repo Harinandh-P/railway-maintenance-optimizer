@@ -58,6 +58,28 @@ _LAST_PERFORMANCE = {
 # GENERIC HELPERS
 # ============================================================
 
+def normalize_corridor(corridor):
+    if not corridor:
+        return "C1"
+    c = str(corridor).strip().upper()
+    mapping = {
+        "COR001": "C1", "COR1": "C1", "C1": "C1",
+        "COR002": "C2", "COR2": "C2", "C2": "C2",
+        "COR003": "C3", "COR3": "C3", "C3": "C3"
+    }
+    return mapping.get(c, c)
+
+def normalize_sector(sector):
+    if not sector:
+        return "TRACK"
+    s = str(sector).strip().upper()
+    mapping = {
+        "ENGINEERING": "TRACK", "TRACK": "TRACK",
+        "S&T": "SIGNAL", "SIGNAL": "SIGNAL",
+        "TRACTION": "OHE", "ELECTRICAL": "OHE", "OHE": "OHE"
+    }
+    return mapping.get(s, s)
+
 def get_value(
     obj,
     name,
@@ -900,93 +922,65 @@ def record_end(item):
 # WORKERS
 # ============================================================
 
+# ============================================================
+# WORKERS
+# ============================================================
+
 def workers_available(
     selected_date,
     start,
     end,
-    worker_data
+    worker_data,
+    target_corridor=None,
+    target_sector=None
 ):
 
     if not worker_data:
-
         return 0
 
-    matching = [
-        item
-        for item in worker_data
-        if str(
-            record_date(item)
-        )
-        ==
-        str(selected_date)
-    ]
+    norm_target_c = normalize_corridor(target_corridor) if target_corridor else None
+    norm_target_s = normalize_sector(target_sector) if target_sector else None
+
+    matching = []
+    for item in worker_data:
+        # Date check if present
+        rec_d = record_date(item)
+        if rec_d and str(rec_d) != str(selected_date):
+            continue
+
+        # Corridor check
+        item_c = get_value(item, "corridor", None)
+        if norm_target_c and item_c:
+            if normalize_corridor(item_c) != norm_target_c:
+                continue
+
+        # Sector check
+        if norm_target_s:
+            item_s = get_value(item, "worker_type", get_value(item, "sector", get_value(item, "department", None)))
+            if item_s and normalize_sector(item_s) != norm_target_s:
+                continue
+
+        # Status check
+        avail = str(get_value(item, "available", "True")).strip().lower()
+        stat = str(get_value(item, "status", "Available")).strip().lower()
+        if avail not in ("true", "1") or stat not in ("available", ""):
+            continue
+
+        matching.append(item)
 
     if not matching:
-
         return 0
 
-    capacities = []
-
+    # Sum available_workers for summary objects or count individual records
+    total_workers = 0
     for item in matching:
+        cnt = get_value(item, "available_workers", get_value(item, "worker_count", get_value(item, "workers", None)))
+        if cnt is not None and isinstance(cnt, (int, float)):
+            total_workers += int(cnt)
+        else:
+            total_workers += 1
 
-        if overlap(
-            start,
-            end,
-            record_start(item),
-            record_end(item)
-        ):
-
-            capacity = get_value(
-                item,
-                "available_workers",
-                get_value(
-                    item,
-                    "worker_count",
-                    get_value(
-                        item,
-                        "workers",
-                        0
-                    )
-                )
-            )
-
-            capacities.append(
-                int(
-                    as_number(
-                        capacity
-                    )
-                )
-            )
-
-    if capacities:
-
-        return max(
-            capacities
-        )
-
-    return max(
-        (
-            int(
-                as_number(
-                    get_value(
-                        item,
-                        "available_workers",
-                        get_value(
-                            item,
-                            "worker_count",
-                            get_value(
-                                item,
-                                "workers",
-                                0
-                            )
-                        )
-                    )
-                )
-            )
-            for item in matching
-        ),
-        default=0
-    )
+    return total_workers
 
 
 # ============================================================
@@ -1022,7 +1016,7 @@ def equipment_quantity(item):
                 get_value(
                     item,
                     "capacity",
-                    0
+                    1
                 )
             )
         )
@@ -1096,55 +1090,38 @@ def equipment_capacity(
     start,
     end,
     equipment,
-    equipment_data
+    equipment_data,
+    target_corridor=None
 ):
-    """
-    Returns total usable quantity of the requested
-    equipment during the requested time.
-
-    Supports:
-        equipment_name
-        name
-        equipment_type
-
-    Also supports:
-        quantity
-        capacity
-
-    And:
-        available
-        operational
-        status
-    """
 
     if not equipment_data:
-
         return 0
 
-    target = str(
-        equipment
-    ).strip().lower()
+    target = str(equipment).strip().lower()
+    norm_target_c = normalize_corridor(target_corridor) if target_corridor else None
+    target_sec = normalize_sector(equipment)
 
     total = 0
 
     for item in equipment_data:
-
-        if str(
-            record_date(item)
-        ) != str(selected_date):
-
+        rec_d = record_date(item)
+        if rec_d and str(rec_d) != str(selected_date):
             continue
 
-        if (
-            equipment_name(item)
-            .lower()
-            != target
-        ):
+        item_c = get_value(item, "corridor", None)
+        if norm_target_c and item_c:
+            if normalize_corridor(item_c) != norm_target_c:
+                continue
 
+        eq_n = equipment_name(item).lower()
+        eq_t = str(get_value(item, "equipment_type", "")).strip().lower()
+        eq_sec = normalize_sector(eq_t or eq_n)
+
+        # Match name, type, or sector
+        if target not in eq_n and target not in eq_t and target_sec != eq_sec:
             continue
 
         if not equipment_is_available(item):
-
             continue
 
         if not overlap(
@@ -1153,12 +1130,9 @@ def equipment_capacity(
             record_start(item),
             record_end(item)
         ):
-
             continue
 
-        total += equipment_quantity(
-            item
-        )
+        total += equipment_quantity(item)
 
     return total
 
@@ -1864,23 +1838,22 @@ def candidates_for_group(
         group
     )
 
+    group_corridor_raw = get_value(
+        group,
+        "corridor",
+        ""
+    )
+    group_corridor = normalize_corridor(group_corridor_raw)
+
     for gap in railway_gaps:
 
         # ----------------------------------------------------
         # CORRIDOR
         # ----------------------------------------------------
 
-        group_corridor = get_value(
-            group,
-            "corridor",
-            gap_corridor(gap)
-        )
+        g_corridor = normalize_corridor(gap_corridor(gap))
 
-        if str(
-            gap_corridor(gap)
-        ) != str(
-            group_corridor
-        ):
+        if g_corridor != group_corridor:
 
             continue
 
@@ -1947,24 +1920,29 @@ def candidates_for_group(
 
                 continue
 
-            # Workers
+            # Workers matching corridor
             workers = workers_available(
                 gap_date(gap),
                 start,
                 end,
-                worker_data
+                worker_data,
+                target_corridor=group_corridor
             )
 
             required_workers = group_workers(
                 group
             )
 
+            # Check exact 1-short worker rule: If short by 1 worker, can extend block duration by +30m if gap duration permits
+            eff_duration = duration
             if workers < required_workers:
-
-                continue
+                if workers == required_workers - 1 and gap_duration(gap) >= duration + 30 and safety_valid(gap, start, start + duration + 30):
+                    eff_duration = duration + 30
+                else:
+                    continue
 
             # ------------------------------------------------
-            # EQUIPMENT
+            # EQUIPMENT MATCHING CORRIDOR
             # ------------------------------------------------
 
             equipment_ok = True
@@ -1974,9 +1952,10 @@ def candidates_for_group(
                 capacity = equipment_capacity(
                     gap_date(gap),
                     start,
-                    end,
+                    start + eff_duration,
                     equipment,
-                    equipment_data
+                    equipment_data,
+                    target_corridor=group_corridor
                 )
 
                 if capacity <= 0:
@@ -2000,6 +1979,9 @@ def candidates_for_group(
                 workers,
                 required_equipment
             )
+            if eff_duration != duration:
+                block.end = start + eff_duration
+                block.required_duration = eff_duration
 
             candidates.append(
                 block
