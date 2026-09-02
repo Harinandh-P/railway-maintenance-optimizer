@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { User, KeyRound, Lock, LogOut, ChevronDown, CheckCircle, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { User, KeyRound, Lock, LogOut, ChevronDown, CheckCircle, AlertTriangle, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -8,6 +8,11 @@ export const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showUsernameModal, setShowUsernameModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  // Password visibility states
+  const [showCurrPass, setShowCurrPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   // Change Username form state
   const [newUsername, setNewUsername] = useState('');
@@ -306,17 +311,71 @@ export const ProfileDropdown = () => {
             <form onSubmit={handleChangePassword}>
               <div style={{ marginBottom: '16px' }}>
                 <label className="label-text" style={{ fontSize: '0.82rem', color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>Current Password</label>
-                <input type="password" className="input-field" value={currPassword} onChange={e => setCurrPassword(e.target.value)} required placeholder="Enter current password" />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showCurrPass ? 'text' : 'password'}
+                    className="input-field"
+                    style={{ paddingRight: '40px' }}
+                    value={currPassword}
+                    onChange={e => setCurrPassword(e.target.value)}
+                    required
+                    placeholder="Enter current password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrPass(!showCurrPass)}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    title={showCurrPass ? 'Hide password' : 'Show password'}
+                  >
+                    {showCurrPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div style={{ marginBottom: '16px' }}>
                 <label className="label-text" style={{ fontSize: '0.82rem', color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>New Password</label>
-                <input type="password" className="input-field" value={newPassword} onChange={e => setNewPassword(e.target.value)} required placeholder="Enter new password (min 6 chars)" />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showNewPass ? 'text' : 'password'}
+                    className="input-field"
+                    style={{ paddingRight: '40px' }}
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    required
+                    placeholder="Enter new password (min 6 chars)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPass(!showNewPass)}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    title={showNewPass ? 'Hide password' : 'Show password'}
+                  >
+                    {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div style={{ marginBottom: '24px' }}>
                 <label className="label-text" style={{ fontSize: '0.82rem', color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>Confirm New Password</label>
-                <input type="password" className="input-field" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required placeholder="Confirm new password" />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showConfirmPass ? 'text' : 'password'}
+                    className="input-field"
+                    style={{ paddingRight: '40px' }}
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="Confirm new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPass(!showConfirmPass)}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    title={showConfirmPass ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>

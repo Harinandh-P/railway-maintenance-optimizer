@@ -53,6 +53,11 @@ def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, cu
         raise HTTPException(status_code=400, detail=f"Request ID '{payload.request_id}' already exists.")
 
     new_record = payload.dict()
+    if not new_record.get("created_by"):
+        new_record["created_by"] = current_user.username
+    if not new_record.get("department"):
+        new_record["department"] = current_user.department or "Engineering"
+
     updated_list = existing + [new_record]
 
     success, errors = CSVService.write_csv(AppConfig.REQUESTS_CSV, updated_list, dataset_type="requests")

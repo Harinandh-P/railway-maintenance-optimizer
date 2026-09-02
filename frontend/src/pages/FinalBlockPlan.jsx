@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CalendarCheck, ShieldCheck, Clock, Users, Wrench, ChevronRight, Eye, AlertCircle, Layers, FileText } from 'lucide-react';
+import { CalendarCheck, ShieldCheck, Clock, Users, Wrench, ChevronRight, Eye, AlertCircle, Layers, FileText, HelpCircle } from 'lucide-react';
 import api from '../services/api';
 import { BlockTimeline } from '../components/BlockTimeline';
 import { WorkerModal } from '../components/WorkerModal';
@@ -286,9 +286,18 @@ export const FinalBlockPlan = () => {
               </div>
 
               {/* Rationale Footer */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#94a3b8' }}>
-                <ShieldCheck size={16} color="#10b981" />
-                <span>{block.reason}</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: 'rgba(15, 23, 42, 0.6)', padding: '12px 16px', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#94a3b8', flex: 1 }}>
+                  <ShieldCheck size={16} color="#10b981" />
+                  <span>{block.reason}</span>
+                </div>
+                <button
+                  onClick={() => setSelectedBlockForDetail(block)}
+                  className="btn btn-secondary"
+                  style={{ fontSize: '0.8rem', padding: '6px 14px', borderColor: 'rgba(56, 189, 248, 0.4)', color: '#38bdf8', whiteSpace: 'nowrap' }}
+                >
+                  <HelpCircle size={16} /> Explain Why
+                </button>
               </div>
             </div>
           ))}

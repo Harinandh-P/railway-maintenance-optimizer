@@ -53,7 +53,7 @@ export const EngineerDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/maintenance-requests');
+      const res = await api.get('/data/maintenance-requests/');
       setRequests(res.data);
 
       try {
@@ -84,7 +84,7 @@ export const EngineerDashboard = () => {
       setSuccessMsg(`Maintenance Request ${formData.request_id} created & persisted to database successfully!`);
       setShowFormModal(false);
       setFormStep(1);
-      fetchData();
+      await fetchData();
       setFormData({
         ...initialFormState,
         request_id: `REQ${Math.floor(100 + Math.random() * 900)}`

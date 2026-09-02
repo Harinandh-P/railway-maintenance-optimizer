@@ -32,7 +32,7 @@ export const Dashboard = () => {
       setMetrics(res.data);
 
       try {
-        const reqRes = await api.get('/data/maintenance-requests');
+        const reqRes = await api.get('/data/maintenance-requests/');
         setRequests(reqRes.data);
       } catch (e) {}
 

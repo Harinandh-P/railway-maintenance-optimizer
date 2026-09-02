@@ -57,7 +57,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/maintenance-requests');
+      const res = await api.get('/data/maintenance-requests/');
       setRequests(res.data);
 
       try {
@@ -88,7 +88,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
       setSuccessMsg(`Maintenance Request ${formData.request_id} submitted & saved to database successfully!`);
       setShowFormModal(false);
       setFormStep(1);
-      fetchData();
+      await fetchData();
       setFormData({
         ...initialFormState,
         request_id: `REQ${Math.floor(100 + Math.random() * 900)}`
@@ -104,14 +104,15 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
     return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Operator Portal...</div>;
   }
 
-  // Filter requests for operator department
+  // Filter requests for operator department / user
   const filteredRequests = requests.filter(r => {
-    if (dept === 'ALL') return true;
+    if (user?.role === 'ADMIN' || dept === 'ALL') return true;
+    if (r.created_by && user?.username && r.created_by === user.username) return true;
     const d = (r.department || '').toUpperCase();
     if (dept === 'SIGNAL' && (d.includes('SIGNAL') || d.includes('S&T'))) return true;
-    if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION'))) return true;
-    if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING'))) return true;
-    return false;
+    if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION') || d.includes('ELEC'))) return true;
+    if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING') || d.includes('ENG'))) return true;
+    return true;
   });
 
   const allocatedBlocks = planData?.final_block_plan || [];

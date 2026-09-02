@@ -41,7 +41,7 @@ export const MaintenanceRequests = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/maintenance-requests');
+      const res = await api.get('/data/maintenance-requests/');
       setData(res.data);
     } catch (err) {
       console.error(err);
@@ -51,7 +51,7 @@ export const MaintenanceRequests = () => {
   };
 
   const handleSave = async (updatedData) => {
-    await api.post('/data/maintenance-requests', updatedData);
+    await api.post('/data/maintenance-requests/', updatedData);
     setData(updatedData);
   };
 
