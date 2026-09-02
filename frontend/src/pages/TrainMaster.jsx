@@ -12,7 +12,7 @@ export const TrainMaster = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/train-master');
+      const res = await api.get('/data/train-master/');
       setData(res.data);
     } catch (err) {
       console.error(err);
@@ -22,23 +22,23 @@ export const TrainMaster = () => {
   };
 
   const handleSave = async (updatedData) => {
-    await api.post('/data/train-master', updatedData);
+    await api.post('/data/train-master/', updatedData);
     setData(updatedData);
   };
 
   const columns = [
-    { key: 'train_id', label: 'Train ID' },
-    { key: 'train_number', label: 'Train Number' },
-    { key: 'train_name', label: 'Train Name' },
-    { key: 'train_type', label: 'Train Type' },
-    { key: 'traffic_type', label: 'Traffic Type' },
-    { key: 'origin', label: 'Origin' },
-    { key: 'destination', label: 'Destination' },
-    { key: 'direction', label: 'Direction' },
-    { key: 'running_days', label: 'Running Days' },
-    { key: 'frequency_per_hour', label: 'Frequency (tph)', type: 'number' },
-    { key: 'priority_class', label: 'Priority Class', type: 'number' },
-    { key: 'operational_status', label: 'Status' }
+    { key: 'train_id', label: 'Train ID', placeholder: 'Example: T001' },
+    { key: 'train_number', label: 'Train Number', placeholder: 'Example: 12673' },
+    { key: 'train_name', label: 'Train Name', placeholder: 'Example: Cheran Express' },
+    { key: 'train_type', label: 'Train Type', placeholder: 'Example: Express' },
+    { key: 'traffic_type', label: 'Traffic Type', placeholder: 'Example: Passenger' },
+    { key: 'origin', label: 'Origin', placeholder: 'Example: Salem Junction' },
+    { key: 'destination', label: 'Destination', placeholder: 'Example: Chennai Central' },
+    { key: 'direction', label: 'Direction', placeholder: 'Example: UP' },
+    { key: 'running_days', label: 'Running Days', placeholder: 'Example: DAILY' },
+    { key: 'frequency_per_hour', label: 'Frequency (tph)', type: 'number', placeholder: 'Example: 2' },
+    { key: 'priority_class', label: 'Priority Class', type: 'number', placeholder: 'Example: 1' },
+    { key: 'operational_status', label: 'Status', placeholder: 'Example: Active' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Train Master...</div>;

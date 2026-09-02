@@ -244,12 +244,12 @@ export const EngineerDashboard = () => {
                   <h4 style={{ fontSize: '0.9rem', color: '#60a5fa', fontWeight: 700, marginBottom: '14px' }}>[1] REQUEST & LOCATION INFORMATION</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                     <div>
-                      <label className="label-text">Request ID (Auto)</label>
-                      <input type="text" className="input-field" value={formData.request_id} readOnly style={{ opacity: 0.8 }} />
+                      <label className="label-text">Request ID</label>
+                      <input type="text" className="input-field" value={formData.request_id} onChange={e => setFormData({ ...formData, request_id: e.target.value })} placeholder="Example: REQ037" required />
                     </div>
                     <div>
-                      <label className="label-text">Department</label>
-                      <input type="text" className="input-field" value={formData.department} readOnly style={{ opacity: 0.8 }} />
+                      <label className="label-text">Department Context</label>
+                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} placeholder="Example: Engineering" required />
                     </div>
                     <div>
                       <label className="label-text">Corridor ID</label>
@@ -261,15 +261,15 @@ export const EngineerDashboard = () => {
                     </div>
                     <div>
                       <label className="label-text">Location (KM)</label>
-                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="Example: KM 128/2" required />
                     </div>
                     <div>
                       <label className="label-text">Point A</label>
-                      <input type="text" className="input-field" value={formData.point_a} onChange={e => setFormData({ ...formData, point_a: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.point_a} onChange={e => setFormData({ ...formData, point_a: e.target.value })} placeholder="Example: Salem Junction" required />
                     </div>
                     <div>
                       <label className="label-text">Point B</label>
-                      <input type="text" className="input-field" value={formData.point_b} onChange={e => setFormData({ ...formData, point_b: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.point_b} onChange={e => setFormData({ ...formData, point_b: e.target.value })} placeholder="Example: Erode Junction" required />
                     </div>
                   </div>
                 </div>
@@ -280,7 +280,7 @@ export const EngineerDashboard = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '14px' }}>
                     <div>
                       <label className="label-text">Asset ID</label>
-                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} placeholder="Example: AST-C1-015" required />
                     </div>
                     <div>
                       <label className="label-text">Asset Type</label>
@@ -303,7 +303,7 @@ export const EngineerDashboard = () => {
                     </div>
                     <div>
                       <label className="label-text">Defect / Fault Type</label>
-                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} placeholder="Example: Rail Crack" required />
                     </div>
                     <div>
                       <label className="label-text">Defect Severity</label>
@@ -326,7 +326,7 @@ export const EngineerDashboard = () => {
 
                   <div style={{ marginBottom: '14px' }}>
                     <label className="label-text">Fault Description (Engineer Notes)</label>
-                    <textarea className="input-field" rows={2} value={formData.fault_description} onChange={e => setFormData({ ...formData, fault_description: e.target.value })} required />
+                    <textarea className="input-field" rows={2} value={formData.fault_description} onChange={e => setFormData({ ...formData, fault_description: e.target.value })} placeholder="Example: Observed defect during routine inspection. Requires maintenance block." required />
                   </div>
                 </div>
 
@@ -336,19 +336,19 @@ export const EngineerDashboard = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                     <div>
                       <label className="label-text">Required Duration (Hours)</label>
-                      <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
+                      <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} placeholder="Example: 2.5" required />
                     </div>
                     <div>
                       <label className="label-text">Required Workers (Crew)</label>
-                      <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
+                      <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} placeholder="Example: 4" required />
                     </div>
                     <div>
                       <label className="label-text">Required Equipment</label>
-                      <input type="text" className="input-field" value={formData.required_equipment} onChange={e => setFormData({ ...formData, required_equipment: e.target.value })} required />
+                      <input type="text" className="input-field" value={formData.required_equipment} onChange={e => setFormData({ ...formData, required_equipment: e.target.value })} placeholder="Example: Track Machine" required />
                     </div>
                     <div>
                       <label className="label-text">Due Date</label>
-                      <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
+                      <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} placeholder="Format: YYYY-MM-DD" required />
                     </div>
                   </div>
                 </div>

@@ -143,7 +143,7 @@ export const ProfileDropdown = () => {
         <div className="glass-panel" style={{
           position: 'absolute',
           right: 0,
-          top: 'calc(100% + 8px)',
+          bottom: 'calc(100% + 8px)',
           width: '240px',
           zIndex: 500,
           padding: '8px',
@@ -203,7 +203,7 @@ export const ProfileDropdown = () => {
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '4px', paddingTop: '4px' }}>
             <button
-              onClick={logout}
+              onClick={() => { setIsOpen(false); logout(); }}
               style={{
                 width: '100%',
                 display: 'flex',

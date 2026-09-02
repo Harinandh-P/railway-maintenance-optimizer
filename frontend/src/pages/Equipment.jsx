@@ -27,16 +27,16 @@ export const Equipment = () => {
   };
 
   const columns = [
-    { key: 'equipment_id', label: 'Equipment ID' },
-    { key: 'equipment_name', label: 'Equipment Name' },
-    { key: 'equipment_type', label: 'Type' },
-    { key: 'equipment_category', label: 'Category' },
-    { key: 'quantity', label: 'Qty', type: 'number' },
-    { key: 'condition', label: 'Condition' },
-    { key: 'operational', label: 'Operational' },
-    { key: 'corridor', label: 'Corridor' },
-    { key: 'available', label: 'Available' },
-    { key: 'status', label: 'Status' }
+    { key: 'equipment_id', label: 'Equipment ID', placeholder: 'Example: EQ001' },
+    { key: 'equipment_name', label: 'Equipment Name', placeholder: 'Example: Track Machine' },
+    { key: 'equipment_type', label: 'Type', placeholder: 'Example: Tamping Machine' },
+    { key: 'equipment_category', label: 'Category', placeholder: 'Example: Heavy Equipment' },
+    { key: 'quantity', label: 'Qty', type: 'number', placeholder: 'Example: 1' },
+    { key: 'condition', label: 'Condition', placeholder: 'Example: Good' },
+    { key: 'operational', label: 'Operational', placeholder: 'Example: True' },
+    { key: 'corridor', label: 'Corridor', placeholder: 'Example: C1' },
+    { key: 'available', label: 'Available', placeholder: 'Example: True' },
+    { key: 'status', label: 'Status', placeholder: 'Example: Available' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Equipment Database...</div>;

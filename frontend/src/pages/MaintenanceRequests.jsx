@@ -94,24 +94,24 @@ export const MaintenanceRequests = () => {
   };
 
   const columns = [
-    { key: 'request_id', label: 'Request ID' },
-    { key: 'request_datetime', label: 'Request Date/Time' },
-    { key: 'department', label: 'Department' },
-    { key: 'asset_id', label: 'Asset ID' },
-    { key: 'asset_type', label: 'Asset Type' },
-    { key: 'location', label: 'Location' },
-    { key: 'point_a', label: 'Point A' },
-    { key: 'point_b', label: 'Point B' },
-    { key: 'corridor_id', label: 'Corridor' },
-    { key: 'maintenance_type', label: 'Type' },
-    { key: 'defect_type', label: 'Defect Type' },
-    { key: 'defect_reason', label: 'Defect Reason' },
-    { key: 'defect_severity', label: 'Severity' },
-    { key: 'safety_risk', label: 'Safety Risk' },
-    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number' },
-    { key: 'required_workers', label: 'Workers', type: 'number' },
-    { key: 'required_equipment', label: 'Equipment' },
-    { key: 'due_date', label: 'Due Date' }
+    { key: 'request_id', label: 'Request ID', placeholder: 'Example: M037' },
+    { key: 'request_datetime', label: 'Request Date/Time', placeholder: 'Format: YYYY-MM-DD HH:MM' },
+    { key: 'department', label: 'Department', placeholder: 'Example: Track Maintenance' },
+    { key: 'asset_id', label: 'Asset ID', placeholder: 'Example: AST-C1-015' },
+    { key: 'asset_type', label: 'Asset Type', placeholder: 'Example: Track' },
+    { key: 'location', label: 'Location', placeholder: 'Example: Salem Junction' },
+    { key: 'point_a', label: 'Point A', placeholder: 'Example: Station A' },
+    { key: 'point_b', label: 'Point B', placeholder: 'Example: Station B' },
+    { key: 'corridor_id', label: 'Corridor', placeholder: 'Example: C1' },
+    { key: 'maintenance_type', label: 'Type', placeholder: 'Example: Track Inspection' },
+    { key: 'defect_type', label: 'Defect Type', placeholder: 'Example: Rail Crack' },
+    { key: 'defect_reason', label: 'Defect Reason', placeholder: 'Example: Thermal Stress' },
+    { key: 'defect_severity', label: 'Severity', placeholder: 'Example: High' },
+    { key: 'safety_risk', label: 'Safety Risk', placeholder: 'Example: High' },
+    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number', placeholder: 'Example: 2.5' },
+    { key: 'required_workers', label: 'Workers', type: 'number', placeholder: 'Example: 4' },
+    { key: 'required_equipment', label: 'Equipment', placeholder: 'Example: Track Machine' },
+    { key: 'due_date', label: 'Due Date', placeholder: 'Example: 2026-09-15' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Maintenance Requests...</div>;

@@ -27,15 +27,15 @@ export const Workers = () => {
   };
 
   const columns = [
-    { key: 'worker_id', label: 'Worker ID' },
-    { key: 'worker_name', label: 'Name' },
-    { key: 'worker_type', label: 'Sector' },
-    { key: 'skill', label: 'Skill' },
-    { key: 'skill_level', label: 'Skill Level', type: 'number' },
-    { key: 'qualification_level', label: 'Qualification' },
-    { key: 'corridor', label: 'Corridor' },
-    { key: 'available', label: 'Available' },
-    { key: 'status', label: 'Status' }
+    { key: 'worker_id', label: 'Worker ID', placeholder: 'Example: W001' },
+    { key: 'worker_name', label: 'Name', placeholder: 'Example: Raj Kumar' },
+    { key: 'worker_type', label: 'Sector', placeholder: 'Example: TRACK' },
+    { key: 'skill', label: 'Skill', placeholder: 'Example: Track Maintenance' },
+    { key: 'skill_level', label: 'Skill Level', type: 'number', placeholder: 'Example: 2' },
+    { key: 'qualification_level', label: 'Qualification', placeholder: 'Example: Senior Technician' },
+    { key: 'corridor', label: 'Corridor', placeholder: 'Example: C1' },
+    { key: 'available', label: 'Available', placeholder: 'Example: True' },
+    { key: 'status', label: 'Status', placeholder: 'Example: Available' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Workers Database...</div>;

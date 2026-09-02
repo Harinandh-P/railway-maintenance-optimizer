@@ -27,19 +27,19 @@ export const StationKmMapping = () => {
   };
 
   const columns = [
-    { key: 'mapping_id', label: 'Mapping ID' },
-    { key: 'corridor_id', label: 'Corridor' },
-    { key: 'section_id', label: 'Section ID' },
-    { key: 'section_name', label: 'Section Name' },
-    { key: 'start_station_code', label: 'Start Code' },
-    { key: 'start_station_name', label: 'Start Station' },
-    { key: 'start_km', label: 'Start KM', type: 'number' },
-    { key: 'end_station_code', label: 'End Code' },
-    { key: 'end_station_name', label: 'End Station' },
-    { key: 'end_km', label: 'End KM', type: 'number' },
-    { key: 'direction', label: 'Direction' },
-    { key: 'line_name', label: 'Line Name' },
-    { key: 'track_id', label: 'Track' }
+    { key: 'mapping_id', label: 'Mapping ID', placeholder: 'Example: MAP001' },
+    { key: 'corridor_id', label: 'Corridor', placeholder: 'Example: C1' },
+    { key: 'section_id', label: 'Section ID', placeholder: 'Example: SEC-C1-01' },
+    { key: 'section_name', label: 'Section Name', placeholder: 'Example: Salem - Erode' },
+    { key: 'start_station_code', label: 'Start Code', placeholder: 'Example: SA' },
+    { key: 'start_station_name', label: 'Start Station', placeholder: 'Example: Salem Junction' },
+    { key: 'start_km', label: 'Start KM', type: 'number', placeholder: 'Example: 150' },
+    { key: 'end_station_code', label: 'End Code', placeholder: 'Example: ED' },
+    { key: 'end_station_name', label: 'End Station', placeholder: 'Example: Erode Junction' },
+    { key: 'end_km', label: 'End KM', type: 'number', placeholder: 'Example: 210' },
+    { key: 'direction', label: 'Direction', placeholder: 'Example: UP' },
+    { key: 'line_name', label: 'Line Name', placeholder: 'Example: Main Line' },
+    { key: 'track_id', label: 'Track', placeholder: 'Example: UP Track' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Station / KM Mapping...</div>;

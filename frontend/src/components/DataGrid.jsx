@@ -232,6 +232,7 @@ export const DataGrid = ({
                         type={col.type || 'text'}
                         className="input-field"
                         value={row[col.key] ?? ''}
+                        placeholder={col.placeholder || ''}
                         onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
                         style={{
                           background: 'transparent',

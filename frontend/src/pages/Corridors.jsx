@@ -27,13 +27,13 @@ export const Corridors = () => {
   };
 
   const columns = [
-    { key: 'corridor_id', label: 'Corridor ID' },
-    { key: 'corridor_name', label: 'Corridor Name' },
-    { key: 'total_length_km', label: 'Length (km)', type: 'number' },
-    { key: 'total_sections', label: 'Sections', type: 'number' },
-    { key: 'daily_train_frequency', label: 'Train Freq', type: 'number' },
-    { key: 'average_traffic_density', label: 'Traffic Density', type: 'number' },
-    { key: 'operational_priority', label: 'Priority', type: 'number' }
+    { key: 'corridor_id', label: 'Corridor ID', placeholder: 'Example: C1' },
+    { key: 'corridor_name', label: 'Corridor Name', placeholder: 'Example: Salem - Chennai' },
+    { key: 'total_length_km', label: 'Length (km)', type: 'number', placeholder: 'Example: 334' },
+    { key: 'total_sections', label: 'Sections', type: 'number', placeholder: 'Example: 12' },
+    { key: 'daily_train_frequency', label: 'Train Freq', type: 'number', placeholder: 'Example: 45' },
+    { key: 'average_traffic_density', label: 'Traffic Density', type: 'number', placeholder: 'Example: 8.5' },
+    { key: 'operational_priority', label: 'Priority', type: 'number', placeholder: 'Example: 1' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Corridors Dataset...</div>;
