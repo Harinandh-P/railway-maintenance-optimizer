@@ -100,13 +100,15 @@ export const EngineerDashboard = () => {
     return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Engineer Dashboard...</div>;
   }
 
-  // Filter requests for engineer department
-  const filteredRequests = requests.filter(r => {
-    if (dept === 'ALL') return true;
+  // Filter requests for engineer department safely
+  const filteredRequests = (Array.isArray(requests) ? requests : []).filter(r => {
+    if (!r || typeof r !== 'object') return false;
+    if (user?.role === 'ADMIN' || dept === 'ALL') return true;
+    if (r.created_by && user?.username && r.created_by === user.username) return true;
     const d = (r.department || '').toUpperCase();
     if (dept === 'SIGNAL' && (d.includes('SIGNAL') || d.includes('S&T'))) return true;
-    if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION'))) return true;
-    if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING'))) return true;
+    if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION') || d.includes('ELEC'))) return true;
+    if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING') || d.includes('ENG'))) return true;
     return false;
   });
 

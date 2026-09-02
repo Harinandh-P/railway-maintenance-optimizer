@@ -104,30 +104,33 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
     return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Operator Portal...</div>;
   }
 
-  // Filter requests for operator department / user
-  const filteredRequests = requests.filter(r => {
+  // Filter requests for operator department / user safely
+  const filteredRequests = (Array.isArray(requests) ? requests : []).filter(r => {
+    if (!r || typeof r !== 'object') return false;
     if (user?.role === 'ADMIN' || dept === 'ALL') return true;
     if (r.created_by && user?.username && r.created_by === user.username) return true;
     const d = (r.department || '').toUpperCase();
     if (dept === 'SIGNAL' && (d.includes('SIGNAL') || d.includes('S&T'))) return true;
     if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION') || d.includes('ELEC'))) return true;
     if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING') || d.includes('ENG'))) return true;
-    return true;
+    return false;
   });
 
   const allocatedBlocks = planData?.final_block_plan || [];
 
-  // Filter allocated blocks for operator department requests
-  const filteredAllocatedBlocks = allocatedBlocks.filter(b => {
+  // Filter allocated blocks for operator department requests safely
+  const filteredAllocatedBlocks = (Array.isArray(allocatedBlocks) ? allocatedBlocks : []).filter(b => {
+    if (!b || typeof b !== 'object') return false;
     if (dept === 'ALL') return true;
     const reqDetails = b.request_details_in_group || [];
     return reqDetails.some(r => {
+      if (!r || typeof r !== 'object') return false;
       const d = (r.department || '').toUpperCase();
       if (dept === 'SIGNAL' && (d.includes('SIGNAL') || d.includes('S&T'))) return true;
-      if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION'))) return true;
-      if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING'))) return true;
+      if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION') || d.includes('ELEC'))) return true;
+      if (dept === 'TRACK' && (d.includes('TRACK') || d.includes('ENGINEERING') || d.includes('ENG'))) return true;
       return false;
-    }) || true;
+    });
   });
 
   return (
