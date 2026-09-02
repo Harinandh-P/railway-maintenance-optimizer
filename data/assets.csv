@@ -4,3 +4,9 @@ SIG001,Signal,KM 130/2,Station B,Station C,COR001,High,10,Degraded,High,38,3,202
 OHE001,OHE,KM 132/7,Station C,Station D,COR002,High,15,Fair,High,45,2,2026-06-14
 TRK002,Track,KM 140/1,Station D,Station E,COR002,Medium,8,Good,Medium,25,1,2026-01-12
 SIG002,Signal,KM 145/3,Station E,Station F,COR003,High,12,Degraded,High,35,1,2026-06-25
+TRK003,Track,KM 128/2,Station A,Station B,COR001,High,12,Fair,High,35,2,2026-05-15
+SIG003,Signal,KM 135/6,Station C,Station D,COR002,High,9,Good,High,40,1,2026-04-10
+OHE002,OHE,KM 142/1,Station D,Station E,COR002,Medium,14,Fair,Medium,28,2,2026-03-22
+TRK004,Track,KM 148/4,Station E,Station F,COR003,High,15,Degraded,High,36,3,2026-06-01
+SIG004,Signal,KM 152/8,Station E,Station F,COR003,Medium,7,Good,Medium,30,0,2026-01-05
+OHE003,OHE,KM 160/2,Station F,Station G,COR003,High,11,Fair,High,32,1,2026-02-18

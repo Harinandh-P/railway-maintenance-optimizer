@@ -49,3 +49,33 @@ W047,Maya Prasad,Electrical,Electrical Technician,1,Technician,16,C2,C2-KM110,20
 W048,Tanvi Rao,Electrical,Track Technician,4,Senior Technician,8,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
 W049,Sneha Kumar,Electrical,Signal Technician,3,Senior Technician,8,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,Substation inspection,False
 W050,Ira Das,Electrical,Electrical Technician,3,Technician,3,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,True
+W051,Aakash Raman,Signal,Signal Technician,4,Senior Technician,12,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W052,Bala Krishnan,Signal,Signal Technician,3,Technician,7,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W053,Chaitanya Varma,Signal,Signal Technician,5,Senior Technician,15,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,True
+W054,Dinesh Karthik,Signal,Signal Technician,2,Technician,5,C1,C1-KM140,2026-08-28,8,10:00,18:00,True,Available,,False
+W055,Ezhil Maran,Signal,Signal Technician,4,Senior Technician,11,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W056,Farhan Khan,Signal,Signal Technician,1,Technician,2,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W057,Giri Prasad,Signal,Signal Technician,3,Technician,8,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W058,Hari Om,Signal,Signal Technician,4,Senior Technician,10,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W059,Indrajit Sen,Signal,Signal Technician,2,Technician,4,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W060,Jayesh Shah,Signal,Signal Technician,5,Senior Technician,16,C1,C1-KM155,2026-08-28,8,09:00,17:00,True,Available,,True
+W061,Karthik Raja,Track,Track Technician,4,Senior Technician,13,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W062,Lokesh Rahul,Track,Track Technician,3,Technician,6,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W063,Manish Pandey,Track,Track Technician,5,Senior Technician,18,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,True
+W064,Nitin Menon,Track,Track Technician,2,Technician,4,C1,C1-KM140,2026-08-28,8,10:00,18:00,True,Available,,False
+W065,Omkar Nath,Track,Track Technician,4,Senior Technician,10,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W066,Pavan Kumar,Track,Track Technician,1,Technician,2,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W067,Qadir Pasha,Track,Track Technician,3,Technician,7,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W068,Rakesh Sharma,Track,Track Technician,4,Senior Technician,12,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W069,Suraj Bhan,Track,Track Technician,2,Technician,3,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W070,Tarun Roy,Track,Track Technician,5,Senior Technician,14,C1,C1-KM155,2026-08-28,8,09:00,17:00,True,Available,,True
+W071,Umesh Yadav,Electrical,Electrical Technician,4,Senior Technician,11,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W072,Varun Chakravarthy,Electrical,Electrical Technician,3,Technician,8,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W073,Wasim Akram,Electrical,Electrical Technician,5,Senior Technician,17,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,True
+W074,Yashasvi Jaiswal,Electrical,Electrical Technician,2,Technician,3,C1,C1-KM140,2026-08-28,8,10:00,18:00,True,Available,,False
+W075,Zain Malik,Electrical,Electrical Technician,4,Senior Technician,9,C2,C2-KM110,2026-08-28,8,14:00,22:00,True,Available,,False
+W076,Abhinav Bindra,Electrical,Electrical Technician,1,Technician,1,C3,C3-KM120,2026-08-28,8,22:00,06:00,True,Available,,False
+W077,Bhuvneshwar Kumar,Electrical,Electrical Technician,3,Technician,6,C1,C1-KM125,2026-08-28,8,06:00,14:00,True,Available,,True
+W078,Chetan Sakariya,Electrical,Electrical Technician,4,Senior Technician,10,C2,C2-KM130,2026-08-28,8,07:00,15:00,True,Available,,False
+W079,Deepak Chahar,Electrical,Electrical Technician,2,Technician,4,C3,C3-KM90,2026-08-28,8,08:00,16:00,True,Available,,False
+W080,Ishant Sharma,Electrical,Electrical Technician,5,Senior Technician,15,C1,C1-KM155,2026-08-28,8,09:00,17:00,True,Available,,True

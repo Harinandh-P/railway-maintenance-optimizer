@@ -179,3 +179,33 @@ EQ027,Portable Power Analyzer,Electrical,Power Analysis,PPA-750,1,Excellent,True
 EQ028,Cable Fault Locator,Electrical,Cable Testing,CFL-420,1,Good,True,C3,C3-KM150,2026-09-02,False,Maintenance,00:00,00:00,None,2026-10-30,2026-11-29,True,Electrical,0
 EQ029,Multimeter Kit,Electrical,Electrical Testing,MMK-200,1,Excellent,True,C1,C1-KM155,2026-09-02,True,Available,08:00,16:00,None,2026-10-31,2026-11-30,False,None,0
 EQ030,Earth Resistance Tester,Electrical,Earth Testing,ERT-300,1,Maintenance Required,False,C2,C2-KM160,2026-09-02,False,Unavailable,00:00,00:00,Equipment unavailable for scheduled repair,2026-11-01,2026-12-01,True,Electrical,0
+EQ031,Signal Tester,Signal,Testing Equipment,ST-RLY-300,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-01,2026-11-01,True,Signal,0
+EQ032,Signal Tester,Signal,Testing Equipment,ST-RLY-300,1,Good,True,C2,C2-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-02,2026-11-02,True,Signal,0
+EQ033,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-300,1,Excellent,True,C3,C3-KM140,2026-08-28,True,Available,08:00,16:00,None,2026-10-03,2026-11-03,True,Signal,0
+EQ034,Point Machine Tester,Signal,Point Testing,PMT-400,1,Good,True,C1,C1-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-04,2026-11-04,True,Signal,0
+EQ035,Insulation Tester,Signal,Insulation Testing,IT-SIG-500,1,Excellent,True,C2,C2-KM160,2026-08-28,True,Available,08:00,16:00,None,2026-10-05,2026-11-05,True,Signal,0
+EQ036,Track Machine,Track,Heavy Machinery,TM-PRO-100,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-06,2026-11-06,True,Track,0
+EQ037,Track Machine,Track,Heavy Machinery,TM-PRO-100,1,Good,True,C2,C2-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-07,2026-11-07,True,Track,0
+EQ038,Inspection Vehicle,Track,Inspection,IV-TK-200,1,Excellent,True,C3,C3-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-08,2026-11-08,True,Track,0
+EQ039,Inspection Vehicle,Track,Inspection,IV-TK-200,1,Good,True,C1,C1-KM155,2026-08-28,True,Available,08:00,16:00,None,2026-10-09,2026-11-09,True,Track,0
+EQ040,Tamping Machine,Track,Heavy Machinery,TPM-500,1,Excellent,True,C2,C2-KM120,2026-08-28,True,Available,08:00,16:00,None,2026-10-10,2026-11-10,True,Track,0
+EQ041,Rail Grinding Machine,Track,Rail Grinding,RGM-400,1,Good,True,C3,C3-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-11,2026-11-11,True,Track,0
+EQ042,Hydraulic Rail Jack,Track,Rail Handling,HRJ-100,1,Excellent,True,C1,C1-KM140,2026-08-28,True,Available,08:00,16:00,None,2026-10-12,2026-11-12,False,None,0
+EQ043,Rail Cutting Machine,Track,Rail Cutting,RCM-400,1,Excellent,True,C2,C2-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-13,2026-11-13,True,Track,0
+EQ044,Tower Wagon,OHE,Traction Equipment,TW-OHE-100,1,Excellent,True,C1,C1-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-14,2026-11-14,True,Electrical,0
+EQ045,Tower Wagon,OHE,Traction Equipment,TW-OHE-100,1,Good,True,C2,C2-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-15,2026-11-15,True,Electrical,0
+EQ046,Tower Wagon,OHE,Traction Equipment,TW-OHE-200,1,Excellent,True,C3,C3-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-16,2026-11-16,True,Electrical,0
+EQ047,Electrical Tester,Electrical,Electrical Testing,ET-200,1,Excellent,True,C1,C1-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-17,2026-11-17,True,Electrical,0
+EQ048,Insulation Resistance Tester,Electrical,Insulation Testing,IRT-600,1,Good,True,C2,C2-KM160,2026-08-28,True,Available,08:00,16:00,None,2026-10-18,2026-11-18,True,Electrical,0
+EQ049,Cable Fault Locator,Electrical,Cable Testing,CFL-500,1,Excellent,True,C3,C3-KM120,2026-08-28,True,Available,08:00,16:00,None,2026-10-19,2026-11-19,True,Electrical,0
+EQ050,Multimeter Kit,Electrical,Electrical Testing,MMK-300,1,Excellent,True,C1,C1-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-20,2026-11-20,False,None,0
+EQ051,Signal Tester,Signal,Testing Equipment,ST-RLY-300,1,Excellent,True,C3,C3-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-21,2026-11-21,True,Signal,0
+EQ052,Signal Testing Kit,Signal,Testing Equipment,STK-100,1,Excellent,True,C1,C1-KM135,2026-08-28,True,Available,08:00,16:00,None,2026-10-22,2026-11-22,True,Signal,0
+EQ053,Signal Testing Kit,Signal,Testing Equipment,STK-100,1,Good,True,C2,C2-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-23,2026-11-23,True,Signal,0
+EQ054,Track Machine,Track,Heavy Machinery,TM-PRO-200,1,Excellent,True,C3,C3-KM155,2026-08-28,True,Available,08:00,16:00,None,2026-10-24,2026-11-24,True,Track,0
+EQ055,Inspection Vehicle,Track,Inspection,IV-TK-300,1,Good,True,C2,C2-KM125,2026-08-28,True,Available,08:00,16:00,None,2026-10-25,2026-11-25,True,Track,0
+EQ056,Tower Wagon,OHE,Traction Equipment,TW-OHE-300,1,Excellent,True,C1,C1-KM160,2026-08-28,True,Available,08:00,16:00,None,2026-10-26,2026-11-26,True,Electrical,0
+EQ057,Relay Testing Kit,Signal,Relay Testing,RTK-SIG-400,1,Good,True,C1,C1-KM145,2026-08-28,True,Available,08:00,16:00,None,2026-10-27,2026-11-27,True,Signal,0
+EQ058,Rail Inspection Trolley,Track,Rail Inspection,RIT-300,1,Excellent,True,C2,C2-KM150,2026-08-28,True,Available,08:00,16:00,None,2026-10-28,2026-11-28,True,Track,0
+EQ059,Cable Fault Locator,Electrical,Cable Testing,CFL-600,1,Good,True,C1,C1-KM130,2026-08-28,True,Available,08:00,16:00,None,2026-10-29,2026-11-29,True,Electrical,0
+EQ060,Track Tools Kit,Track,Maintenance Tools,TTK-700,1,Excellent,True,C3,C3-KM165,2026-08-28,True,Available,08:00,16:00,None,2026-10-30,2026-11-30,False,None,0

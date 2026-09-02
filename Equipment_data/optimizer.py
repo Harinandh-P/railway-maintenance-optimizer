@@ -586,7 +586,9 @@ model.Maximize(
 
 solver = cp_model.CpSolver()
 
-solver.parameters.max_time_in_seconds = 10
+solver.parameters.max_time_in_seconds = 60
+solver.parameters.num_search_workers = 4
+solver.parameters.log_search_progress = True
 
 
 # ============================================================
@@ -601,6 +603,12 @@ print(
 status = solver.Solve(
     model
 )
+
+status_name = solver.StatusName(status)
+print(f"Solver status: {status_name}")
+print(f"Solver wall time: {solver.WallTime():.2f}s")
+print(f"Number of branches: {solver.NumBranches()}")
+print(f"Number of conflicts: {solver.NumConflicts()}")
 
 
 # ============================================================
@@ -625,15 +633,26 @@ elif status == cp_model.FEASIBLE:
     )
 
 
+elif status == cp_model.INFEASIBLE:
+
+    print()
+    print(
+        "ERROR: No feasible allocation exists (CP-SAT Solver INFEASIBLE)."
+    )
+    print()
+
+    raise RuntimeError("No feasible allocation exists.")
+
+
 else:
 
     print()
     print(
-        "NO FEASIBLE EQUIPMENT SOLUTION"
+        f"ERROR: Solver failure or timeout (CP-SAT Solver status: {status_name})."
     )
     print()
 
-    raise SystemExit
+    raise RuntimeError(f"Solver failure or timeout: {status_name}")
 
 
 # ============================================================
