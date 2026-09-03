@@ -3,174 +3,141 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   PlaySquare,
-  FileCheck,
   CalendarCheck,
+  Activity,
   Layers,
-  Train,
+  Sliders,
+  Wrench,
+  TrainTrack,
   MapPin,
   Users,
-  Wrench,
-  ShieldAlert,
-  LogOut,
-  TrainTrack,
-  History,
-  GitCommit,
   HardHat,
-  PlusCircle
+  History,
+  FileText,
+  Train,
+  ChevronDown,
+  User
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileDropdown } from './ProfileDropdown';
 
 export const Sidebar = () => {
-  const { user, logout, isAdmin } = useAuth();
-  const isOperator = user?.role === 'OPERATOR';
+  const { user } = useAuth();
 
-  // Role 1: OPERATOR navigation (Simplified for engineers)
-  const operatorNavItems = [
-    { to: '/operator', label: 'Engineer Portal', icon: HardHat, badge: user?.department || 'ENG' },
-    { to: '/operator/requests', label: 'My Requests', icon: TrainTrack },
-    { to: '/operator/slots', label: 'My Allocated Slots', icon: CalendarCheck, badge: 'Phase 3' }
-  ];
-
-  // Grouped ADMIN navigation for Mission Control telemetry
-  const adminNavGroups = [
+  const navGroups = [
     {
-      groupLabel: 'OPERATIONS TELEMETRY',
+      title: 'OPERATIONS TELEMETRY',
       items: [
-        { to: '/admin', label: 'Admin Dashboard', icon: LayoutDashboard },
-        { to: '/pipeline', label: 'Run Optimization', icon: PlaySquare, badge: 'ADMIN' },
-        { to: '/final-plan', label: 'Final Block Plan', icon: CalendarCheck, badge: 'P-3' }
+        { name: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
+        { name: 'Run Optimization', path: '/pipeline', icon: PlaySquare, badge: 'Admin', badgeType: 'admin' },
+        { name: 'Final Block Plan', path: '/final-plan', icon: CalendarCheck, badge: 'P-3', badgeType: 'p3' },
       ]
     },
     {
-      groupLabel: 'ARBITRATION WORKFLOW',
+      title: 'ARBITRATION WORKFLOW',
       items: [
-        { to: '/phase1-results', label: 'Phase 1 Analysis', icon: FileCheck },
-        { to: '/phase2-results', label: 'Phase 2 Candidate Gaps', icon: Layers },
-        { to: '/phase3-results', label: 'Phase 3 Optimization', icon: CalendarCheck },
-        { to: '/requests', label: 'All Maintenance Requests', icon: TrainTrack }
+        { name: 'Phase 1 Analysis', path: '/phase1-results', icon: Activity },
+        { name: 'Phase 2 Candidate Gaps', path: '/phase2-results', icon: Layers },
+        { name: 'Phase 3 Optimization', path: '/phase3-results', icon: Sliders },
+        { name: 'All Maintenance Requests', path: '/requests', icon: Wrench },
       ]
     },
     {
-      groupLabel: 'RAILWAY TOPOLOGY',
+      title: 'RAILWAY TOPOLOGY',
       items: [
-        { to: '/train-master', label: 'Train Master', icon: Train },
-        { to: '/train-routes', label: 'Train Routes', icon: MapPin },
-        { to: '/station-km', label: 'Station / KM Mapping', icon: MapPin },
-        { to: '/corridors', label: 'Corridor Details', icon: GitCommit },
-        { to: '/workers', label: 'Worker Database', icon: Users },
-        { to: '/equipment', label: 'Equipment Database', icon: Wrench },
-        { to: '/history', label: 'Maintenance History', icon: History },
-        { to: '/audit-log', label: 'System Audit Logs', icon: ShieldAlert }
+        { name: 'Train Master', path: '/train-master', icon: TrainTrack },
+        { name: 'Train Routes', path: '/train-routes', icon: MapPin },
+        { name: 'Station / KM Mapping', path: '/station-km', icon: MapPin },
+        { name: 'Corridor Details', path: '/corridors', icon: MapPin },
+        { name: 'Worker Database', path: '/workers', icon: Users },
+        { name: 'Equipment Database', path: '/equipment', icon: HardHat },
+        { name: 'Maintenance History', path: '/history', icon: History },
+        { name: 'System Audit Logs', path: '/audit-log', icon: FileText },
       ]
     }
   ];
 
+  if (user?.role === 'OPERATOR') {
+    navGroups.unshift({
+      title: 'OPERATOR CONSOLE',
+      items: [
+        { name: 'Engineer Portal', path: '/operator', icon: LayoutDashboard },
+        { name: 'My Requests', path: '/operator/requests', icon: Wrench },
+        { name: 'My Allocated Slots', path: '/operator/slots', icon: CalendarCheck },
+      ]
+    });
+  }
+
   return (
-    <aside className="sidebar-aside">
-      {/* Brand Header */}
-      <div style={{ padding: '20px 20px', borderBottom: '1px solid #24334D', background: '#151E2E' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-            padding: '10px',
-            borderRadius: '12px',
-            display: 'flex',
-            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-          }}>
-            <Train size={22} color="white" />
+    <aside className="w-[282px] shrink-0 min-h-screen p-5 flex flex-col justify-between select-none bg-[#ebf0f7] border-r border-[#d2dceb] fixed left-0 top-0 z-50 overflow-y-auto" data-purpose="sidebar">
+      <div className="flex flex-col gap-6">
+        {/* App Brand / Header */}
+        <div className="flex items-center gap-3.5 px-2 py-1.5" data-purpose="app-branding">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/30 text-white">
+            <Train size={24} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#DFE2EE', letterSpacing: '1px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              AROHA
-            </h1>
-            <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              {isAdmin ? 'Control Office Portal' : 'Engineer Operations'}
-            </span>
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-tight font-display">AROHA</h1>
+            <p className="text-[10px] font-mono tracking-wider font-semibold text-slate-500 uppercase">Control Office Portal</p>
           </div>
         </div>
-      </div>
 
-      {/* Navigation List */}
-      <nav style={{ flex: 1, padding: '16px 12px', overflowY: 'auto' }}>
-        {isAdmin ? (
-          adminNavGroups.map((group, gIdx) => (
-            <div key={gIdx} style={{ marginBottom: '16px' }}>
-              <div style={{ padding: '0 12px 6px 12px', fontSize: '0.65rem', fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#64748B', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                {group.groupLabel}
+        {/* Navigation Links Container */}
+        <nav aria-label="Main Navigation" className="space-y-6">
+          {navGroups.map((group, gIdx) => (
+            <div key={gIdx}>
+              <div className="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase font-mono">
+                {group.title}
               </div>
-              {group.items.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    style={({ isActive }) => ({
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '9px 14px',
-                      borderRadius: '10px',
-                      color: isActive ? '#ffffff' : '#C2C6D6',
-                      background: isActive ? '#1E2B42' : 'transparent',
-                      border: isActive ? '1px solid rgba(59, 130, 246, 0.35)' : '1px solid transparent',
-                      boxShadow: isActive ? '0 0 20px rgba(59, 130, 246, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.1)' : 'none',
-                      fontWeight: isActive ? 600 : 500,
-                      fontSize: '0.85rem',
-                      textDecoration: 'none',
-                      marginBottom: '3px',
-                      transition: 'all 0.18s ease'
-                    })}
-                  >
-                    <Icon size={17} style={{ flexShrink: 0 }} />
-                    <span style={{ flex: 1 }}>{item.label}</span>
-                    {item.badge && (
-                      <span className="badge badge-final" style={{ fontSize: '0.62rem', padding: '2px 6px' }}>{item.badge}</span>
-                    )}
-                  </NavLink>
-                );
-              })}
-            </div>
-          ))
-        ) : (
-          operatorNavItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                style={({ isActive }) => ({
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: '10px',
-                  color: isActive ? '#ffffff' : '#C2C6D6',
-                  background: isActive ? '#1E2B42' : 'transparent',
-                  border: isActive ? '1px solid rgba(59, 130, 246, 0.35)' : '1px solid transparent',
-                  boxShadow: isActive ? '0 0 20px rgba(59, 130, 246, 0.20)' : 'none',
-                  fontWeight: isActive ? 600 : 500,
-                  fontSize: '0.85rem',
-                  textDecoration: 'none',
-                  marginBottom: '4px',
-                  transition: 'all 0.18s ease'
+              <ul className="space-y-1.5 font-medium text-sm">
+                {group.items.map((item, iIdx) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={iIdx}>
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) =>
+                          `sidebar-nav-item flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-150 ${
+                            isActive
+                              ? 'nav-active-card text-blue-600 font-bold'
+                              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                          }`
+                        }
+                      >
+                        {({ isActive }) => (
+                          <>
+                            <div className="flex items-center gap-3">
+                              {isActive ? (
+                                <div className="relative flex items-center justify-center">
+                                  <div className="absolute w-5 h-5 rounded-full bg-blue-400/30 animate-pulse"></div>
+                                  <Icon size={16} className="text-blue-600 relative z-10" />
+                                </div>
+                              ) : (
+                                <Icon size={16} className="text-slate-500" />
+                              )}
+                              <span className="tracking-tight">{item.name}</span>
+                            </div>
+                            {item.badge && (
+                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase text-white shadow-sm ${
+                                item.badgeType === 'admin' ? 'bg-gradient-to-r from-indigo-500 to-purple-600' : 'bg-blue-500'
+                              }`}>
+                                {item.badge}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </NavLink>
+                    </li>
+                  );
                 })}
-              >
-                <Icon size={18} />
-                <span style={{ flex: 1 }}>{item.label}</span>
-                {item.badge && (
-                  <span className="badge badge-final" style={{ fontSize: '0.62rem' }}>{item.badge}</span>
-                )}
-              </NavLink>
-            );
-          })
-        )}
-      </nav>
-
-      {/* User Footer with Profile Dropdown */}
-      <div style={{ padding: '12px 16px', borderTop: '1px solid #24334D', background: '#151E2E' }}>
-        <ProfileDropdown />
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
+
+      {/* Bottom Profile Dropdown Pill Widget */}
+      <ProfileDropdown />
     </aside>
   );
 };

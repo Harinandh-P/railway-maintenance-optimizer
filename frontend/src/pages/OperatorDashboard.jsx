@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye, Activity, Radio } from 'lucide-react';
+import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye, Activity, Radio, Search, Filter, Upload, Download, ShieldCheck, Database, Cpu, ChevronRight } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { GroupDetailModal } from '../components/GroupDetailModal';
 import { WorkerModal } from '../components/WorkerModal';
 import { EquipmentModal } from '../components/EquipmentModal';
 import { EquipmentSelect } from '../components/EquipmentSelect';
+import { TiltCard } from '../components/TiltCard';
 
 export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   const { user } = useAuth();
@@ -104,7 +105,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-[#94A3B8] font-mono">
+      <div className="flex flex-col items-center justify-center py-20 text-slate-500 font-mono">
         <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <div>LOADING ENGINEER OPERATIONS CONSOLE...</div>
       </div>
@@ -141,7 +142,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 select-none">
       {/* Modals */}
       <GroupDetailModal
         isOpen={!!selectedGroupModal}
@@ -165,144 +166,203 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         assignedEquipment={selectedEquipBlock?.assigned_equipment_details || []}
       />
 
-      {/* Header Mission Banner */}
-      <section className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-xs font-mono font-bold text-blue-500 uppercase tracking-widest">
-              MISSION CONTROL // ENGINEER PORTAL
-            </span>
-            <span className="bg-[#101726] border border-[#24334D] text-[#DFE2EE] font-mono text-[11px] px-3 py-0.5 rounded-full flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              DEPARTMENT: {dept}
+      {/* Hero Dataset Banner & Info Tiles */}
+      <section className="tactile-card rounded-2xl p-7 mb-6 grid grid-cols-1 xl:grid-cols-3 gap-6 items-center shadow-neu-flat" data-purpose="dataset-header">
+        <div className="xl:col-span-2 space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600">Topology Engine // Sector NR-HQ</span>
+            <span className="tactile-inset px-2.5 py-0.5 rounded-full text-[11px] font-mono text-slate-600 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              DEPARTMENT: {dept} ({user?.fullName})
             </span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#DFE2EE] font-display uppercase tracking-tight">
-            ENGINEER OPERATIONS CONSOLE
-          </h1>
-          <p className="text-xs md:text-sm text-[#94A3B8] mt-1 font-sans">
-            Railway Maintenance & Block Coordination • Logged in: <strong className="text-[#DFE2EE]">{user?.fullName}</strong> ({user?.role})
-          </p>
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 font-display uppercase">
+            ENGINEER OPERATIONS PORTAL
+          </h2>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 font-medium">
+            <span>Station-by-Station Movement & Maintenance Coordination Model</span>
+            <span className="text-slate-300">•</span>
+            <span className="font-mono text-slate-400">Phase-1 Conflict Calibration Grid</span>
+          </div>
         </div>
 
-        <button
-          onClick={() => { setShowFormModal(true); setFormStep(1); }}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2.5 transition-all transform active:scale-95"
-        >
-          <Plus size={18} strokeWidth={2.5} />
-          <span>CREATE MAINTENANCE REQUEST</span>
-        </button>
+        <div className="flex flex-col gap-3">
+          <div className="tactile-pill rounded-xl p-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-blue-100/70 text-blue-600 flex items-center justify-center tactile-inset">
+                <TrainTrack size={18} />
+              </div>
+              <div>
+                <div className="text-[10px] font-mono tracking-wider text-slate-400 uppercase font-semibold">Partition Sector</div>
+                <div className="text-xs font-bold text-slate-800">IR Sector 4B (Northern Grid)</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="tactile-pill rounded-xl p-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-indigo-100/70 text-indigo-600 flex items-center justify-center tactile-inset">
+                <Clock size={18} />
+              </div>
+              <div>
+                <div className="text-[10px] font-mono tracking-wider text-slate-400 uppercase font-semibold">Sync State</div>
+                <div className="text-xs font-bold text-slate-800">
+                  Just now <span className="text-slate-400 font-mono font-normal">//</span> <span className="text-blue-600 font-semibold">Synced</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {successMsg && (
-        <div className="bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 p-4 rounded-xl text-sm flex items-center gap-3">
-          <CheckCircle size={18} />
+        <div className="tactile-pill border-l-4 border-emerald-500 p-4 rounded-xl text-xs text-emerald-700 font-semibold flex items-center gap-2">
+          <CheckCircle size={16} />
           <span>{successMsg}</span>
         </div>
       )}
 
-      {/* KPI Mission Telemetry Cards */}
+      {/* KPI 3D Metric Cards Grid (Interactive 3D Tilt + Cursor Spotlight) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">DEPARTMENT REQUESTS</div>
-            <div className="text-3xl font-extrabold text-[#DFE2EE] font-mono mt-1">{filteredRequests.length}</div>
-            <div className="text-[11px] text-[#64748B] mt-1">Active Logged Items</div>
-          </div>
-          <div className="w-11 h-11 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-500 flex items-center justify-center">
-            <TrainTrack size={22} />
-          </div>
-        </div>
-
-        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">PENDING OPTIMIZATION</div>
-            <div className="text-3xl font-extrabold text-blue-400 font-mono mt-1">{filteredRequests.length}</div>
-            <div className="text-[11px] text-[#64748B] mt-1">Awaiting CP-SAT Run</div>
-          </div>
-          <div className="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center">
-            <Clock size={22} />
-          </div>
-        </div>
-
-        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">MY ALLOCATED SLOTS</div>
-            <div className="text-3xl font-extrabold text-emerald-400 font-mono mt-1">{filteredAllocatedBlocks.length}</div>
-            <div className="text-[11px] text-[#64748B] mt-1">Phase-3 Verified</div>
-          </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-            <CalendarCheck size={22} />
-          </div>
-        </div>
-
-        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">SYSTEM TELEMETRY</div>
-            <div className="text-xl font-extrabold text-emerald-400 font-mono mt-2 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              ONLINE
+        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">DEPARTMENT REQUESTS</div>
+              <div className="text-3xl font-extrabold text-slate-900 font-display mt-1">{filteredRequests.length}</div>
+              <div className="text-[11px] text-slate-500 mt-1">Logged Items</div>
             </div>
-            <div className="text-[11px] text-[#64748B] mt-1">Database Connected</div>
+            <div className="w-11 h-11 rounded-xl bg-blue-100/70 text-blue-600 flex items-center justify-center tactile-inset">
+              <TrainTrack size={22} />
+            </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center">
-            <Radio size={22} />
+        </TiltCard>
+
+        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">PENDING OPTIMIZATION</div>
+              <div className="text-3xl font-extrabold text-blue-600 font-display mt-1">{filteredRequests.length}</div>
+              <div className="text-[11px] text-slate-500 mt-1">Awaiting Solver Run</div>
+            </div>
+            <div className="w-11 h-11 rounded-xl bg-cyan-100/70 text-cyan-600 flex items-center justify-center tactile-inset">
+              <Clock size={22} />
+            </div>
           </div>
-        </div>
+        </TiltCard>
+
+        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">MY ALLOCATED SLOTS</div>
+              <div className="text-3xl font-extrabold text-emerald-600 font-display mt-1">{filteredAllocatedBlocks.length}</div>
+              <div className="text-[11px] text-slate-500 mt-1">Phase 3 Verified</div>
+            </div>
+            <div className="w-11 h-11 rounded-xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center tactile-inset">
+              <CalendarCheck size={22} />
+            </div>
+          </div>
+        </TiltCard>
+
+        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">SYSTEM TELEMETRY</div>
+              <div className="text-base font-bold text-emerald-600 font-mono mt-2 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                SYSTEM ONLINE
+              </div>
+              <div className="text-[11px] text-slate-500 mt-1">Database Synced</div>
+            </div>
+            <div className="w-11 h-11 rounded-xl bg-purple-100/70 text-purple-600 flex items-center justify-center tactile-inset">
+              <Radio size={22} />
+            </div>
+          </div>
+        </TiltCard>
       </div>
+
+      {/* Action Toolbar */}
+      <section className="flex flex-wrap items-center justify-between gap-4 mb-5" data-purpose="action-toolbar">
+        <div className="flex items-center gap-3 flex-1 max-w-xl">
+          <div className="relative w-full tactile-inset rounded-full flex items-center px-3.5 py-2">
+            <Search size={16} className="text-slate-400 mr-2.5 shrink-0" />
+            <input
+              className="bg-transparent border-0 text-xs w-full text-slate-700 focus:outline-none focus:ring-0 placeholder-slate-400 p-0 font-sans"
+              placeholder="Search dataset by request ID, asset ID or defect type..."
+              type="text"
+            />
+          </div>
+          <button className="tactile-pill px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 tactile-btn flex items-center justify-center shrink-0">
+            <Filter size={16} />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button className="tactile-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-2 tactile-btn">
+            <Upload size={16} className="text-slate-500" />
+            <span>Import</span>
+          </button>
+
+          <button
+            onClick={() => { setShowFormModal(true); setFormStep(1); }}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all"
+          >
+            <Plus size={16} strokeWidth={2.5} />
+            <span>Add Row</span>
+          </button>
+
+          <button className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 tactile-btn">
+            <Download size={16} className="text-slate-500" />
+            <span>CSV</span>
+          </button>
+        </div>
+      </section>
 
       {/* TAB 1: REQUESTS VIEW */}
       {(activeTab === 'overview' || activeTab === 'requests') && (
-        <section className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#24334D]">
-            <h3 className="text-lg font-bold text-[#DFE2EE] font-display flex items-center gap-2">
-              <Activity size={18} className="text-blue-500" />
-              <span>{dept} Department Maintenance Requests</span>
-              <span className="text-xs font-mono bg-[#101726] border border-[#24334D] px-2.5 py-0.5 rounded-full text-[#94A3B8]">
-                {filteredRequests.length} ITEMS
-              </span>
-            </h3>
+        <div className="tactile-card rounded-2xl flex flex-col justify-between overflow-hidden shadow-neu-flat" data-purpose="table-container">
+          <div className="border-b border-slate-200/80 px-6 py-3 bg-slate-100/50">
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
+              <span>{dept} Department Maintenance Requests ({filteredRequests.length})</span>
+            </div>
           </div>
 
-          <div className="table-container bg-[#1A2438] border border-[#24334D] rounded-xl overflow-x-auto">
-            <table className="custom-table w-full text-left font-sans text-sm">
+          <div className="table-container border-0 shadow-none rounded-none">
+            <table className="custom-table w-full">
               <thead>
-                <tr className="bg-[#151E2E] border-b-2 border-[#24334D] text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">
-                  <th className="py-3 px-4">REQUEST ID</th>
-                  <th className="py-3 px-4">ASSET ID</th>
-                  <th className="py-3 px-4">TYPE</th>
-                  <th className="py-3 px-4">LOCATION</th>
-                  <th className="py-3 px-4">DEFECT TYPE</th>
-                  <th className="py-3 px-4">SEVERITY</th>
-                  <th className="py-3 px-4">RISK</th>
-                  <th className="py-3 px-4">DURATION</th>
-                  <th className="py-3 px-4">CREW</th>
-                  <th className="py-3 px-4">EQUIPMENT</th>
-                  <th className="py-3 px-4">DUE DATE</th>
-                  <th className="py-3 px-4 text-right">ACTION</th>
+                <tr>
+                  <th>REQUEST ID</th>
+                  <th>ASSET ID</th>
+                  <th>ASSET TYPE</th>
+                  <th>LOCATION</th>
+                  <th>DEFECT TYPE</th>
+                  <th>SEVERITY</th>
+                  <th>DURATION</th>
+                  <th>CREW</th>
+                  <th>EQUIPMENT</th>
+                  <th>DUE DATE</th>
+                  <th className="text-right">ACTIONS</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#24334D]/50">
+              <tbody>
                 {filteredRequests.map((r, idx) => (
-                  <tr key={idx} className="hover:bg-[#1E2B42] transition-colors bg-[#1A2438] even:bg-[#181F2D]">
-                    <td className="py-3 px-4 font-mono font-bold text-[#DFE2EE]">{r.request_id}</td>
-                    <td className="py-3 px-4 font-mono text-[#94A3B8]">{r.asset_id}</td>
-                    <td className="py-3 px-4 text-[#C2C6D6]">{r.asset_type}</td>
-                    <td className="py-3 px-4 text-[#C2C6D6]">{r.corridor_id} ({r.location})</td>
-                    <td className="py-3 px-4 font-semibold text-[#DFE2EE]">{r.defect_type}</td>
-                    <td className="py-3 px-4">
+                  <tr key={idx}>
+                    <td className="font-mono font-bold text-slate-900">{r.request_id}</td>
+                    <td className="font-mono text-slate-600">{r.asset_id}</td>
+                    <td className="text-slate-700">{r.asset_type}</td>
+                    <td className="text-slate-700">{r.corridor_id} ({r.location})</td>
+                    <td className="font-semibold text-slate-900">{r.defect_type}</td>
+                    <td>
                       <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
                         {r.defect_severity}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-[#94A3B8]">{r.safety_risk}</td>
-                    <td className="py-3 px-4 font-mono text-[#F59E0B]">{r.required_duration_hours} h</td>
-                    <td className="py-3 px-4 font-mono text-[#10B981]">{r.required_workers}</td>
-                    <td className="py-3 px-4 text-[#C2C6D6]">{r.required_equipment}</td>
-                    <td className="py-3 px-4 font-mono text-[#94A3B8]">{r.due_date}</td>
-                    <td className="py-3 px-4 text-right">
-                      <button onClick={() => setSelectedReqDetail(r)} className="btn btn-secondary text-xs py-1 px-2.5">
-                        <Eye size={13} /> View
+                    <td className="font-mono text-blue-600 font-bold">{r.required_duration_hours} h</td>
+                    <td className="font-mono text-emerald-600 font-bold">{r.required_workers}</td>
+                    <td className="text-slate-600">{r.required_equipment}</td>
+                    <td className="font-mono text-slate-500">{r.due_date}</td>
+                    <td className="text-right">
+                      <button onClick={() => setSelectedReqDetail(r)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-blue-600 hover:text-blue-800 tactile-btn">
+                        View
                       </button>
                     </td>
                   </tr>
@@ -310,77 +370,79 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
               </tbody>
             </table>
           </div>
-        </section>
+
+          <div className="border-t border-slate-200/80 px-6 py-3 flex items-center justify-between text-xs font-mono text-slate-500 bg-slate-50/50">
+            <span>{filteredRequests.length} OF {filteredRequests.length} ENTRIES</span>
+            <div className="flex items-center gap-2 text-emerald-600 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>LIVE DB: CONNECTED</span>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* TAB 2: MY ALLOCATED SLOTS VIEW */}
       {(activeTab === 'overview' || activeTab === 'slots') && (
         <section className="space-y-4">
-          <h3 className="text-lg font-bold text-[#DFE2EE] font-display flex items-center gap-2">
-            <CalendarCheck size={18} className="text-emerald-400" />
-            <span>My Department Allocated Slots</span>
-            <span className="text-xs font-mono bg-[#101726] border border-[#24334D] px-2.5 py-0.5 rounded-full text-[#94A3B8]">
-              {filteredAllocatedBlocks.length} SLOTS
-            </span>
+          <h3 className="text-base font-bold text-slate-800 font-display uppercase tracking-wide">
+            My Department Allocated Slots ({filteredAllocatedBlocks.length})
           </h3>
 
           {filteredAllocatedBlocks.length === 0 ? (
-            <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-10 text-center text-[#94A3B8] font-mono text-sm">
+            <div className="tactile-card rounded-2xl p-8 text-center text-slate-500 font-mono text-xs">
               NO ALLOCATED MAINTENANCE SLOTS YET. CONTROL OFFICE ADMIN WILL RUN OPTIMIZATION.
             </div>
           ) : (
             <div className="space-y-4">
               {filteredAllocatedBlocks.map((block, idx) => (
-                <div key={idx} className="bg-[#1A2438] border border-[#24334D] border-l-4 border-l-emerald-500 rounded-2xl p-6 shadow-xl">
-                  <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div key={idx} className="tactile-card rounded-2xl p-6 shadow-neu-flat border-l-4 border-l-emerald-500">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
                     <div>
-                      <h4 className="text-lg font-bold text-[#DFE2EE] font-display">
+                      <h4 className="text-base font-bold text-slate-900 font-display">
                         {block.block_id} — Corridor {block.corridor} ({block.work_area})
                       </h4>
-                      <div className="text-xs font-mono text-[#94A3B8] mt-1">
-                        Group: <strong className="text-[#DFE2EE]">{block.group_id}</strong> • Tasks: <strong className="text-[#DFE2EE]">{block.group_task_count || 1}</strong>
+                      <div className="text-xs font-mono text-slate-500 mt-0.5">
+                        Group: <strong>{block.group_id}</strong> • Tasks: <strong>{block.group_task_count || 1}</strong>
                       </div>
                     </div>
-                    <span className="badge badge-final text-xs px-3 py-1">
+                    <span className="badge badge-final">
                       STATUS: ALLOCATED
                     </span>
                   </div>
 
-                  <div className="bg-[#151E2E] border border-[#24334D] rounded-xl p-4 mb-4">
-                    <div className="text-xs font-mono font-bold text-blue-400 uppercase mb-2">
+                  <div className="tactile-inset p-3 rounded-xl mb-3 text-xs text-slate-700">
+                    <div className="font-mono font-bold text-blue-600 uppercase mb-1">
                       Work Included ({block.group_task_count || 1} Tasks)
                     </div>
                     {block.group_work_summary?.map((w, wIdx) => (
-                      <div key={wIdx} className="text-sm text-[#DFE2EE] font-semibold mt-1">
-                        • {w}
-                      </div>
+                      <div key={wIdx} className="font-medium">• {w}</div>
                     ))}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#101726] border border-[#24334D] p-4 rounded-xl mb-4 font-mono">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 tactile-inset p-3 rounded-xl mb-4 font-mono text-xs">
                     <div>
-                      <div className="text-[10px] text-[#64748B] uppercase">SCHEDULED DATE</div>
-                      <div className="text-base font-bold text-[#DFE2EE] mt-0.5">{block.date}</div>
+                      <div className="text-[10px] text-slate-400 uppercase">SCHEDULED DATE</div>
+                      <div className="font-bold text-slate-800">{block.date}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-[#64748B] uppercase">ALLOCATED TIME</div>
-                      <div className="text-base font-bold text-blue-400 mt-0.5">{block.block_start} — {block.block_end}</div>
+                      <div className="text-[10px] text-slate-400 uppercase">ALLOCATED TIME</div>
+                      <div className="font-bold text-blue-600">{block.block_start} — {block.block_end}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-[#64748B] uppercase">DURATION</div>
-                      <div className="text-base font-bold text-amber-400 mt-0.5">{block.allocated_duration_minutes} MIN</div>
+                      <div className="text-[10px] text-slate-400 uppercase">DURATION</div>
+                      <div className="font-bold text-amber-600">{block.allocated_duration_minutes} MIN</div>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <button onClick={() => setSelectedWorkerBlock(block)} className="btn btn-emerald text-xs">
-                      <Users size={15} /> View Assigned Crew ({block.assigned_worker_details?.length || block.workers_required})
+                  <div className="flex flex-wrap gap-2">
+                    <button onClick={() => setSelectedWorkerBlock(block)} className="bg-emerald-600 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg shadow-sm">
+                      View Crew ({block.assigned_worker_details?.length || block.workers_required})
                     </button>
-                    <button onClick={() => setSelectedEquipBlock(block)} className="btn btn-secondary text-xs text-amber-400 border-amber-500/30">
-                      <Wrench size={15} /> View Equipment Details
+                    <button onClick={() => setSelectedEquipBlock(block)} className="tactile-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-blue-600">
+                      View Equipment Details
                     </button>
-                    <button onClick={() => setSelectedGroupModal(block)} className="btn btn-secondary text-xs">
-                      <FileText size={15} /> View Task Breakdown
+                    <button onClick={() => setSelectedGroupModal(block)} className="tactile-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-blue-600">
+                      Task Breakdown
                     </button>
                   </div>
                 </div>
@@ -390,39 +452,102 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         </section>
       )}
 
+      {/* Bottom Diagnostics Cards (3D Interactive Tilt) */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-5" data-purpose="diagnostic-row">
+        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Topology Integrity</span>
+              <div className="w-9 h-9 rounded-xl bg-blue-100/60 text-blue-600 flex items-center justify-center tactile-inset">
+                <ShieldCheck size={20} />
+              </div>
+            </div>
+            <h4 className="text-base font-bold text-slate-900 font-display mb-1">PASS 1 READY</h4>
+            <p className="text-xs text-slate-500 leading-normal">
+              Station mileage sequence validator loaded with 48 Sector points.
+            </p>
+          </div>
+          <div className="mt-4 pt-3 flex justify-end">
+            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </TiltCard>
+
+        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Ingestion Protocols</span>
+              <div className="w-9 h-9 rounded-xl bg-indigo-100/60 text-indigo-600 flex items-center justify-center tactile-inset">
+                <Database size={20} />
+              </div>
+            </div>
+            <h4 className="text-base font-bold text-slate-900 font-display mb-1">GTFS / CSV / JSON</h4>
+            <p className="text-xs text-slate-500 leading-normal">
+              Standardized column auto-mapping enabled for Indian Railways CSV dumps.
+            </p>
+          </div>
+          <div className="mt-4 pt-3 flex justify-end">
+            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </TiltCard>
+
+        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Arbitration Engine</span>
+              <div className="w-9 h-9 rounded-xl bg-purple-100/60 text-purple-600 flex items-center justify-center tactile-inset">
+                <Cpu size={20} />
+              </div>
+            </div>
+            <h4 className="text-base font-bold text-slate-900 font-display mb-1">STANDBY MODE</h4>
+            <p className="text-xs text-slate-500 leading-normal">
+              Sequence records directly feed Phase-2 gap window calculation.
+            </p>
+          </div>
+          <div className="mt-4 pt-3 flex justify-end">
+            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </TiltCard>
+      </section>
+
       {/* CREATE REQUEST MODAL */}
       {showFormModal && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box max-w-3xl bg-[#1A2438] border border-[#24334D]">
-            <h2 className="text-xl font-bold text-[#DFE2EE] font-display mb-2">
+          <div className="modal-box max-w-3xl">
+            <h2 className="text-xl font-bold text-slate-900 font-display mb-1">
               {formStep === 1 ? 'New Maintenance Request Entry Form' : 'Review & Confirm Request Submission'}
             </h2>
-            <p className="text-xs text-[#94A3B8] mb-6 font-mono">
-              Phase 1 Raw Input Collection • Logged in Engineer: <strong className="text-[#DFE2EE]">{user?.fullName}</strong> ({dept})
+            <p className="text-xs text-slate-500 mb-6 font-mono">
+              Phase 1 Raw Input Collection • Logged in Engineer: <strong className="text-slate-800">{user?.fullName}</strong> ({dept})
             </p>
 
             {errorMsg && (
-              <div className="p-3 bg-red-500/15 border border-red-500/40 text-red-400 rounded-xl mb-4 text-xs flex items-center gap-2">
+              <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-xl mb-4 text-xs flex items-center gap-2">
                 <AlertTriangle size={16} />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             {formStep === 1 ? (
-              <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }} className="space-y-5">
-                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
-                  <h4 className="text-xs font-mono font-bold text-blue-400 uppercase">[1] REQUEST & LOCATION INFORMATION</h4>
+              <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }} className="space-y-4">
+                <div className="tactile-card p-4 rounded-xl space-y-3">
+                  <h4 className="text-xs font-mono font-bold text-blue-600 uppercase">[1] REQUEST & LOCATION INFORMATION</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#94A3B8] mb-1">Request ID (Backend Auto-Gen)</label>
-                      <input type="text" className="input-field bg-[#101726] opacity-70 cursor-not-allowed" value="[Auto-Generated Unique ID]" readOnly disabled />
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Request ID (Auto-Gen)</label>
+                      <input type="text" className="input-field opacity-60 cursor-not-allowed" value="[Auto-Generated Unique ID]" readOnly disabled />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Department Context</label>
-                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} placeholder="eg: Engineering" required />
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Department Context</label>
+                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Corridor ID</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Corridor ID</label>
                       <select className="input-field" value={formData.corridor_id} onChange={e => setFormData({ ...formData, corridor_id: e.target.value })}>
                         <option value="C1">C1 (Salem - Chennai)</option>
                         <option value="C2">C2 (Bangalore - Chennai)</option>
@@ -430,21 +555,21 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Location (KM)</label>
-                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="eg: KM 128/2" required />
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Location (KM)</label>
+                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
-                  <h4 className="text-xs font-mono font-bold text-purple-400 uppercase">[2] ASSET & DEFECT DETAILS</h4>
+                <div className="tactile-card p-4 rounded-xl space-y-3">
+                  <h4 className="text-xs font-mono font-bold text-indigo-600 uppercase">[2] ASSET & DEFECT DETAILS</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Asset ID</label>
-                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} placeholder="eg: TRK003" required />
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Asset ID</label>
+                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Asset Type</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Asset Type</label>
                       <select className="input-field" value={formData.asset_type} onChange={e => setFormData({ ...formData, asset_type: e.target.value })}>
                         <option value="Signal">Signal</option>
                         <option value="Track">Track</option>
@@ -452,11 +577,11 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Defect Type</label>
-                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} placeholder="eg: Rail Crack" required />
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Type</label>
+                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Defect Severity</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Severity</label>
                       <select className="input-field" value={formData.defect_severity} onChange={e => setFormData({ ...formData, defect_severity: e.target.value })}>
                         <option value="Critical">Critical</option>
                         <option value="High">High</option>
@@ -467,23 +592,23 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                   </div>
                 </div>
 
-                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
-                  <h4 className="text-xs font-mono font-bold text-amber-400 uppercase">[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
+                <div className="tactile-card p-4 rounded-xl space-y-3">
+                  <h4 className="text-xs font-mono font-bold text-amber-600 uppercase">[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Duration (Hours)</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Duration (Hours)</label>
                       <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Workers (Crew)</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Workers (Crew)</label>
                       <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Equipment</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Equipment</label>
                       <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Due Date</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Due Date</label>
                       <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
                     </div>
                   </div>
@@ -495,18 +620,18 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                 </div>
               </form>
             ) : (
-              <div className="space-y-6">
-                <div className="bg-[#151E2E] border border-[#24334D] p-5 rounded-xl space-y-3 font-sans text-sm">
-                  <h3 className="text-base font-bold text-blue-400 font-display mb-2">Review Maintenance Request Details</h3>
-                  <div className="grid grid-cols-2 gap-3 text-xs font-mono text-[#C2C6D6]">
-                    <div>Request ID: <strong className="text-[#DFE2EE]">{formData.request_id}</strong></div>
-                    <div>Engineer: <strong className="text-[#DFE2EE]">{user?.fullName}</strong></div>
-                    <div>Department: <strong className="text-[#DFE2EE]">{formData.department}</strong></div>
-                    <div>Asset ID: <strong className="text-[#DFE2EE]">{formData.asset_id}</strong></div>
-                    <div>Location: <strong className="text-[#DFE2EE]">{formData.location}</strong></div>
-                    <div>Severity: <strong className="text-red-400">{formData.defect_severity}</strong></div>
-                    <div>Duration: <strong className="text-amber-400">{formData.required_duration_hours} hrs</strong></div>
-                    <div>Crew: <strong className="text-emerald-400">{formData.required_workers} workers</strong></div>
+              <div className="space-y-5">
+                <div className="tactile-inset p-4 rounded-xl space-y-2 text-xs font-mono text-slate-700">
+                  <h3 className="text-sm font-bold text-blue-600 font-display mb-2">Review Maintenance Request Details</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>Request ID: <strong>{formData.request_id}</strong></div>
+                    <div>Engineer: <strong>{user?.fullName}</strong></div>
+                    <div>Department: <strong>{formData.department}</strong></div>
+                    <div>Asset ID: <strong>{formData.asset_id}</strong></div>
+                    <div>Location: <strong>{formData.location}</strong></div>
+                    <div>Severity: <strong className="text-red-600">{formData.defect_severity}</strong></div>
+                    <div>Duration: <strong className="text-amber-600">{formData.required_duration_hours} hrs</strong></div>
+                    <div>Crew: <strong className="text-emerald-600">{formData.required_workers} workers</strong></div>
                   </div>
                 </div>
 
@@ -525,36 +650,28 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
       {/* REQUEST DETAIL MODAL */}
       {selectedReqDetail && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box max-w-xl bg-[#1A2438] border border-[#24334D]">
-            <div className="flex items-center justify-between mb-4 border-b border-[#24334D] pb-3">
-              <h3 className="text-base font-bold text-[#DFE2EE] font-display">
+          <div className="modal-box max-w-xl">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-200 pb-3">
+              <h3 className="text-base font-bold text-slate-900 font-display">
                 Request Details — {selectedReqDetail.request_id}
               </h3>
-              <button onClick={() => setSelectedReqDetail(null)} className="btn btn-secondary text-xs py-1 px-3.5">Close</button>
+              <button onClick={() => setSelectedReqDetail(null)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-slate-600">Close</button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs font-mono text-[#C2C6D6]">
-              <div>Department: <strong className="text-[#DFE2EE]">{selectedReqDetail.department}</strong></div>
-              <div>Asset ID: <strong className="text-[#DFE2EE]">{selectedReqDetail.asset_id}</strong></div>
-              <div>Defect Type: <strong className="text-blue-400">{selectedReqDetail.defect_type}</strong></div>
-              <div>Severity: <strong className="text-red-400">{selectedReqDetail.defect_severity}</strong></div>
-              <div>Safety Risk: <strong className="text-amber-400">{selectedReqDetail.safety_risk}</strong></div>
-              <div>Duration: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_duration_hours} hours</strong></div>
-              <div>Crew Required: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_workers}</strong></div>
-              <div>Equipment: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_equipment}</strong></div>
-              <div>Due Date: <strong className="text-[#DFE2EE]">{selectedReqDetail.due_date}</strong></div>
+            <div className="grid grid-cols-2 gap-3 text-xs font-mono text-slate-700">
+              <div>Department: <strong>{selectedReqDetail.department}</strong></div>
+              <div>Asset ID: <strong>{selectedReqDetail.asset_id}</strong></div>
+              <div>Defect Type: <strong className="text-blue-600">{selectedReqDetail.defect_type}</strong></div>
+              <div>Severity: <strong className="text-red-600">{selectedReqDetail.defect_severity}</strong></div>
+              <div>Safety Risk: <strong className="text-amber-600">{selectedReqDetail.safety_risk}</strong></div>
+              <div>Duration: <strong>{selectedReqDetail.required_duration_hours} hours</strong></div>
+              <div>Crew Required: <strong>{selectedReqDetail.required_workers}</strong></div>
+              <div>Equipment: <strong>{selectedReqDetail.required_equipment}</strong></div>
+              <div>Due Date: <strong>{selectedReqDetail.due_date}</strong></div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Mission Telemetry Footer */}
-      <footer className="flex items-center justify-between text-xs font-mono text-[#64748B] border-t border-[#24334D] pt-4">
-        <div>
-          ● LIVE DATABASE: <span className="text-emerald-400 font-bold">CONNECTED</span> • API: ACTIVE
-        </div>
-        <div>ZONE: NR-HQ / DLI</div>
-      </footer>
     </div>
   );
 };

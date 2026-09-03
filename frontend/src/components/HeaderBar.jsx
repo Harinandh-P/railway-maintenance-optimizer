@@ -1,171 +1,112 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, User } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export const HeaderBar = () => {
+  const { user } = useAuth();
   const location = useLocation();
-  const [timeStr, setTimeStr] = useState('');
+  const [timeString, setTimeString] = useState('');
 
   useEffect(() => {
-    const updateClock = () => {
+    const updateTime = () => {
       const now = new Date();
-      const istTime = now.toLocaleTimeString('en-GB', {
+      const ist = now.toLocaleTimeString('en-GB', {
         timeZone: 'Asia/Kolkata',
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
       });
-      setTimeStr(istTime + ' IST');
+      setTimeString(`${ist} IST`);
     };
-    updateClock();
-    const interval = setInterval(updateClock, 1000);
-    return () => clearInterval(interval);
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const getPageTitle = (path) => {
     switch (path) {
-      case '/admin': return 'Admin Dashboard';
-      case '/pipeline': return 'Run Optimization';
-      case '/final-plan': return 'Final Block Plan';
-      case '/phase1-results': return 'Phase 1 Analysis';
-      case '/phase2-results': return 'Phase 2 Candidate Gaps';
-      case '/phase3-results': return 'Phase 3 Optimization';
-      case '/requests': return 'All Maintenance Requests';
-      case '/train-master': return 'Train Master';
-      case '/train-routes': return 'Train Routes';
-      case '/station-km': return 'Station / KM Mapping';
-      case '/corridors': return 'Corridor Details';
-      case '/workers': return 'Worker Database';
-      case '/equipment': return 'Equipment Database';
-      case '/history': return 'Maintenance History';
-      case '/audit-log': return 'System Audit Logs';
-      case '/operator': return 'Engineer Portal';
+      case '/operator': return 'Engineer Operations Portal';
       case '/operator/requests': return 'My Maintenance Requests';
       case '/operator/slots': return 'My Allocated Slots';
-      default: return 'Control Office';
+      case '/admin': return 'Control Office Dashboard';
+      case '/pipeline': return 'Run Optimization Pipeline';
+      case '/final-plan': return 'Final Block Plan (Phase 3)';
+      case '/phase1-results': return 'Phase 1 Analysis Results';
+      case '/phase2-results': return 'Phase 2 Candidate Gaps';
+      case '/phase3-results': return 'Phase 3 Optimization Matrix';
+      case '/requests': return 'All Maintenance Requests';
+      case '/train-master': return 'Train Master Dataset';
+      case '/train-routes': return 'Train Route Sequence Dataset';
+      case '/station-km': return 'Station / KM Mapping';
+      case '/corridors': return 'Corridor Topology Details';
+      case '/workers': return 'Worker Roster & Skills';
+      case '/equipment': return 'Equipment Inventory';
+      case '/history': return 'Maintenance History';
+      case '/audit-log': return 'System Audit Logs';
+      default: return 'Control Office Portal';
     }
   };
 
   const pageTitle = getPageTitle(location.pathname);
 
   return (
-    <header className="glass-panel" style={{
-      padding: '14px 24px',
-      marginBottom: '24px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-      gap: '16px',
-      background: '#151E2E',
-      border: '1px solid #24334D',
-      borderRadius: '16px',
-      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
-    }}>
-      {/* Breadcrumb & System Status */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+    <header className="tactile-card rounded-2xl px-6 py-3.5 flex items-center justify-between mb-6 shadow-neu-flat select-none" data-purpose="top-navigation">
+      {/* Breadcrumbs & Status Subtitle */}
+      <div className="flex items-center gap-6">
         <div>
-          <div style={{ fontSize: '0.70rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '0.05em', color: '#64748B', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400">
             <span>AROHA</span>
             <span>/</span>
-            <span style={{ color: '#3B82F6', fontWeight: 700 }}>{pageTitle}</span>
+            <span className="text-blue-600 font-bold">{pageTitle}</span>
           </div>
-          <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#DFE2EE', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Station-by-Station Movement & Block Optimization
+          <div className="text-sm font-semibold text-slate-800 tracking-tight font-sans">
+            Railway Maintenance & Track Block System
           </div>
         </div>
 
-        {/* System Online Pill */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '6px 14px',
-          borderRadius: '9999px',
-          background: '#101726',
-          border: '1px solid #24334D',
-          fontSize: '0.72rem',
-          fontFamily: "'JetBrains Mono', monospace",
-          fontWeight: 600,
-          color: '#DFE2EE'
-        }}>
-          <span style={{ position: 'relative', display: 'flex', width: '8px', height: '8px' }}>
-            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#10B981', opacity: 0.75 }}></span>
-            <span style={{ position: 'relative', borderRadius: '50%', width: '8px', height: '8px', background: '#10B981' }}></span>
+        {/* Pill: System Online */}
+        <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full tactile-inset text-slate-700 text-xs font-mono font-medium">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span style={{ letterSpacing: '0.05em' }}>SYSTEM ONLINE</span>
+          <span className="tracking-wide">SYSTEM ONLINE</span>
         </div>
       </div>
 
-      {/* Right Telemetry & Quick Tools */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* Search Input and Quick Actions */}
+      <div className="flex items-center gap-5">
         {/* Recessed Search Bar */}
-        <div style={{ position: 'relative', width: '260px' }}>
-          <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
+        <div className="relative w-72 md:w-80 tactile-inset rounded-full flex items-center px-3.5 py-1.5">
+          <Search size={16} className="text-slate-400 mr-2.5 shrink-0" />
           <input
             type="text"
+            className="bg-transparent border-0 text-xs w-full text-slate-700 focus:outline-none focus:ring-0 placeholder-slate-400 p-0 font-sans"
             placeholder="Search routes, blocks, train IDs..."
-            className="input-field"
-            style={{ paddingLeft: '34px', paddingRight: '45px', height: '36px', fontSize: '0.80rem' }}
           />
-          <kbd style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: '#1E2B42',
-            border: '1px solid #24334D',
-            borderRadius: '4px',
-            padding: '2px 6px',
-            fontSize: '0.65rem',
-            fontFamily: "'JetBrains Mono', monospace",
-            color: '#94A3B8'
-          }}>⌘K</kbd>
+          <div className="flex items-center ml-1">
+            <kbd className="tactile-pill px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-400">⌘K</kbd>
+          </div>
         </div>
 
-        {/* Live Clock Telemetry */}
-        <div style={{ textAlign: 'right', paddingRight: '12px', borderRight: '1px solid #24334D', fontFamily: "'JetBrains Mono', monospace" }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#DFE2EE' }}>{timeStr || '12:00:00 IST'}</div>
-          <div style={{ fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.05em' }}>ZONE: NR-HQ / DLI</div>
+        {/* Time & Zone Telemetry */}
+        <div className="hidden lg:block text-right pr-2 border-r border-slate-300/60 font-mono">
+          <div className="text-xs font-bold text-slate-800">{timeString || '12:12:42 IST'}</div>
+          <div className="text-[10px] text-slate-400 tracking-wider">ZONE: NR-HQ / DLI</div>
         </div>
 
         {/* Notification Bell */}
-        <button
-          style={{
-            position: 'relative',
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            background: '#1E2B42',
-            border: '1px solid #24334D',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#94A3B8',
-            cursor: 'pointer'
-          }}
-          title="Notifications"
-        >
+        <button className="tactile-pill w-10 h-10 rounded-full flex items-center justify-center text-slate-600 hover:text-slate-900 relative transition-transform tactile-btn">
           <Bell size={16} />
-          <span style={{
-            position: 'absolute',
-            top: '-2px',
-            right: '-2px',
-            width: '16px',
-            height: '16px',
-            borderRadius: '50%',
-            background: '#8B5CF6',
-            color: '#DFE2EE',
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            fontFamily: "'JetBrains Mono', monospace",
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '2px solid #151E2E'
-          }}>1</span>
+          <span className="absolute top-1 right-1 w-4 h-4 bg-indigo-600 text-white rounded-full text-[9px] font-mono font-bold flex items-center justify-center ring-2 ring-white">1</span>
         </button>
+
+        {/* User Account Icon */}
+        <div className="tactile-pill w-10 h-10 rounded-full flex items-center justify-center text-slate-600 font-bold text-xs uppercase font-mono">
+          {user?.username?.substring(0, 2) || 'AD'}
+        </div>
       </div>
     </header>
   );
