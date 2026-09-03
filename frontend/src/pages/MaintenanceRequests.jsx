@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Upload, CheckCircle, AlertCircle, TrainTrack, Calendar, Clock, Users, Wrench } from 'lucide-react';
 import api from '../services/api';
 import { DataGrid } from '../components/DataGrid';
+import { EquipmentSelect } from '../components/EquipmentSelect';
 
 export const MaintenanceRequests = () => {
   const [data, setData] = useState([]);
@@ -42,9 +43,10 @@ export const MaintenanceRequests = () => {
   const fetchData = async () => {
     try {
       const res = await api.get('/data/maintenance-requests/');
-      setData(res.data);
+      setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -97,24 +99,24 @@ export const MaintenanceRequests = () => {
   };
 
   const columns = [
-    { key: 'request_id', label: 'Request ID', placeholder: 'e.g., M037' },
-    { key: 'request_datetime', label: 'Request Date/Time', placeholder: 'e.g., 2026-08-28 10:00' },
-    { key: 'department', label: 'Department', placeholder: 'e.g., Track Maintenance' },
-    { key: 'asset_id', label: 'Asset ID', placeholder: 'e.g., AST012' },
-    { key: 'asset_type', label: 'Asset Type', placeholder: 'e.g., Track' },
-    { key: 'location', label: 'Location', placeholder: 'e.g., C1-KM155' },
-    { key: 'point_a', label: 'Point A', placeholder: 'e.g., Station A' },
-    { key: 'point_b', label: 'Point B', placeholder: 'e.g., Station B' },
-    { key: 'corridor_id', label: 'Corridor', placeholder: 'e.g., C1' },
-    { key: 'maintenance_type', label: 'Type', placeholder: 'e.g., Corrective' },
-    { key: 'defect_type', label: 'Defect Type', placeholder: 'e.g., Rail Crack' },
-    { key: 'defect_reason', label: 'Defect Reason', placeholder: 'e.g., Thermal Stress' },
-    { key: 'defect_severity', label: 'Severity', placeholder: 'e.g., High' },
-    { key: 'safety_risk', label: 'Safety Risk', placeholder: 'e.g., High' },
-    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number', placeholder: 'e.g., 2.5' },
-    { key: 'required_workers', label: 'Workers', type: 'number', placeholder: 'e.g., 4' },
-    { key: 'required_equipment', label: 'Equipment', placeholder: 'e.g., Track Machine' },
-    { key: 'due_date', label: 'Due Date', placeholder: 'e.g., 2026-09-15' }
+    { key: 'request_id', label: 'Request ID', placeholder: 'eg: REQ037' },
+    { key: 'request_datetime', label: 'Request Date/Time', placeholder: 'eg: 2026-08-28 10:00' },
+    { key: 'department', label: 'Department', placeholder: 'eg: Engineering (Track Maintenance)' },
+    { key: 'asset_id', label: 'Asset ID', placeholder: 'eg: AST012 - Track Joint' },
+    { key: 'asset_type', label: 'Asset Type', placeholder: 'eg: Track' },
+    { key: 'location', label: 'Location', placeholder: 'eg: C1-KM155.5 (Salem - Erode)' },
+    { key: 'point_a', label: 'Point A', placeholder: 'eg: Station A - Salem Junction' },
+    { key: 'point_b', label: 'Point B', placeholder: 'eg: Station B - Erode Junction' },
+    { key: 'corridor_id', label: 'Corridor', placeholder: 'eg: C1 - Salem to Chennai Line' },
+    { key: 'maintenance_type', label: 'Type', placeholder: 'eg: Corrective Maintenance' },
+    { key: 'defect_type', label: 'Defect Type', placeholder: 'eg: Heavy Rail Joint Fracture & Thermal Stress' },
+    { key: 'defect_reason', label: 'Defect Reason', placeholder: 'eg: Thermal Expansion & Heavy Axle Load' },
+    { key: 'defect_severity', label: 'Severity', placeholder: 'eg: Critical' },
+    { key: 'safety_risk', label: 'Safety Risk', placeholder: 'eg: High' },
+    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number', placeholder: 'eg: 2.5' },
+    { key: 'required_workers', label: 'Workers', type: 'number', placeholder: 'eg: 4' },
+    { key: 'required_equipment', label: 'Equipment', placeholder: 'eg: Hydraulic Track Tamping Machine' },
+    { key: 'due_date', label: 'Due Date', placeholder: 'eg: 2026-09-15' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Maintenance Requests...</div>;
@@ -241,8 +243,8 @@ export const MaintenanceRequests = () => {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Equipment Required</label>
-                <input type="text" className="input-field" value={formData.required_equipment} onChange={e => setFormData({ ...formData, required_equipment: e.target.value })} placeholder="e.g., Track Machine" required />
+                <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Equipment Required (Search Database)</label>
+                <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required placeholder="eg: EQ211 - Hydraulic Track Tamping Machine" />
               </div>
 
               <div>

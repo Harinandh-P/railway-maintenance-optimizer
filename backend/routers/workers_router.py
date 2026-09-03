@@ -11,10 +11,12 @@ from workersAvailability.sync import sync_workers_to_json
 
 router = APIRouter(prefix="/api/data/workers", tags=["Workers"])
 
+@router.get("")
 @router.get("/")
 def get_workers(current_user: TokenData = Depends(get_current_user)):
     return CSVService.read_csv(AppConfig.WORKER_DB_CSV)
 
+@router.post("")
 @router.post("/")
 def save_workers(data: List[Dict[str, Any]], current_user: TokenData = Depends(require_admin)):
     success, errors = CSVService.write_csv(AppConfig.WORKER_DB_CSV, data, dataset_type="workers")

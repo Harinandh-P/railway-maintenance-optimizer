@@ -10,10 +10,12 @@ from backend.services.audit_service import AuditService
 
 router = APIRouter(prefix="/api/data/maintenance-history", tags=["Maintenance History"])
 
+@router.get("")
 @router.get("/")
 def get_maintenance_history(current_user: TokenData = Depends(get_current_user)):
     return CSVService.read_csv(AppConfig.HISTORY_CSV)
 
+@router.post("")
 @router.post("/")
 def save_maintenance_history(data: List[Dict[str, Any]], current_user: TokenData = Depends(require_admin)):
     success, errors = CSVService.write_csv(AppConfig.HISTORY_CSV, data)

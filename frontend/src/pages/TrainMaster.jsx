@@ -13,9 +13,10 @@ export const TrainMaster = () => {
   const fetchData = async () => {
     try {
       const res = await api.get('/data/train-master/');
-      setData(res.data);
+      setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -33,18 +34,18 @@ export const TrainMaster = () => {
   };
 
   const columns = [
-    { key: 'train_id', label: 'Train ID', placeholder: 'e.g., TRN009' },
-    { key: 'train_number', label: 'Train Number', placeholder: 'e.g., 12674' },
-    { key: 'train_name', label: 'Train Name', placeholder: 'e.g., Chennai Express' },
-    { key: 'train_type', label: 'Train Type', placeholder: 'e.g., Express' },
-    { key: 'traffic_type', label: 'Traffic Type', placeholder: 'e.g., Passenger' },
-    { key: 'origin', label: 'Origin', placeholder: 'e.g., Salem' },
-    { key: 'destination', label: 'Destination', placeholder: 'e.g., Chennai' },
-    { key: 'direction', label: 'Direction', placeholder: 'e.g., UP' },
-    { key: 'running_days', label: 'Running Days', placeholder: 'e.g., DAILY' },
-    { key: 'frequency_per_hour', label: 'Frequency (tph)', type: 'number', placeholder: 'e.g., 2' },
-    { key: 'priority_class', label: 'Priority Class', type: 'number', placeholder: 'e.g., 1' },
-    { key: 'operational_status', label: 'Status', placeholder: 'e.g., Active' }
+    { key: 'train_id', label: 'Train ID', placeholder: 'eg: TRN009' },
+    { key: 'train_number', label: 'Train Number', placeholder: 'eg: 12674' },
+    { key: 'train_name', label: 'Train Name', placeholder: 'eg: Cheran Superfast Express' },
+    { key: 'train_type', label: 'Train Type', placeholder: 'eg: Superfast Express' },
+    { key: 'traffic_type', label: 'Traffic Type', placeholder: 'eg: Passenger' },
+    { key: 'origin', label: 'Origin', placeholder: 'eg: Salem Junction (SA)' },
+    { key: 'destination', label: 'Destination', placeholder: 'eg: Chennai Central (MAS)' },
+    { key: 'direction', label: 'Direction', placeholder: 'eg: UP' },
+    { key: 'running_days', label: 'Running Days', placeholder: 'eg: DAILY' },
+    { key: 'frequency_per_hour', label: 'Frequency (tph)', type: 'number', placeholder: 'eg: 2' },
+    { key: 'priority_class', label: 'Priority Class', type: 'number', placeholder: 'eg: 1' },
+    { key: 'operational_status', label: 'Status', placeholder: 'eg: Active' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Train Master...</div>;

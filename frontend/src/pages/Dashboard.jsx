@@ -17,6 +17,10 @@ import {
 import api from '../services/api';
 
 export const Dashboard = () => {
+  const [metrics, setMetrics] = useState({});
+  const [requests, setRequests] = useState([]);
+  const [plan, setPlan] = useState({});
+  const [loading, setLoading] = useState(true);
   const [errorBanner, setErrorBanner] = useState(null);
 
   useEffect(() => {

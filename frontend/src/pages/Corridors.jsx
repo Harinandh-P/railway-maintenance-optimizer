@@ -12,17 +12,18 @@ export const Corridors = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/corridors');
-      setData(res.data);
+      const res = await api.get('/data/corridors/');
+      setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
+      setData([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSave = async (updatedData) => {
-    await api.post('/data/corridors', updatedData);
+    await api.post('/data/corridors/', updatedData);
     setData(updatedData);
   };
 
@@ -35,16 +36,16 @@ export const Corridors = () => {
   };
 
   const columns = [
-    { key: 'corridor_id', label: 'Corridor ID', placeholder: 'e.g., COR004' },
-    { key: 'track_id', label: 'Track ID', placeholder: 'e.g., T1' },
-    { key: 'track_capacity', label: 'Track Capacity', type: 'number', placeholder: 'e.g., 100' },
-    { key: 'current_occupancy', label: 'Current Occupancy', type: 'number', placeholder: 'e.g., 50' },
-    { key: 'direction', label: 'Direction', placeholder: 'e.g., Both' },
-    { key: 'compatible_train_types', label: 'Compatible Trains', placeholder: 'e.g., Passenger,Goods' },
-    { key: 'alternative_routing_possible', label: 'Alt Routing', placeholder: 'e.g., False' },
-    { key: 'block_availability', label: 'Block Available', placeholder: 'e.g., True' },
-    { key: 'existing_restrictions', label: 'Existing Restrictions', placeholder: 'e.g., Speed restriction' },
-    { key: 'maintenance_restrictions', label: 'Maintenance Restrictions', placeholder: 'e.g., Maintenance requested' }
+    { key: 'corridor_id', label: 'Corridor ID', placeholder: 'eg: COR004' },
+    { key: 'track_id', label: 'Track ID', placeholder: 'eg: T1' },
+    { key: 'track_capacity', label: 'Track Capacity', type: 'number', placeholder: 'eg: 100' },
+    { key: 'current_occupancy', label: 'Current Occupancy', type: 'number', placeholder: 'eg: 50' },
+    { key: 'direction', label: 'Direction', placeholder: 'eg: Both UP & DOWN' },
+    { key: 'compatible_train_types', label: 'Compatible Trains', placeholder: 'eg: Passenger, Freight, Express' },
+    { key: 'alternative_routing_possible', label: 'Alt Routing', placeholder: 'eg: False' },
+    { key: 'block_availability', label: 'Block Available', placeholder: 'eg: True' },
+    { key: 'existing_restrictions', label: 'Existing Restrictions', placeholder: 'eg: Speed restriction 30 km/h' },
+    { key: 'maintenance_restrictions', label: 'Maintenance Restrictions', placeholder: 'eg: Night maintenance block only' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Corridors Dataset...</div>;

@@ -12,17 +12,18 @@ export const Equipment = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/equipment');
-      setData(res.data);
+      const res = await api.get('/data/equipment/');
+      setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
+      setData([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSave = async (updatedData) => {
-    await api.post('/data/equipment', updatedData);
+    await api.post('/data/equipment/', updatedData);
     setData(updatedData);
   };
 
@@ -33,16 +34,16 @@ export const Equipment = () => {
   };
 
   const columns = [
-    { key: 'equipment_id', label: 'Equipment ID', placeholder: 'e.g., EQ211' },
-    { key: 'equipment_name', label: 'Equipment Name', placeholder: 'e.g., Track Machine' },
-    { key: 'equipment_type', label: 'Type', placeholder: 'e.g., Tamping Machine' },
-    { key: 'equipment_category', label: 'Category', placeholder: 'e.g., Heavy Equipment' },
-    { key: 'quantity', label: 'Qty', type: 'number', placeholder: 'e.g., 2' },
-    { key: 'condition', label: 'Condition', placeholder: 'e.g., Good' },
-    { key: 'operational', label: 'Operational', placeholder: 'e.g., True' },
-    { key: 'corridor', label: 'Corridor', placeholder: 'e.g., C1' },
-    { key: 'available', label: 'Available', placeholder: 'e.g., True' },
-    { key: 'status', label: 'Status', placeholder: 'e.g., Available' }
+    { key: 'equipment_id', label: 'Equipment ID', placeholder: 'eg: EQ211' },
+    { key: 'equipment_name', label: 'Equipment Name', placeholder: 'eg: Hydraulic Track Tamping Machine' },
+    { key: 'equipment_type', label: 'Type', placeholder: 'eg: Heavy Track Tamping Machine' },
+    { key: 'equipment_category', label: 'Category', placeholder: 'eg: Heavy Track Maintenance Machinery' },
+    { key: 'quantity', label: 'Qty', type: 'number', placeholder: 'eg: 2' },
+    { key: 'condition', label: 'Condition', placeholder: 'eg: Good Operational Condition' },
+    { key: 'operational', label: 'Operational', placeholder: 'eg: True' },
+    { key: 'corridor', label: 'Corridor', placeholder: 'eg: C1 - Salem to Chennai Main Line' },
+    { key: 'available', label: 'Available', placeholder: 'eg: True' },
+    { key: 'status', label: 'Status', placeholder: 'eg: Available' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Equipment Database...</div>;

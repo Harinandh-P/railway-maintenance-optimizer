@@ -10,10 +10,12 @@ from backend.services.audit_service import AuditService
 
 router = APIRouter(prefix="/api/data/train-master", tags=["Train Master"])
 
+@router.get("")
 @router.get("/")
 def get_train_master(current_user: TokenData = Depends(get_current_user)):
     return CSVService.read_csv(AppConfig.TRAIN_MASTER_CSV)
 
+@router.post("")
 @router.post("/")
 def save_train_master(data: List[Dict[str, Any]], current_user: TokenData = Depends(require_admin)):
     success, errors = CSVService.write_csv(AppConfig.TRAIN_MASTER_CSV, data, dataset_type="train_master")

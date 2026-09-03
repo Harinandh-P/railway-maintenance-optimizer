@@ -10,10 +10,12 @@ from backend.services.audit_service import AuditService
 
 router = APIRouter(prefix="/api/data/equipment", tags=["Equipment"])
 
+@router.get("")
 @router.get("/")
 def get_equipment(current_user: TokenData = Depends(get_current_user)):
     return CSVService.read_csv(AppConfig.EQUIPMENT_DB_CSV)
 
+@router.post("")
 @router.post("/")
 def save_equipment(data: List[Dict[str, Any]], current_user: TokenData = Depends(require_admin)):
     success, errors = CSVService.write_csv(AppConfig.EQUIPMENT_DB_CSV, data, dataset_type="equipment")

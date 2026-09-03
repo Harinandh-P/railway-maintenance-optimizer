@@ -11,8 +11,22 @@ from backend.services.audit_service import AuditService
 
 router = APIRouter(prefix="/api/data/maintenance-requests", tags=["Maintenance Requests"])
 
+def generate_next_request_id() -> str:
+    import re
+    existing = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+    max_num = 0
+    for r in existing:
+        req_id = str(r.get("request_id", "")).strip()
+        nums = re.findall(r'\d+', req_id)
+        if nums:
+            val = int(nums[-1])
+            if val > max_num:
+                max_num = val
+    next_num = max_num + 1
+    return f"REQ{next_num:03d}"
+
 class CreateMaintenanceRequestModel(BaseModel):
-    request_id: str
+    request_id: Optional[str] = None
     request_datetime: str
     department: str
     asset_id: str
@@ -37,12 +51,14 @@ class CreateMaintenanceRequestModel(BaseModel):
     status: Optional[str] = "PENDING"
     created_by: Optional[str] = None
 
+@router.get("")
 @router.get("/")
 def get_maintenance_requests(current_user: TokenData = Depends(get_current_user)):
     records = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     print(f"[API GET /maintenance-requests] User: '{current_user.username}', Role: '{current_user.role}', Dept: '{current_user.department}', Returned: {len(records)} records")
     return records
 
+@router.post("")
 @router.post("/")
 def save_maintenance_requests(data: List[Dict[str, Any]], current_user: TokenData = Depends(get_current_user)):
     success, errors = CSVService.write_csv(AppConfig.REQUESTS_CSV, data, dataset_type="requests")
@@ -53,20 +69,25 @@ def save_maintenance_requests(data: List[Dict[str, Any]], current_user: TokenDat
 
 @router.post("/create")
 def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, current_user: TokenData = Depends(get_current_user)):
+    import re
     from backend.database import is_postgres
     existing = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     
-    # Check duplicate ID
-    if any(str(r.get("request_id")).strip() == payload.request_id.strip() for r in existing):
-        raise HTTPException(status_code=400, detail=f"Request ID '{payload.request_id}' already exists.")
+    # Generate authoritative unique Request ID on backend
+    auto_id = generate_next_request_id()
+    while any(str(r.get("request_id")).strip() == auto_id for r in existing):
+        nums = re.findall(r'\d+', auto_id)
+        next_val = int(nums[-1]) + 1 if nums else len(existing) + 1
+        auto_id = f"REQ{next_val:03d}"
 
     new_record = payload.dict()
+    new_record["request_id"] = auto_id
     new_record["created_by"] = current_user.username
     if not new_record.get("department"):
         new_record["department"] = current_user.department or "Engineering"
 
     db_type = "PostgreSQL" if is_postgres() else "SQLite"
-    print(f"[API POST /create] Database: {db_type}, User: '{current_user.username}', RequestID: '{payload.request_id}', CreatedBy: '{new_record['created_by']}'")
+    print(f"[API POST /create] Database: {db_type}, User: '{current_user.username}', Auto-Generated RequestID: '{auto_id}', CreatedBy: '{new_record['created_by']}'")
 
     updated_list = existing + [new_record]
 
@@ -74,10 +95,10 @@ def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, cu
     if not success:
         raise HTTPException(status_code=400, detail={"message": "Validation failed", "errors": errors})
 
-    AuditService.log_action(current_user.username, current_user.role, "CREATE_MAINTENANCE_REQUEST", dataset="maintenance_requests.csv", details=f"Created request {payload.request_id}")
+    AuditService.log_action(current_user.username, current_user.role, "CREATE_MAINTENANCE_REQUEST", dataset="maintenance_requests.csv", details=f"Created request {auto_id}")
     
-    print(f"[API POST /create] Successful DB insertion & commit for RequestID: '{payload.request_id}'")
-    return {"status": "SUCCESS", "message": f"Maintenance Request {payload.request_id} created successfully", "data": new_record}
+    print(f"[API POST /create] Successful DB insertion & commit for RequestID: '{auto_id}'")
+    return {"status": "SUCCESS", "message": f"Maintenance Request {auto_id} created successfully", "data": new_record}
 
 @router.post("/import/csv")
 async def import_requests_csv(file: UploadFile = File(...), current_user: TokenData = Depends(get_current_user)):

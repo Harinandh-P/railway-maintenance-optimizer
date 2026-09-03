@@ -12,10 +12,11 @@ export const AuditLog = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/audit-log');
-      setData(res.data);
+      const res = await api.get('/audit-log/');
+      setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
+      setData([]);
     } finally {
       setLoading(false);
     }
