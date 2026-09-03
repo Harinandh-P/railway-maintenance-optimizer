@@ -121,6 +121,7 @@ def init_db():
                 required_materials TEXT,
                 due_date VARCHAR(50),
                 status VARCHAR(30) DEFAULT 'PENDING',
+                created_by VARCHAR(100),
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
             """)
@@ -172,6 +173,108 @@ def init_db():
                 mobilization_time_minutes INT DEFAULT 0
             );
             """)
+
+            conn.exec_driver_sql("""
+            CREATE TABLE IF NOT EXISTS train_master (
+                train_id VARCHAR(50) PRIMARY KEY,
+                train_number VARCHAR(50),
+                train_name VARCHAR(150),
+                train_type VARCHAR(50),
+                traffic_type VARCHAR(50),
+                origin VARCHAR(100),
+                destination VARCHAR(100),
+                direction VARCHAR(20),
+                running_days VARCHAR(100),
+                frequency_per_hour INT,
+                priority_class VARCHAR(20),
+                operational_status VARCHAR(50)
+            );
+            """)
+
+            conn.exec_driver_sql("""
+            CREATE TABLE IF NOT EXISTS train_routes (
+                route_id SERIAL PRIMARY KEY,
+                train_id VARCHAR(50),
+                train_number VARCHAR(50),
+                sequence INT,
+                station_code VARCHAR(20),
+                station_name VARCHAR(100),
+                arrival_time VARCHAR(20),
+                departure_time VARCHAR(20),
+                distance_from_origin NUMERIC(8,2),
+                distance_from_previous_station NUMERIC(8,2),
+                corridor_id VARCHAR(50),
+                section_id VARCHAR(50),
+                direction VARCHAR(20),
+                km_location NUMERIC(8,2),
+                from_km NUMERIC(8,2),
+                to_km NUMERIC(8,2),
+                previous_station VARCHAR(100),
+                next_station VARCHAR(100),
+                track_id VARCHAR(50),
+                railway_division VARCHAR(50)
+            );
+            """)
+
+            conn.exec_driver_sql("""
+            CREATE TABLE IF NOT EXISTS station_km_mapping (
+                mapping_id VARCHAR(50) PRIMARY KEY,
+                corridor_id VARCHAR(50),
+                section_id VARCHAR(50),
+                section_name VARCHAR(100),
+                start_station_code VARCHAR(20),
+                start_station_name VARCHAR(100),
+                start_km NUMERIC(8,2),
+                end_station_code VARCHAR(20),
+                end_station_name VARCHAR(100),
+                end_km NUMERIC(8,2),
+                direction VARCHAR(20),
+                line_name VARCHAR(100),
+                track_id VARCHAR(50)
+            );
+            """)
+
+            conn.exec_driver_sql("""
+            CREATE TABLE IF NOT EXISTS corridor_data (
+                corridor_id VARCHAR(50) PRIMARY KEY,
+                track_id VARCHAR(50),
+                track_capacity INT,
+                current_occupancy INT,
+                direction VARCHAR(20),
+                compatible_train_types TEXT,
+                alternative_routing_possible VARCHAR(10),
+                block_availability VARCHAR(50),
+                existing_restrictions TEXT,
+                maintenance_restrictions TEXT
+            );
+            """)
+
+            conn.exec_driver_sql("""
+            CREATE TABLE IF NOT EXISTS maintenance_history (
+                task_id VARCHAR(50) PRIMARY KEY,
+                asset_id VARCHAR(50),
+                location VARCHAR(100),
+                department VARCHAR(50),
+                maintenance_type VARCHAR(50),
+                defect_type VARCHAR(100),
+                defect_reason VARCHAR(100),
+                severity VARCHAR(20),
+                planned_duration_hours NUMERIC(5,2),
+                actual_duration_hours NUMERIC(5,2),
+                previous_failure VARCHAR(10),
+                failure_date VARCHAR(50),
+                maintenance_date VARCHAR(50),
+                next_scheduled_maintenance VARCHAR(50),
+                overdue_days INT,
+                previous_priority NUMERIC(5,2),
+                train_operational_impact TEXT,
+                workers_used TEXT,
+                equipment_used TEXT,
+                materials_used TEXT
+            );
+            """)
+
+            conn.exec_driver_sql("ALTER TABLE maintenance_requests ADD COLUMN IF NOT EXISTS created_by VARCHAR(100);")
 
             from backend.auth import hash_password
             aroha_pass = hash_password("Aroha2026")
@@ -270,9 +373,16 @@ def init_db():
             required_materials TEXT,
             due_date TEXT,
             status TEXT DEFAULT 'PENDING',
+            created_by TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
         """)
+
+        # Add created_by column if missing in existing SQLite table
+        cursor.execute("PRAGMA table_info(maintenance_requests)")
+        cols = [c[1] for c in cursor.fetchall()]
+        if "created_by" not in cols:
+            cursor.execute("ALTER TABLE maintenance_requests ADD COLUMN created_by TEXT")
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS workers (
@@ -322,6 +432,106 @@ def init_db():
         )
         """)
 
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS train_master (
+            train_id TEXT PRIMARY KEY,
+            train_number TEXT,
+            train_name TEXT,
+            train_type TEXT,
+            traffic_type TEXT,
+            origin TEXT,
+            destination TEXT,
+            direction TEXT,
+            running_days TEXT,
+            frequency_per_hour INTEGER,
+            priority_class TEXT,
+            operational_status TEXT
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS train_routes (
+            route_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            train_id TEXT,
+            train_number TEXT,
+            sequence INTEGER,
+            station_code TEXT,
+            station_name TEXT,
+            arrival_time TEXT,
+            departure_time TEXT,
+            distance_from_origin REAL,
+            distance_from_previous_station REAL,
+            corridor_id TEXT,
+            section_id TEXT,
+            direction TEXT,
+            km_location REAL,
+            from_km REAL,
+            to_km REAL,
+            previous_station TEXT,
+            next_station TEXT,
+            track_id TEXT,
+            railway_division TEXT
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS station_km_mapping (
+            mapping_id TEXT PRIMARY KEY,
+            corridor_id TEXT,
+            section_id TEXT,
+            section_name TEXT,
+            start_station_code TEXT,
+            start_station_name TEXT,
+            start_km REAL,
+            end_station_code TEXT,
+            end_station_name TEXT,
+            end_km REAL,
+            direction TEXT,
+            line_name TEXT,
+            track_id TEXT
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS corridor_data (
+            corridor_id TEXT PRIMARY KEY,
+            track_id TEXT,
+            track_capacity INTEGER,
+            current_occupancy INTEGER,
+            direction TEXT,
+            compatible_train_types TEXT,
+            alternative_routing_possible TEXT,
+            block_availability TEXT,
+            existing_restrictions TEXT,
+            maintenance_restrictions TEXT
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS maintenance_history (
+            task_id TEXT PRIMARY KEY,
+            asset_id TEXT,
+            location TEXT,
+            department TEXT,
+            maintenance_type TEXT,
+            defect_type TEXT,
+            defect_reason TEXT,
+            severity TEXT,
+            planned_duration_hours REAL,
+            actual_duration_hours REAL,
+            previous_failure TEXT,
+            failure_date TEXT,
+            maintenance_date TEXT,
+            next_scheduled_maintenance TEXT,
+            overdue_days INTEGER,
+            previous_priority REAL,
+            train_operational_impact TEXT,
+            workers_used TEXT,
+            equipment_used TEXT,
+            materials_used TEXT
+        )
+        """)
+
         from backend.auth import hash_password
         aroha_pass = hash_password("Aroha2026")
         employee_pass = hash_password("Emp2026")
@@ -362,6 +572,13 @@ def init_db():
         conn.commit()
         conn.close()
         print("[DATABASE] SQLite schema initialized successfully.")
+
+    # Populate datasets if empty
+    try:
+        from backend.scripts.migrate_csv_to_postgres import migrate_datasets
+        migrate_datasets()
+    except Exception as e:
+        print(f"[DATABASE] Auto dataset migration notice: {e}")
 
 if __name__ == "__main__":
     init_db()
