@@ -33,8 +33,9 @@ export const Dashboard = () => {
       setMetrics(res.data || {});
 
       try {
-        const reqRes = await api.get('/data/maintenance-requests/');
-        setRequests(Array.isArray(reqRes.data) ? reqRes.data : []);
+        const reqRes = await api.get('/data/maintenance-requests');
+        const list = Array.isArray(reqRes.data) ? reqRes.data : (Array.isArray(reqRes.data?.data) ? reqRes.data.data : (Array.isArray(reqRes.data?.records) ? reqRes.data.records : []));
+        setRequests(list);
       } catch (e) {
         setRequests([]);
       }

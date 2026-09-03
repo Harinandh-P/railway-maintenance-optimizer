@@ -12,8 +12,9 @@ export const AuditLog = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/audit-log/');
-      setData(Array.isArray(res.data) ? res.data : []);
+      const res = await api.get('/audit-log');
+      const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
+      setData(list);
     } catch (err) {
       console.error(err);
       setData([]);

@@ -12,8 +12,9 @@ export const TrainMaster = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/train-master/');
-      setData(Array.isArray(res.data) ? res.data : []);
+      const res = await api.get('/data/train-master');
+      const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
+      setData(list);
     } catch (err) {
       console.error(err);
       setData([]);
@@ -23,8 +24,8 @@ export const TrainMaster = () => {
   };
 
   const handleSave = async (updatedData) => {
-    await api.post('/data/train-master/', updatedData);
-    setData(updatedData);
+    await api.post('/data/train-master', updatedData);
+    await fetchData();
   };
 
   const handleDelete = async (row) => {

@@ -53,8 +53,9 @@ export const EngineerDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await api.get('/data/maintenance-requests/');
-      setRequests(res.data);
+      const res = await api.get('/data/maintenance-requests');
+      const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
+      setRequests(list);
 
       try {
         const planRes = await api.get('/results/final-plan');

@@ -24,8 +24,21 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
   const fetchEquipment = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/data/equipment/');
-      setEquipmentList(Array.isArray(res.data) ? res.data : []);
+      setError(null);
+      const res = await api.get('/data/equipment');
+      const rawData = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
+      
+      // Deduplicate by equipment_id or equipment_name
+      const seen = new Set();
+      const uniqueList = rawData.filter(item => {
+        if (!item || typeof item !== 'object') return false;
+        const key = item.equipment_id || item.equipment_name || JSON.stringify(item);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      setEquipmentList(uniqueList);
     } catch (err) {
       console.error('Failed to load equipment list:', err);
       setError('Failed to load equipment database');
