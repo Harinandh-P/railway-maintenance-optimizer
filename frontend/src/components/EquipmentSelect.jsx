@@ -41,8 +41,9 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
     const id = (eq.equipment_id || '').toLowerCase();
     const name = (eq.equipment_name || '').toLowerCase();
     const type = (eq.equipment_type || '').toLowerCase();
+    const category = (eq.equipment_category || '').toLowerCase();
     const corridor = (eq.corridor || '').toLowerCase();
-    return id.includes(term) || name.includes(term) || type.includes(term) || corridor.includes(term);
+    return id.includes(term) || name.includes(term) || type.includes(term) || category.includes(term) || corridor.includes(term);
   });
 
   const handleSelect = (eq) => {
@@ -66,16 +67,17 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
           padding: '10px 14px',
           color: value ? 'white' : '#94a3b8',
           cursor: 'pointer',
-          fontSize: '0.9rem'
+          fontSize: '0.9rem',
+          minWidth: '220px'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, overflow: 'hidden' }}>
-          <Wrench size={16} color="#f59e0b" />
+          <Wrench size={16} color="#f59e0b" style={{ flexShrink: 0 }} />
           <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {value || placeholder}
           </span>
         </div>
-        <ChevronDown size={18} color="#94a3b8" />
+        <ChevronDown size={18} color="#94a3b8" style={{ flexShrink: 0 }} />
       </div>
 
       {isOpen && (
@@ -89,23 +91,23 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             background: '#1e293b',
             border: '1px solid #334155',
             borderRadius: '8px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6)',
             zIndex: 1100,
-            maxHeight: '260px',
+            maxHeight: '320px',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden'
           }}
         >
           {/* Search Input Box */}
-          <div style={{ padding: '8px 12px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '8px', background: '#0f172a' }}>
+          <div style={{ padding: '10px 12px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '8px', background: '#0f172a' }}>
             <Search size={16} color="#94a3b8" />
             <input
               type="text"
               autoFocus
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by ID, Name, Type, or Corridor..."
+              placeholder="Search by ID, Name, Type, Category, or Corridor..."
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -117,11 +119,15 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             />
           </div>
 
+          <div style={{ padding: '6px 12px', background: 'rgba(15, 23, 42, 0.6)', fontSize: '0.75rem', color: '#94a3b8', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            Available Equipment: <strong>{filteredEquipment.length}</strong> of {equipmentList.length}
+          </div>
+
           {/* List Options */}
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {loading ? (
               <div style={{ padding: '16px', color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center' }}>
-                Loading equipment database...
+                Loading full equipment database...
               </div>
             ) : error ? (
               <div style={{ padding: '16px', color: '#fb7185', fontSize: '0.85rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
@@ -153,7 +159,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
                     {eq.equipment_id} — {eq.equipment_name}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                    Type: <strong>{eq.equipment_type || 'General'}</strong> • Corridor: <strong>{eq.corridor || 'All'}</strong> • Status: <strong>{eq.status || 'Available'}</strong>
+                    Type: <strong>{eq.equipment_type || 'General'}</strong> • Category: <strong>{eq.equipment_category || 'Maintenance'}</strong> • Corridor: <strong>{eq.corridor || 'All'}</strong>
                   </div>
                 </div>
               ))

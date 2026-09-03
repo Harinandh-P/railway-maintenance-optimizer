@@ -23,12 +23,16 @@ export const DataGrid = ({
   const [errorMsg, setErrorMsg] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  // Sync if parent data changes and grid is clean
+  // Sync if parent data changes
   React.useEffect(() => {
     if (!isDirty) {
-      setGridData(data);
+      setGridData(Array.isArray(data) ? data : []);
+    } else {
+      // Preserve any active unsaved rows while syncing parent data
+      const unsavedRows = (gridData || []).filter(r => r && r._isNew);
+      setGridData([...unsavedRows, ...(Array.isArray(data) ? data : [])]);
     }
-  }, [data, isDirty]);
+  }, [data]);
 
   const handleCellChange = (rowIdx, colKey, value) => {
     const updated = [...gridData];
@@ -38,7 +42,7 @@ export const DataGrid = ({
   };
 
   const handleAddRow = () => {
-    const newRow = {};
+    const newRow = { _isNew: true };
     columns.forEach(col => {
       newRow[col.key] = '';
     });
@@ -48,6 +52,14 @@ export const DataGrid = ({
 
   const handleDeleteRow = async (rowIdx) => {
     const rowToDelete = gridData[rowIdx];
+    if (rowToDelete._isNew) {
+      const updated = gridData.filter((_, idx) => idx !== rowIdx);
+      setGridData(updated);
+      const remainingNew = updated.filter(r => r._isNew).length;
+      if (remainingNew === 0) setIsDirty(false);
+      return;
+    }
+
     if (onDeleteRow) {
       try {
         await onDeleteRow(rowToDelete);
@@ -71,10 +83,13 @@ export const DataGrid = ({
     setSuccessMsg(null);
     try {
       if (onSave) {
-        await onSave(gridData);
+        // Strip temporary _isNew flag before sending to API
+        const cleanData = gridData.map(({ _isNew, ...rest }) => rest);
+        await onSave(cleanData);
         setIsDirty(false);
-        setSuccessMsg('Changes saved successfully!');
+        setSuccessMsg('Changes saved successfully to database!');
         setTimeout(() => setSuccessMsg(null), 3000);
+        if (onRefresh) onRefresh();
       }
     } catch (err) {
       const errDetails = err.response?.data?.detail?.errors || [err.response?.data?.detail || err.message];
@@ -85,7 +100,7 @@ export const DataGrid = ({
   };
 
   const handleReset = () => {
-    setGridData(data);
+    setGridData(Array.isArray(data) ? data : []);
     setIsDirty(false);
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -113,10 +128,11 @@ export const DataGrid = ({
 
   // Search & Filter
   const filteredData = useMemo(() => {
-    return gridData.filter(row => {
+    return (gridData || []).filter(row => {
+      if (!row || typeof row !== 'object') return false;
       if (!searchTerm) return true;
       return Object.values(row).some(val =>
-        String(val).toLowerCase().includes(searchTerm.toLowerCase())
+        String(val ?? '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
   }, [gridData, searchTerm]);
@@ -133,6 +149,14 @@ export const DataGrid = ({
     });
   }, [filteredData, sortCol, sortDir]);
 
+  const existingCount = useMemo(() => {
+    return sortedData.filter(r => !r._isNew).length;
+  }, [sortedData]);
+
+  const unsavedCount = useMemo(() => {
+    return sortedData.filter(r => r._isNew).length;
+  }, [sortedData]);
+
   const handleSort = (key) => {
     if (sortCol === key) {
       setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
@@ -142,20 +166,34 @@ export const DataGrid = ({
     }
   };
 
+  const getColMinWidth = (col) => {
+    if (col.minWidth) return col.minWidth;
+    const key = (col.key || '').toLowerCase();
+    if (key.includes('name') || key.includes('description') || key.includes('defect') || key.includes('location') || key.includes('track') || key.includes('equipment')) {
+      return '220px';
+    }
+    if (key.includes('id') || key.includes('department') || key.includes('qualification') || key.includes('corridor') || key.includes('section')) {
+      return '160px';
+    }
+    return '130px';
+  };
+
   return (
     <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
       {/* Header Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>{title}</h2>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-            Showing {sortedData.length} records {isDirty && '• (Unsaved Changes)'}
+          <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
+            Showing <strong>{existingCount}</strong> existing records
+            {unsavedCount > 0 && <span style={{ color: '#fbbf24', marginLeft: '6px' }}>+ {unsavedCount} unsaved row{unsavedCount > 1 ? 's' : ''}</span>}
+            {isDirty && <span style={{ color: '#38bdf8', marginLeft: '6px' }}>• (Unsaved Changes)</span>}
           </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* Search Box */}
-          <div style={{ position: 'relative', width: '200px' }}>
+          <div style={{ position: 'relative', width: '220px' }}>
             <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
             <input
               type="text"
@@ -177,7 +215,7 @@ export const DataGrid = ({
                 </label>
               )}
               <button onClick={handleAddRow} className="btn btn-secondary" title="Add Row">
-                <Plus size={16} /> Add
+                <Plus size={16} /> Add Row
               </button>
               {isDirty && (
                 <>
@@ -222,25 +260,25 @@ export const DataGrid = ({
 
       {/* Table Grid */}
       <div className="table-container">
-        <table className="custom-table">
+        <table className="custom-table" style={{ width: '100%', minWidth: 'max-content' }}>
           <thead>
             <tr>
               {columns.map(col => (
-                <th key={col.key} onClick={() => handleSort(col.key)} style={{ cursor: 'pointer' }}>
+                <th key={col.key} onClick={() => handleSort(col.key)} style={{ cursor: 'pointer', minWidth: getColMinWidth(col) }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {col.label}
                     {sortCol === col.key && (sortDir === 'asc' ? ' ▲' : ' ▼')}
                   </div>
                 </th>
               ))}
-              {!readOnly && <th style={{ width: '60px' }}>Actions</th>}
+              {!readOnly && <th style={{ width: '80px', minWidth: '80px' }}>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {sortedData.map((row, rowIdx) => (
-              <tr key={rowIdx}>
+              <tr key={rowIdx} style={row._isNew ? { background: 'rgba(59, 130, 246, 0.12)', borderLeft: '3px solid #3b82f6' } : {}}>
                 {columns.map(col => (
-                  <td key={col.key}>
+                  <td key={col.key} style={{ minWidth: getColMinWidth(col) }}>
                     {!readOnly ? (
                       <input
                         type={col.type || 'text'}
@@ -249,13 +287,15 @@ export const DataGrid = ({
                         placeholder={col.placeholder || ''}
                         onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
                         style={{
-                          background: 'transparent',
-                          border: '1px solid transparent',
-                          padding: '4px 8px',
-                          height: 'auto'
+                          background: row._isNew ? 'rgba(15, 23, 42, 0.9)' : 'transparent',
+                          border: row._isNew ? '1px solid #3b82f6' : '1px solid transparent',
+                          padding: '6px 10px',
+                          height: 'auto',
+                          width: '100%',
+                          fontSize: '0.88rem'
                         }}
                         onFocus={e => (e.target.style.border = '1px solid #3b82f6')}
-                        onBlur={e => (e.target.style.border = '1px solid transparent')}
+                        onBlur={e => (e.target.style.border = row._isNew ? '1px solid #3b82f6' : '1px solid transparent')}
                       />
                     ) : (
                       <span>{row[col.key]}</span>
@@ -266,8 +306,8 @@ export const DataGrid = ({
                   <td>
                     <button
                       onClick={() => handleDeleteRow(rowIdx)}
-                      style={{ background: 'transparent', border: 'none', color: '#f43f5e', cursor: 'pointer' }}
-                      title="Delete Row"
+                      style={{ background: 'transparent', border: 'none', color: '#f43f5e', cursor: 'pointer', padding: '4px' }}
+                      title={row._isNew ? 'Discard Unsaved Row' : 'Delete Row'}
                     >
                       <Trash2 size={16} />
                     </button>
