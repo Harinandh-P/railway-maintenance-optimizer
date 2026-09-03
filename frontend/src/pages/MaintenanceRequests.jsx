@@ -71,7 +71,7 @@ export const MaintenanceRequests = () => {
       const res = await api.post('/data/maintenance-requests/create', formData);
       setSuccessMsg(`Maintenance Request ${formData.request_id} created successfully!`);
       setShowForm(false);
-      fetchData();
+      await fetchData();
       setFormData(initialFormState);
     } catch (err) {
       setError(err.response?.data?.detail || err.message);

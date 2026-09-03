@@ -17,10 +17,7 @@ import {
 import api from '../services/api';
 
 export const Dashboard = () => {
-  const [metrics, setMetrics] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [plan, setPlan] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [errorBanner, setErrorBanner] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -29,19 +26,27 @@ export const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const res = await api.get('/dashboard/metrics');
-      setMetrics(res.data);
+      setMetrics(res.data || {});
 
       try {
         const reqRes = await api.get('/data/maintenance-requests/');
-        setRequests(reqRes.data);
-      } catch (e) {}
+        setRequests(Array.isArray(reqRes.data) ? reqRes.data : []);
+      } catch (e) {
+        setRequests([]);
+      }
 
       try {
         const planRes = await api.get('/results/final-plan');
-        setPlan(planRes.data);
-      } catch (e) {}
+        setPlan(planRes.data || {});
+      } catch (e) {
+        setPlan({});
+      }
     } catch (err) {
       console.error('Failed to load metrics:', err);
+      setErrorBanner(err.response?.data?.detail || err.message || 'Failed to connect to backend server');
+      setMetrics({});
+      setRequests([]);
+      setPlan({});
     } finally {
       setLoading(false);
     }
@@ -51,11 +56,13 @@ export const Dashboard = () => {
     return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Dashboard Metrics...</div>;
   }
 
-  // Calculate Distributions
+  // Calculate Distributions safely
+  const safeRequests = Array.isArray(requests) ? requests : [];
   const priorityCount = { Critical: 0, High: 0, Medium: 0, Low: 0 };
   const corridorCount = {};
 
-  requests.forEach(r => {
+  safeRequests.forEach(r => {
+    if (!r || typeof r !== 'object') return;
     const sev = r.defect_severity || 'Medium';
     priorityCount[sev] = (priorityCount[sev] || 0) + 1;
 
@@ -91,6 +98,13 @@ export const Dashboard = () => {
         </NavLink>
       </div>
 
+      {errorBanner && (
+        <div style={{ padding: '14px 18px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fb7185', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <AlertTriangle size={18} />
+          <span>Notice: {errorBanner}</span>
+        </div>
+      )}
+
       {/* Metrics Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '20px', marginBottom: '32px' }}>
         {statCards.map((card, idx) => {
@@ -120,7 +134,7 @@ export const Dashboard = () => {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {Object.entries(priorityCount).map(([key, val]) => {
-              const pct = requests.length ? Math.round((val / requests.length) * 100) : 0;
+              const pct = safeRequests.length ? Math.round((val / safeRequests.length) * 100) : 0;
               const colors = { Critical: '#f43f5e', High: '#f59e0b', Medium: '#3b82f6', Low: '#10b981' };
               return (
                 <div key={key}>

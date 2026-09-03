@@ -87,15 +87,26 @@ class CSVService:
                     required_equipment, required_materials, due_date, status, created_by
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(request_id) DO UPDATE SET
+                    request_datetime = EXCLUDED.request_datetime,
                     department = EXCLUDED.department,
                     asset_id = EXCLUDED.asset_id,
+                    asset_type = EXCLUDED.asset_type,
                     location = EXCLUDED.location,
+                    point_a = EXCLUDED.point_a,
+                    point_b = EXCLUDED.point_b,
+                    corridor_id = EXCLUDED.corridor_id,
+                    section_id = EXCLUDED.section_id,
+                    maintenance_type = EXCLUDED.maintenance_type,
                     defect_type = EXCLUDED.defect_type,
+                    defect_reason = EXCLUDED.defect_reason,
                     defect_severity = EXCLUDED.defect_severity,
                     safety_risk = EXCLUDED.safety_risk,
+                    safety_risk_description = EXCLUDED.safety_risk_description,
+                    fault_description = EXCLUDED.fault_description,
                     required_duration_hours = EXCLUDED.required_duration_hours,
                     required_workers = EXCLUDED.required_workers,
                     required_equipment = EXCLUDED.required_equipment,
+                    required_materials = EXCLUDED.required_materials,
                     due_date = EXCLUDED.due_date,
                     status = EXCLUDED.status,
                     created_by = EXCLUDED.created_by

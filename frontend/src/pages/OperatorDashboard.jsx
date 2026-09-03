@@ -108,7 +108,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   const filteredRequests = (Array.isArray(requests) ? requests : []).filter(r => {
     if (!r || typeof r !== 'object') return false;
     if (user?.role === 'ADMIN' || dept === 'ALL') return true;
-    if (r.created_by && user?.username && r.created_by === user.username) return true;
+    if (r.created_by && user?.username && r.created_by.toString().toLowerCase().trim() === user.username.toString().toLowerCase().trim()) return true;
     const d = (r.department || '').toUpperCase();
     if (dept === 'SIGNAL' && (d.includes('SIGNAL') || d.includes('S&T'))) return true;
     if (dept === 'ELECTRICAL' && (d.includes('ELECTRICAL') || d.includes('TRACTION') || d.includes('ELEC'))) return true;

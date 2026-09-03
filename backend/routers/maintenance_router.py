@@ -21,20 +21,27 @@ class CreateMaintenanceRequestModel(BaseModel):
     point_a: str
     point_b: str
     corridor_id: str
+    section_id: Optional[str] = "C1-S1"
     maintenance_type: str
     defect_type: str
     defect_reason: str
     defect_severity: str
     safety_risk: str
+    safety_risk_description: Optional[str] = ""
+    fault_description: Optional[str] = ""
     required_duration_hours: float
     required_workers: int
     required_equipment: str
     required_materials: Optional[str] = ""
     due_date: str
+    status: Optional[str] = "PENDING"
+    created_by: Optional[str] = None
 
 @router.get("/")
 def get_maintenance_requests(current_user: TokenData = Depends(get_current_user)):
-    return CSVService.read_csv(AppConfig.REQUESTS_CSV)
+    records = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+    print(f"[API GET /maintenance-requests] User: '{current_user.username}', Role: '{current_user.role}', Dept: '{current_user.department}', Returned: {len(records)} records")
+    return records
 
 @router.post("/")
 def save_maintenance_requests(data: List[Dict[str, Any]], current_user: TokenData = Depends(get_current_user)):
@@ -46,6 +53,7 @@ def save_maintenance_requests(data: List[Dict[str, Any]], current_user: TokenDat
 
 @router.post("/create")
 def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, current_user: TokenData = Depends(get_current_user)):
+    from backend.database import is_postgres
     existing = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     
     # Check duplicate ID
@@ -53,10 +61,12 @@ def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, cu
         raise HTTPException(status_code=400, detail=f"Request ID '{payload.request_id}' already exists.")
 
     new_record = payload.dict()
-    if not new_record.get("created_by"):
-        new_record["created_by"] = current_user.username
+    new_record["created_by"] = current_user.username
     if not new_record.get("department"):
         new_record["department"] = current_user.department or "Engineering"
+
+    db_type = "PostgreSQL" if is_postgres() else "SQLite"
+    print(f"[API POST /create] Database: {db_type}, User: '{current_user.username}', RequestID: '{payload.request_id}', CreatedBy: '{new_record['created_by']}'")
 
     updated_list = existing + [new_record]
 
@@ -65,6 +75,8 @@ def create_single_maintenance_request(payload: CreateMaintenanceRequestModel, cu
         raise HTTPException(status_code=400, detail={"message": "Validation failed", "errors": errors})
 
     AuditService.log_action(current_user.username, current_user.role, "CREATE_MAINTENANCE_REQUEST", dataset="maintenance_requests.csv", details=f"Created request {payload.request_id}")
+    
+    print(f"[API POST /create] Successful DB insertion & commit for RequestID: '{payload.request_id}'")
     return {"status": "SUCCESS", "message": f"Maintenance Request {payload.request_id} created successfully", "data": new_record}
 
 @router.post("/import/csv")
