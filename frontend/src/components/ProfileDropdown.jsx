@@ -113,34 +113,36 @@ export const ProfileDropdown = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{
-          background: 'rgba(30, 41, 59, 0.8)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          borderRadius: '10px',
+          background: '#1E2B42',
+          border: '1px solid #24334D',
+          borderRadius: '12px',
           padding: '8px 14px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          color: 'white',
+          color: '#DFE2EE',
           cursor: 'pointer',
-          transition: 'all 0.2s ease'
+          transition: 'all 0.18s ease',
+          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.08)'
         }}
       >
         <div style={{
-          background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+          background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
           width: '32px',
           height: '32px',
           borderRadius: '8px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4)'
         }}>
           <User size={18} color="white" />
         </div>
         <div style={{ textAlign: 'left' }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'white', lineHeight: '1.2' }}>{user?.fullName || user?.username}</div>
-          <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{user?.role} ({user?.department || 'ALL'})</div>
+          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#DFE2EE', lineHeight: '1.2', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName || user?.username}</div>
+          <div style={{ fontSize: '0.70rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>{user?.role} ({user?.department || 'ALL'})</div>
         </div>
-        <ChevronDown size={16} color="#94a3b8" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+        <ChevronDown size={16} color="#94A3B8" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
       </button>
 
       {/* Dropdown Menu */}
@@ -152,12 +154,13 @@ export const ProfileDropdown = () => {
           width: '240px',
           zIndex: 500,
           padding: '8px',
-          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
-          background: '#1e293b'
+          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.6)',
+          background: '#1A2438',
+          border: '1px solid #24334D'
         }}>
-          <div style={{ padding: '10px 12px', borderBottom: '1px solid rgba(255,255,255,0.08)', marginBottom: '4px' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'white' }}>{user?.fullName}</div>
-            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Username: <strong>{user?.username}</strong></div>
+          <div style={{ padding: '10px 12px', borderBottom: '1px solid #24334D', marginBottom: '4px' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#DFE2EE', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName}</div>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>Username: <strong>{user?.username}</strong></div>
           </div>
 
           {isAdmin && (

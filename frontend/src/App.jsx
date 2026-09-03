@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Sidebar } from './components/Sidebar';
+import { HeaderBar } from './components/HeaderBar';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { OperatorDashboard } from './pages/OperatorDashboard';
@@ -46,6 +47,7 @@ const ProtectedLayout = () => {
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">
+        <HeaderBar />
         <Routes>
           {/* Default entry point based on role */}
           <Route path="/" element={<Navigate to={defaultRedirect} replace />} />

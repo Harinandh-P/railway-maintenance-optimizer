@@ -33,14 +33,14 @@ export const Login = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%)',
+      background: 'radial-gradient(circle at top left, #151E2E 0%, #0B0F17 100%)',
       padding: '20px'
     }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '40px' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '40px', background: '#1A2438', border: '1px solid #24334D', borderRadius: '16px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
         {/* Header Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+            background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
             width: '64px',
             height: '64px',
             borderRadius: '16px',
@@ -48,12 +48,12 @@ export const Login = () => {
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 16px auto',
-            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.4)'
+            boxShadow: '0 8px 24px rgba(37, 99, 235, 0.4)'
           }}>
             <Train size={36} color="white" />
           </div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'white', letterSpacing: '1px' }}>AROHA</h1>
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '4px' }}>
+          <h1 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#DFE2EE', letterSpacing: '1px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>AROHA</h1>
+          <p style={{ fontSize: '0.80rem', color: '#94A3B8', marginTop: '4px', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Railway Maintenance Block Optimizer
           </p>
         </div>
