@@ -573,12 +573,5 @@ def init_db():
         conn.close()
         print("[DATABASE] SQLite schema initialized successfully.")
 
-    # Populate datasets if empty
-    try:
-        from backend.scripts.migrate_csv_to_postgres import migrate_datasets
-        migrate_datasets()
-    except Exception as e:
-        print(f"[DATABASE] Auto dataset migration notice: {e}")
-
 if __name__ == "__main__":
     init_db()
