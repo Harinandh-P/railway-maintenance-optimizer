@@ -26,14 +26,25 @@ export const Corridors = () => {
     setData(updatedData);
   };
 
+  const handleDelete = async (row) => {
+    if (row && row.corridor_id && row.track_id) {
+      await api.delete(`/data/corridors/${row.corridor_id}/${row.track_id}`);
+    } else if (row && row.corridor_id) {
+      await api.delete(`/data/corridors/${row.corridor_id}`);
+    }
+  };
+
   const columns = [
-    { key: 'corridor_id', label: 'Corridor ID', placeholder: 'Example: C1' },
-    { key: 'corridor_name', label: 'Corridor Name', placeholder: 'Example: Salem - Chennai' },
-    { key: 'total_length_km', label: 'Length (km)', type: 'number', placeholder: 'Example: 334' },
-    { key: 'total_sections', label: 'Sections', type: 'number', placeholder: 'Example: 12' },
-    { key: 'daily_train_frequency', label: 'Train Freq', type: 'number', placeholder: 'Example: 45' },
-    { key: 'average_traffic_density', label: 'Traffic Density', type: 'number', placeholder: 'Example: 8.5' },
-    { key: 'operational_priority', label: 'Priority', type: 'number', placeholder: 'Example: 1' }
+    { key: 'corridor_id', label: 'Corridor ID', placeholder: 'e.g., COR004' },
+    { key: 'track_id', label: 'Track ID', placeholder: 'e.g., T1' },
+    { key: 'track_capacity', label: 'Track Capacity', type: 'number', placeholder: 'e.g., 100' },
+    { key: 'current_occupancy', label: 'Current Occupancy', type: 'number', placeholder: 'e.g., 50' },
+    { key: 'direction', label: 'Direction', placeholder: 'e.g., Both' },
+    { key: 'compatible_train_types', label: 'Compatible Trains', placeholder: 'e.g., Passenger,Goods' },
+    { key: 'alternative_routing_possible', label: 'Alt Routing', placeholder: 'e.g., False' },
+    { key: 'block_availability', label: 'Block Available', placeholder: 'e.g., True' },
+    { key: 'existing_restrictions', label: 'Existing Restrictions', placeholder: 'e.g., Speed restriction' },
+    { key: 'maintenance_restrictions', label: 'Maintenance Restrictions', placeholder: 'e.g., Maintenance requested' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Corridors Dataset...</div>;
@@ -45,6 +56,7 @@ export const Corridors = () => {
         columns={columns}
         data={data}
         onSave={handleSave}
+        onDeleteRow={handleDelete}
         exportCsvUrl="/api/data/corridors/export/csv"
         exportExcelUrl="/api/data/corridors/export/excel"
       />

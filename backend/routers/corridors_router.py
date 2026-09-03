@@ -49,3 +49,24 @@ def export_corridors_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.CORRIDOR_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Corridors")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=corridor_data.xlsx"})
+
+@router.delete("/{corridor_id}/{track_id}")
+def delete_corridor_track(corridor_id: str, track_id: str, current_user: TokenData = Depends(require_admin)):
+    from backend.database import execute_statement
+    import pandas as pd
+    execute_statement("DELETE FROM corridor_data WHERE corridor_id = ? AND track_id = ?", (corridor_id, track_id))
+    if AppConfig.CORRIDOR_CSV.exists():
+        try:
+            df = pd.read_csv(AppConfig.CORRIDOR_CSV)
+            df = df[~((df['corridor_id'].astype(str) == str(corridor_id)) & (df['track_id'].astype(str) == str(track_id)))]
+            df.to_csv(AppConfig.CORRIDOR_CSV, index=False)
+        except Exception:
+            pass
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_CORRIDOR", dataset="corridor_data.csv", details=f"Deleted corridor track {corridor_id}/{track_id}")
+    return {"status": "SUCCESS", "message": f"Corridor track {corridor_id}/{track_id} deleted successfully"}
+
+@router.delete("/{corridor_id}")
+def delete_corridor(corridor_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.CORRIDOR_CSV, "corridor_data", "corridor_id", corridor_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_CORRIDOR", dataset="corridor_data.csv", details=f"Deleted corridor record {corridor_id}")
+    return {"status": "SUCCESS", "message": f"Corridor {corridor_id} deleted successfully"}

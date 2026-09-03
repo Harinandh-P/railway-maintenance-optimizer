@@ -60,3 +60,9 @@ def export_routes_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.TRAIN_ROUTES_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Train Routes")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=train_routes.xlsx"})
+
+@router.delete("/{train_id}")
+def delete_train_route(train_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.TRAIN_ROUTES_CSV, "train_routes", "train_id", train_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_TRAIN_ROUTE", dataset="train_routes.csv", details=f"Deleted train route for {train_id}")
+    return {"status": "SUCCESS", "message": f"Train route {train_id} deleted successfully"}

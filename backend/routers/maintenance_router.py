@@ -94,3 +94,9 @@ def export_requests_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Maintenance Requests")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=maintenance_requests.xlsx"})
+
+@router.delete("/{request_id}")
+def delete_maintenance_request(request_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.REQUESTS_CSV, "maintenance_requests", "request_id", request_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_MAINTENANCE_REQUEST", dataset="maintenance_requests.csv", details=f"Deleted maintenance request {request_id}")
+    return {"status": "SUCCESS", "message": f"Maintenance request {request_id} deleted successfully"}

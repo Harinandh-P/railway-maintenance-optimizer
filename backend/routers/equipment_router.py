@@ -50,3 +50,9 @@ def export_equipment_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.EQUIPMENT_DB_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Equipment")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=equipment_database.xlsx"})
+
+@router.delete("/{equipment_id}")
+def delete_equipment(equipment_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.EQUIPMENT_DB_CSV, "equipment", "equipment_id", equipment_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_EQUIPMENT", dataset="equipment_database.csv", details=f"Deleted equipment {equipment_id}")
+    return {"status": "SUCCESS", "message": f"Equipment {equipment_id} deleted successfully"}

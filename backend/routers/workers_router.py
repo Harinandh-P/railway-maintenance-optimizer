@@ -56,3 +56,10 @@ def export_workers_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.WORKER_DB_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Workers")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=worker_database.xlsx"})
+
+@router.delete("/{worker_id}")
+def delete_worker(worker_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.WORKER_DB_CSV, "workers", "worker_id", worker_id)
+    sync_workers_to_json()
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_WORKER", dataset="worker_database.csv", details=f"Deleted worker {worker_id}")
+    return {"status": "SUCCESS", "message": f"Worker {worker_id} deleted successfully"}

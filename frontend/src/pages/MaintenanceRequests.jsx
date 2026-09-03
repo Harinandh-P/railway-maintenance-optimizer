@@ -12,25 +12,25 @@ export const MaintenanceRequests = () => {
   const [successMsg, setSuccessMsg] = useState(null);
 
   const initialFormState = {
-    request_id: `REQ${Math.floor(100 + Math.random() * 900)}`,
+    request_id: '',
     request_datetime: new Date().toISOString().slice(0, 16).replace('T', ' '),
     department: 'Engineering',
-    asset_id: 'TRK003',
+    asset_id: '',
     asset_type: 'Track',
-    location: 'KM 128/2',
-    point_a: 'Station B',
-    point_b: 'Station C',
+    location: '',
+    point_a: '',
+    point_b: '',
     corridor_id: 'COR001',
     maintenance_type: 'Corrective',
-    defect_type: 'Rail Joint Defect',
-    defect_reason: 'Thermal Stress',
+    defect_type: '',
+    defect_reason: '',
     defect_severity: 'High',
     safety_risk: 'High',
-    required_duration_hours: 2.0,
-    required_workers: 6,
-    required_equipment: 'Track Machine',
-    required_materials: 'Fasteners;Rail Joiners',
-    due_date: '2026-08-30'
+    required_duration_hours: '',
+    required_workers: '',
+    required_equipment: '',
+    required_materials: '',
+    due_date: ''
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -55,6 +55,12 @@ export const MaintenanceRequests = () => {
     setData(updatedData);
   };
 
+  const handleDelete = async (row) => {
+    if (row && row.request_id) {
+      await api.delete(`/data/maintenance-requests/${row.request_id}`);
+    }
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -66,10 +72,7 @@ export const MaintenanceRequests = () => {
       setSuccessMsg(`Maintenance Request ${formData.request_id} created successfully!`);
       setShowForm(false);
       fetchData();
-      setFormData({
-        ...initialFormState,
-        request_id: `REQ${Math.floor(100 + Math.random() * 900)}`
-      });
+      setFormData(initialFormState);
     } catch (err) {
       setError(err.response?.data?.detail || err.message);
     } finally {
@@ -94,24 +97,24 @@ export const MaintenanceRequests = () => {
   };
 
   const columns = [
-    { key: 'request_id', label: 'Request ID', placeholder: 'Example: M037' },
-    { key: 'request_datetime', label: 'Request Date/Time', placeholder: 'Format: YYYY-MM-DD HH:MM' },
-    { key: 'department', label: 'Department', placeholder: 'Example: Track Maintenance' },
-    { key: 'asset_id', label: 'Asset ID', placeholder: 'Example: AST-C1-015' },
-    { key: 'asset_type', label: 'Asset Type', placeholder: 'Example: Track' },
-    { key: 'location', label: 'Location', placeholder: 'Example: Salem Junction' },
-    { key: 'point_a', label: 'Point A', placeholder: 'Example: Station A' },
-    { key: 'point_b', label: 'Point B', placeholder: 'Example: Station B' },
-    { key: 'corridor_id', label: 'Corridor', placeholder: 'Example: C1' },
-    { key: 'maintenance_type', label: 'Type', placeholder: 'Example: Track Inspection' },
-    { key: 'defect_type', label: 'Defect Type', placeholder: 'Example: Rail Crack' },
-    { key: 'defect_reason', label: 'Defect Reason', placeholder: 'Example: Thermal Stress' },
-    { key: 'defect_severity', label: 'Severity', placeholder: 'Example: High' },
-    { key: 'safety_risk', label: 'Safety Risk', placeholder: 'Example: High' },
-    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number', placeholder: 'Example: 2.5' },
-    { key: 'required_workers', label: 'Workers', type: 'number', placeholder: 'Example: 4' },
-    { key: 'required_equipment', label: 'Equipment', placeholder: 'Example: Track Machine' },
-    { key: 'due_date', label: 'Due Date', placeholder: 'Example: 2026-09-15' }
+    { key: 'request_id', label: 'Request ID', placeholder: 'e.g., M037' },
+    { key: 'request_datetime', label: 'Request Date/Time', placeholder: 'e.g., 2026-08-28 10:00' },
+    { key: 'department', label: 'Department', placeholder: 'e.g., Track Maintenance' },
+    { key: 'asset_id', label: 'Asset ID', placeholder: 'e.g., AST012' },
+    { key: 'asset_type', label: 'Asset Type', placeholder: 'e.g., Track' },
+    { key: 'location', label: 'Location', placeholder: 'e.g., C1-KM155' },
+    { key: 'point_a', label: 'Point A', placeholder: 'e.g., Station A' },
+    { key: 'point_b', label: 'Point B', placeholder: 'e.g., Station B' },
+    { key: 'corridor_id', label: 'Corridor', placeholder: 'e.g., C1' },
+    { key: 'maintenance_type', label: 'Type', placeholder: 'e.g., Corrective' },
+    { key: 'defect_type', label: 'Defect Type', placeholder: 'e.g., Rail Crack' },
+    { key: 'defect_reason', label: 'Defect Reason', placeholder: 'e.g., Thermal Stress' },
+    { key: 'defect_severity', label: 'Severity', placeholder: 'e.g., High' },
+    { key: 'safety_risk', label: 'Safety Risk', placeholder: 'e.g., High' },
+    { key: 'required_duration_hours', label: 'Duration (hrs)', type: 'number', placeholder: 'e.g., 2.5' },
+    { key: 'required_workers', label: 'Workers', type: 'number', placeholder: 'e.g., 4' },
+    { key: 'required_equipment', label: 'Equipment', placeholder: 'e.g., Track Machine' },
+    { key: 'due_date', label: 'Due Date', placeholder: 'e.g., 2026-09-15' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Maintenance Requests...</div>;
@@ -163,7 +166,7 @@ export const MaintenanceRequests = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px', marginBottom: '24px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Request ID</label>
-                <input type="text" className="input-field" value={formData.request_id} onChange={e => setFormData({ ...formData, request_id: e.target.value })} required />
+                <input type="text" className="input-field" value={formData.request_id} onChange={e => setFormData({ ...formData, request_id: e.target.value })} placeholder="e.g., M037" required />
               </div>
 
               <div>
@@ -177,7 +180,7 @@ export const MaintenanceRequests = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Asset ID</label>
-                <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
+                <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} placeholder="e.g., AST012" required />
               </div>
 
               <div>
@@ -191,7 +194,7 @@ export const MaintenanceRequests = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Location (KM)</label>
-                <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
+                <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="e.g., C1-KM155" required />
               </div>
 
               <div>
@@ -205,7 +208,7 @@ export const MaintenanceRequests = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Defect Type</label>
-                <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
+                <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} placeholder="e.g., Rail Crack" required />
               </div>
 
               <div>
@@ -229,17 +232,17 @@ export const MaintenanceRequests = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Duration (Hours)</label>
-                <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: parseFloat(e.target.value) })} required />
+                <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value ? parseFloat(e.target.value) : '' })} placeholder="e.g., 2.5" required />
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Workers Required</label>
-                <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: parseInt(e.target.value) })} required />
+                <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value ? parseInt(e.target.value) : '' })} placeholder="e.g., 4" required />
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '6px' }}>Equipment Required</label>
-                <input type="text" className="input-field" value={formData.required_equipment} onChange={e => setFormData({ ...formData, required_equipment: e.target.value })} required />
+                <input type="text" className="input-field" value={formData.required_equipment} onChange={e => setFormData({ ...formData, required_equipment: e.target.value })} placeholder="e.g., Track Machine" required />
               </div>
 
               <div>
@@ -264,6 +267,7 @@ export const MaintenanceRequests = () => {
         columns={columns}
         data={data}
         onSave={handleSave}
+        onDeleteRow={handleDelete}
         exportCsvUrl="/api/data/maintenance-requests/export/csv"
         exportExcelUrl="/api/data/maintenance-requests/export/excel"
       />

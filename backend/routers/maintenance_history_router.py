@@ -49,3 +49,9 @@ def export_history_excel(current_user: TokenData = Depends(get_current_user)):
     data = CSVService.read_csv(AppConfig.HISTORY_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Maintenance History")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=maintenance_history.xlsx"})
+
+@router.delete("/{task_id}")
+def delete_maintenance_history(task_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.HISTORY_CSV, "maintenance_history", "task_id", task_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_MAINTENANCE_HISTORY", dataset="maintenance_history.csv", details=f"Deleted history task {task_id}")
+    return {"status": "SUCCESS", "message": f"Task {task_id} deleted successfully"}

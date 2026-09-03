@@ -159,6 +159,7 @@ def migrate_datasets():
     # 5. Train Routes Migration
     if AppConfig.TRAIN_ROUTES_CSV.exists():
         df_tr = pd.read_csv(AppConfig.TRAIN_ROUTES_CSV)
+        execute_statement("DELETE FROM train_routes")
         tr_cnt = 0
         for _, row in df_tr.iterrows():
             stmt = """
@@ -233,7 +234,7 @@ def migrate_datasets():
             stmt = """
             INSERT INTO corridor_data (corridor_id, track_id, track_capacity, current_occupancy, direction, compatible_train_types, alternative_routing_possible, block_availability, existing_restrictions, maintenance_restrictions)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(corridor_id) DO NOTHING
+            ON CONFLICT(corridor_id, track_id) DO NOTHING
             """
             params = (
                 c_id,

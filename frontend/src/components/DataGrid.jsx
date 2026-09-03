@@ -7,6 +7,7 @@ export const DataGrid = ({
   columns,
   data,
   onSave,
+  onDeleteRow,
   exportCsvUrl,
   exportExcelUrl,
   importCsvUrl,
@@ -45,10 +46,23 @@ export const DataGrid = ({
     setIsDirty(true);
   };
 
-  const handleDeleteRow = (rowIdx) => {
-    const updated = gridData.filter((_, idx) => idx !== rowIdx);
-    setGridData(updated);
-    setIsDirty(true);
+  const handleDeleteRow = async (rowIdx) => {
+    const rowToDelete = gridData[rowIdx];
+    if (onDeleteRow) {
+      try {
+        await onDeleteRow(rowToDelete);
+        const updated = gridData.filter((_, idx) => idx !== rowIdx);
+        setGridData(updated);
+        setSuccessMsg('Record deleted successfully from database!');
+        setTimeout(() => setSuccessMsg(null), 3000);
+      } catch (err) {
+        setErrorMsg(err.response?.data?.detail || err.message || 'Failed to delete record');
+      }
+    } else {
+      const updated = gridData.filter((_, idx) => idx !== rowIdx);
+      setGridData(updated);
+      setIsDirty(true);
+    }
   };
 
   const handleSave = async () => {

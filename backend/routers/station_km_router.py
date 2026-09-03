@@ -50,3 +50,9 @@ def export_station_km_excel(current_user: TokenData = Depends(get_current_user))
     data = CSVService.read_csv(AppConfig.STATION_KM_CSV)
     excel_bytes = ExcelService.export_to_excel(data, sheet_name="Station KM Mapping")
     return Response(content=excel_bytes, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=station_km_mapping.xlsx"})
+
+@router.delete("/{mapping_id}")
+def delete_station_km(mapping_id: str, current_user: TokenData = Depends(require_admin)):
+    CSVService.delete_record(AppConfig.STATION_KM_CSV, "station_km_mapping", "mapping_id", mapping_id)
+    AuditService.log_action(current_user.username, current_user.role, "DELETE_STATION_KM", dataset="station_km_mapping.csv", details=f"Deleted station mapping {mapping_id}")
+    return {"status": "SUCCESS", "message": f"Mapping {mapping_id} deleted successfully"}

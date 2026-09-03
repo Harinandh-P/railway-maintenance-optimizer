@@ -26,16 +26,22 @@ export const Workers = () => {
     setData(updatedData);
   };
 
+  const handleDelete = async (row) => {
+    if (row && row.worker_id) {
+      await api.delete(`/data/workers/${row.worker_id}`);
+    }
+  };
+
   const columns = [
-    { key: 'worker_id', label: 'Worker ID', placeholder: 'Example: W001' },
-    { key: 'worker_name', label: 'Name', placeholder: 'Example: Raj Kumar' },
-    { key: 'worker_type', label: 'Sector', placeholder: 'Example: TRACK' },
-    { key: 'skill', label: 'Skill', placeholder: 'Example: Track Maintenance' },
-    { key: 'skill_level', label: 'Skill Level', type: 'number', placeholder: 'Example: 2' },
-    { key: 'qualification_level', label: 'Qualification', placeholder: 'Example: Senior Technician' },
-    { key: 'corridor', label: 'Corridor', placeholder: 'Example: C1' },
-    { key: 'available', label: 'Available', placeholder: 'Example: True' },
-    { key: 'status', label: 'Status', placeholder: 'Example: Available' }
+    { key: 'worker_id', label: 'Worker ID', placeholder: 'e.g., W081' },
+    { key: 'worker_name', label: 'Name', placeholder: 'e.g., Arun Kumar' },
+    { key: 'worker_type', label: 'Sector', placeholder: 'e.g., TRACK' },
+    { key: 'skill', label: 'Skill', placeholder: 'e.g., Track Maintenance' },
+    { key: 'skill_level', label: 'Skill Level', type: 'number', placeholder: 'e.g., 3' },
+    { key: 'qualification_level', label: 'Qualification', placeholder: 'e.g., Senior Technician' },
+    { key: 'corridor', label: 'Corridor', placeholder: 'e.g., C1' },
+    { key: 'available', label: 'Available', placeholder: 'e.g., True' },
+    { key: 'status', label: 'Status', placeholder: 'e.g., Available' }
   ];
 
   if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Workers Database...</div>;
@@ -47,6 +53,7 @@ export const Workers = () => {
         columns={columns}
         data={data}
         onSave={handleSave}
+        onDeleteRow={handleDelete}
         exportCsvUrl="/api/data/workers/export/csv"
         exportExcelUrl="/api/data/workers/export/excel"
       />

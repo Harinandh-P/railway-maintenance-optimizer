@@ -236,7 +236,7 @@ def init_db():
 
             conn.exec_driver_sql("""
             CREATE TABLE IF NOT EXISTS corridor_data (
-                corridor_id VARCHAR(50) PRIMARY KEY,
+                corridor_id VARCHAR(50),
                 track_id VARCHAR(50),
                 track_capacity INT,
                 current_occupancy INT,
@@ -245,7 +245,8 @@ def init_db():
                 alternative_routing_possible VARCHAR(10),
                 block_availability VARCHAR(50),
                 existing_restrictions TEXT,
-                maintenance_restrictions TEXT
+                maintenance_restrictions TEXT,
+                PRIMARY KEY (corridor_id, track_id)
             );
             """)
 
@@ -494,7 +495,7 @@ def init_db():
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS corridor_data (
-            corridor_id TEXT PRIMARY KEY,
+            corridor_id TEXT,
             track_id TEXT,
             track_capacity INTEGER,
             current_occupancy INTEGER,
@@ -503,7 +504,8 @@ def init_db():
             alternative_routing_possible TEXT,
             block_availability TEXT,
             existing_restrictions TEXT,
-            maintenance_restrictions TEXT
+            maintenance_restrictions TEXT,
+            PRIMARY KEY (corridor_id, track_id)
         )
         """)
 

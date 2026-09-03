@@ -255,7 +255,7 @@ class CSVService:
                     compatible_train_types, alternative_routing_possible, block_availability,
                     existing_restrictions, maintenance_restrictions
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(corridor_id) DO UPDATE SET
+                ON CONFLICT(corridor_id, track_id) DO UPDATE SET
                     track_id = EXCLUDED.track_id,
                     track_capacity = EXCLUDED.track_capacity,
                     current_occupancy = EXCLUDED.current_occupancy,
@@ -400,3 +400,19 @@ class CSVService:
         file_path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(file_path, index=False)
         return True, ["Successfully saved to Database and CSV"]
+
+    @staticmethod
+    def delete_record(file_path: Path, table_name: str, pk_col: str, pk_val: str) -> bool:
+        # Delete from Database
+        execute_statement(f"DELETE FROM {table_name} WHERE {pk_col} = ?", (pk_val,))
+
+        # Delete from local CSV backup
+        if file_path.exists():
+            try:
+                df = pd.read_csv(file_path)
+                if pk_col in df.columns:
+                    df = df[df[pk_col].astype(str) != str(pk_val)]
+                    df.to_csv(file_path, index=False)
+            except Exception as e:
+                print(f"[CSVService] CSV backup delete notice: {e}")
+        return True
