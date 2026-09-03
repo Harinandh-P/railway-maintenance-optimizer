@@ -8,8 +8,37 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              canvas: '#0B0F17',
+              surface: {
+                1: '#151E2E',
+                2: '#1A2438',
+                3: '#1E2B42'
+              },
+              borderLine: '#24334D',
+              accentBlue: '#3B82F6',
+              accentPurple: '#8B5CF6',
+              accentCyan: '#06B6D4',
+              accentAmber: '#F59E0B',
+              accentRed: '#EF4444',
+              accentEmerald: '#10B981'
+            },
+            fontFamily: {
+              display: ['"Plus Jakarta Sans"', 'sans-serif'],
+              sans: ['"Inter"', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
   </head>
-  <body>
+  <body class="bg-[#0B0F17] text-[#DFE2EE] antialiased selection:bg-blue-600 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

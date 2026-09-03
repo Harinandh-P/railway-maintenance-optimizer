@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye } from 'lucide-react';
+import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye, Activity, Radio } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { GroupDetailModal } from '../components/GroupDetailModal';
@@ -103,7 +103,12 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   };
 
   if (loading) {
-    return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Operator Portal...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-[#94A3B8] font-mono">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div>LOADING ENGINEER OPERATIONS CONSOLE...</div>
+      </div>
+    );
   }
 
   // Filter requests for operator department / user safely
@@ -136,7 +141,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   });
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Modals */}
       <GroupDetailModal
         isOpen={!!selectedGroupModal}
@@ -160,96 +165,144 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         assignedEquipment={selectedEquipBlock?.assigned_equipment_details || []}
       />
 
-      {/* Header Banner */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
+      {/* Header Mission Banner */}
+      <section className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-6">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Engineer Operations Portal</h1>
-            <span className="badge badge-candidate" style={{ fontSize: '0.8rem', padding: '4px 12px' }}>
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-xs font-mono font-bold text-blue-500 uppercase tracking-widest">
+              MISSION CONTROL // ENGINEER PORTAL
+            </span>
+            <span className="bg-[#101726] border border-[#24334D] text-[#DFE2EE] font-mono text-[11px] px-3 py-0.5 rounded-full flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               DEPARTMENT: {dept}
             </span>
           </div>
-          <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
-            Logged in as: <strong>{user?.fullName}</strong> (OPERATOR Role)
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#DFE2EE] font-display uppercase tracking-tight">
+            ENGINEER OPERATIONS CONSOLE
+          </h1>
+          <p className="text-xs md:text-sm text-[#94A3B8] mt-1 font-sans">
+            Railway Maintenance & Block Coordination • Logged in: <strong className="text-[#DFE2EE]">{user?.fullName}</strong> ({user?.role})
           </p>
         </div>
 
-        <button onClick={() => { setShowFormModal(true); setFormStep(1); }} className="btn btn-emerald" style={{ padding: '12px 24px', fontSize: '0.95rem' }}>
-          <Plus size={20} /> Create Maintenance Request
+        <button
+          onClick={() => { setShowFormModal(true); setFormStep(1); }}
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-lg shadow-blue-500/25 flex items-center gap-2.5 transition-all transform active:scale-95"
+        >
+          <Plus size={18} strokeWidth={2.5} />
+          <span>CREATE MAINTENANCE REQUEST</span>
         </button>
-      </div>
+      </section>
 
       {successMsg && (
-        <div style={{ padding: '14px 18px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#10B981', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem' }}>
-          <CheckCircle size={18} style={{ display: 'inline', marginRight: '8px' }} />
-          {successMsg}
+        <div className="bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 p-4 rounded-xl text-sm flex items-center gap-3">
+          <CheckCircle size={18} />
+          <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Department Metrics Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px', marginBottom: '32px' }}>
-        <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>DEPARTMENT REQUESTS</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#DFE2EE', marginTop: '4px' }}>{filteredRequests.length}</div>
+      {/* KPI Mission Telemetry Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">DEPARTMENT REQUESTS</div>
+            <div className="text-3xl font-extrabold text-[#DFE2EE] font-mono mt-1">{filteredRequests.length}</div>
+            <div className="text-[11px] text-[#64748B] mt-1">Active Logged Items</div>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-500 flex items-center justify-center">
+            <TrainTrack size={22} />
+          </div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>PENDING OPTIMIZATION</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3B82F6', marginTop: '4px' }}>{filteredRequests.length}</div>
+        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">PENDING OPTIMIZATION</div>
+            <div className="text-3xl font-extrabold text-blue-400 font-mono mt-1">{filteredRequests.length}</div>
+            <div className="text-[11px] text-[#64748B] mt-1">Awaiting CP-SAT Run</div>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center">
+            <Clock size={22} />
+          </div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>MY ALLOCATED SLOTS</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10B981', marginTop: '4px' }}>{filteredAllocatedBlocks.length}</div>
+        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">MY ALLOCATED SLOTS</div>
+            <div className="text-3xl font-extrabold text-emerald-400 font-mono mt-1">{filteredAllocatedBlocks.length}</div>
+            <div className="text-[11px] text-[#64748B] mt-1">Phase-3 Verified</div>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+            <CalendarCheck size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-5 shadow-lg flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">SYSTEM TELEMETRY</div>
+            <div className="text-xl font-extrabold text-emerald-400 font-mono mt-2 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              ONLINE
+            </div>
+            <div className="text-[11px] text-[#64748B] mt-1">Database Connected</div>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center">
+            <Radio size={22} />
+          </div>
         </div>
       </div>
 
       {/* TAB 1: REQUESTS VIEW */}
       {(activeTab === 'overview' || activeTab === 'requests') && (
-        <div className="glass-panel" style={{ padding: '24px', marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#DFE2EE', marginBottom: '18px' }}>
-            {dept} Department Maintenance Requests ({filteredRequests.length})
-          </h3>
+        <section className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#24334D]">
+            <h3 className="text-lg font-bold text-[#DFE2EE] font-display flex items-center gap-2">
+              <Activity size={18} className="text-blue-500" />
+              <span>{dept} Department Maintenance Requests</span>
+              <span className="text-xs font-mono bg-[#101726] border border-[#24334D] px-2.5 py-0.5 rounded-full text-[#94A3B8]">
+                {filteredRequests.length} ITEMS
+              </span>
+            </h3>
+          </div>
 
-          <div className="table-container">
-            <table className="custom-table">
+          <div className="table-container bg-[#1A2438] border border-[#24334D] rounded-xl overflow-x-auto">
+            <table className="custom-table w-full text-left font-sans text-sm">
               <thead>
-                <tr>
-                  <th>Request ID</th>
-                  <th>Asset ID</th>
-                  <th>Asset Type</th>
-                  <th>Corridor / Location</th>
-                  <th>Defect Type</th>
-                  <th>Severity</th>
-                  <th>Safety Risk</th>
-                  <th>Duration</th>
-                  <th>Workers</th>
-                  <th>Equipment</th>
-                  <th>Due Date</th>
-                  <th>Actions</th>
+                <tr className="bg-[#151E2E] border-b-2 border-[#24334D] text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider">
+                  <th className="py-3 px-4">REQUEST ID</th>
+                  <th className="py-3 px-4">ASSET ID</th>
+                  <th className="py-3 px-4">TYPE</th>
+                  <th className="py-3 px-4">LOCATION</th>
+                  <th className="py-3 px-4">DEFECT TYPE</th>
+                  <th className="py-3 px-4">SEVERITY</th>
+                  <th className="py-3 px-4">RISK</th>
+                  <th className="py-3 px-4">DURATION</th>
+                  <th className="py-3 px-4">CREW</th>
+                  <th className="py-3 px-4">EQUIPMENT</th>
+                  <th className="py-3 px-4">DUE DATE</th>
+                  <th className="py-3 px-4 text-right">ACTION</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-[#24334D]/50">
                 {filteredRequests.map((r, idx) => (
-                  <tr key={idx}>
-                    <td><strong>{r.request_id}</strong></td>
-                    <td>{r.asset_id}</td>
-                    <td>{r.asset_type}</td>
-                    <td>{r.corridor_id} ({r.location})</td>
-                    <td><span style={{ color: '#DFE2EE', fontWeight: 600 }}>{r.defect_type}</span></td>
-                    <td>
+                  <tr key={idx} className="hover:bg-[#1E2B42] transition-colors bg-[#1A2438] even:bg-[#181F2D]">
+                    <td className="py-3 px-4 font-mono font-bold text-[#DFE2EE]">{r.request_id}</td>
+                    <td className="py-3 px-4 font-mono text-[#94A3B8]">{r.asset_id}</td>
+                    <td className="py-3 px-4 text-[#C2C6D6]">{r.asset_type}</td>
+                    <td className="py-3 px-4 text-[#C2C6D6]">{r.corridor_id} ({r.location})</td>
+                    <td className="py-3 px-4 font-semibold text-[#DFE2EE]">{r.defect_type}</td>
+                    <td className="py-3 px-4">
                       <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
                         {r.defect_severity}
                       </span>
                     </td>
-                    <td>{r.safety_risk}</td>
-                    <td>{r.required_duration_hours} h</td>
-                    <td>{r.required_workers}</td>
-                    <td>{r.required_equipment}</td>
-                    <td>{r.due_date}</td>
-                    <td>
-                      <button onClick={() => setSelectedReqDetail(r)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>
-                        <Eye size={14} /> View
+                    <td className="py-3 px-4 text-[#94A3B8]">{r.safety_risk}</td>
+                    <td className="py-3 px-4 font-mono text-[#F59E0B]">{r.required_duration_hours} h</td>
+                    <td className="py-3 px-4 font-mono text-[#10B981]">{r.required_workers}</td>
+                    <td className="py-3 px-4 text-[#C2C6D6]">{r.required_equipment}</td>
+                    <td className="py-3 px-4 font-mono text-[#94A3B8]">{r.due_date}</td>
+                    <td className="py-3 px-4 text-right">
+                      <button onClick={() => setSelectedReqDetail(r)} className="btn btn-secondary text-xs py-1 px-2.5">
+                        <Eye size={13} /> View
                       </button>
                     </td>
                   </tr>
@@ -257,122 +310,119 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
       )}
 
       {/* TAB 2: MY ALLOCATED SLOTS VIEW */}
       {(activeTab === 'overview' || activeTab === 'slots') && (
-        <div style={{ marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#DFE2EE', marginBottom: '20px' }}>
-            My Department Allocated Slots ({filteredAllocatedBlocks.length})
+        <section className="space-y-4">
+          <h3 className="text-lg font-bold text-[#DFE2EE] font-display flex items-center gap-2">
+            <CalendarCheck size={18} className="text-emerald-400" />
+            <span>My Department Allocated Slots</span>
+            <span className="text-xs font-mono bg-[#101726] border border-[#24334D] px-2.5 py-0.5 rounded-full text-[#94A3B8]">
+              {filteredAllocatedBlocks.length} SLOTS
+            </span>
           </h3>
 
           {filteredAllocatedBlocks.length === 0 ? (
-            <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#94A3B8' }}>
-              No allocated maintenance slots yet. Control Office Admin will run the optimizer.
+            <div className="bg-[#1A2438] border border-[#24334D] rounded-2xl p-10 text-center text-[#94A3B8] font-mono text-sm">
+              NO ALLOCATED MAINTENANCE SLOTS YET. CONTROL OFFICE ADMIN WILL RUN OPTIMIZATION.
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="space-y-4">
               {filteredAllocatedBlocks.map((block, idx) => (
-                <div key={idx} className="glass-panel" style={{ padding: '24px', borderLeft: '5px solid #10b981' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <div key={idx} className="bg-[#1A2438] border border-[#24334D] border-l-4 border-l-emerald-500 rounded-2xl p-6 shadow-xl">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                     <div>
-                      <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE' }}>
+                      <h4 className="text-lg font-bold text-[#DFE2EE] font-display">
                         {block.block_id} — Corridor {block.corridor} ({block.work_area})
                       </h4>
-                      <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
-                        Group: <strong>{block.group_id}</strong> • Tasks: <strong>{block.group_task_count || 1}</strong>
+                      <div className="text-xs font-mono text-[#94A3B8] mt-1">
+                        Group: <strong className="text-[#DFE2EE]">{block.group_id}</strong> • Tasks: <strong className="text-[#DFE2EE]">{block.group_task_count || 1}</strong>
                       </div>
                     </div>
-                    <span className="badge badge-final" style={{ padding: '6px 12px' }}>
+                    <span className="badge badge-final text-xs px-3 py-1">
                       STATUS: ALLOCATED
                     </span>
                   </div>
 
-                  {/* Encapsulated Work Included */}
-                  <div style={{ background: '#151E2E', border: '1px solid #24334D', borderRadius: '8px', padding: '14px', marginBottom: '16px' }}>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#3B82F6', textTransform: 'uppercase', marginBottom: '6px' }}>
+                  <div className="bg-[#151E2E] border border-[#24334D] rounded-xl p-4 mb-4">
+                    <div className="text-xs font-mono font-bold text-blue-400 uppercase mb-2">
                       Work Included ({block.group_task_count || 1} Tasks)
                     </div>
                     {block.group_work_summary?.map((w, wIdx) => (
-                      <div key={wIdx} style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600, marginTop: '2px' }}>
+                      <div key={wIdx} className="text-sm text-[#DFE2EE] font-semibold mt-1">
                         • {w}
                       </div>
                     ))}
                   </div>
 
-                  {/* Schedule Details Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', background: '#101726', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#101726] border border-[#24334D] p-4 rounded-xl mb-4 font-mono">
                     <div>
-                      <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>SCHEDULED DATE</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#DFE2EE', marginTop: '2px' }}>{block.date}</div>
+                      <div className="text-[10px] text-[#64748B] uppercase">SCHEDULED DATE</div>
+                      <div className="text-base font-bold text-[#DFE2EE] mt-0.5">{block.date}</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>ALLOCATED TIME</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#3B82F6', marginTop: '2px' }}>{block.block_start} — {block.block_end}</div>
+                      <div className="text-[10px] text-[#64748B] uppercase">ALLOCATED TIME</div>
+                      <div className="text-base font-bold text-blue-400 mt-0.5">{block.block_start} — {block.block_end}</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>DURATION</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#F59E0B', marginTop: '2px' }}>{block.allocated_duration_minutes} MIN</div>
+                      <div className="text-[10px] text-[#64748B] uppercase">DURATION</div>
+                      <div className="text-base font-bold text-amber-400 mt-0.5">{block.allocated_duration_minutes} MIN</div>
                     </div>
                   </div>
 
-                  {/* Interactive Worker & Equipment Buttons */}
-                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <button onClick={() => setSelectedWorkerBlock(block)} className="btn btn-emerald" style={{ fontSize: '0.8rem' }}>
-                      <Users size={16} /> View Assigned Crew ({block.assigned_worker_details?.length || block.workers_required})
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={() => setSelectedWorkerBlock(block)} className="btn btn-emerald text-xs">
+                      <Users size={15} /> View Assigned Crew ({block.assigned_worker_details?.length || block.workers_required})
                     </button>
-                    <button onClick={() => setSelectedEquipBlock(block)} className="btn btn-secondary" style={{ fontSize: '0.8rem', color: '#F59E0B', borderColor: 'rgba(245, 158, 11, 0.4)' }}>
-                      <Wrench size={16} /> View Equipment Details
+                    <button onClick={() => setSelectedEquipBlock(block)} className="btn btn-secondary text-xs text-amber-400 border-amber-500/30">
+                      <Wrench size={15} /> View Equipment Details
                     </button>
-                    <button onClick={() => setSelectedGroupModal(block)} className="btn btn-secondary" style={{ fontSize: '0.8rem' }}>
-                      <FileText size={16} /> View Task Breakdown
+                    <button onClick={() => setSelectedGroupModal(block)} className="btn btn-secondary text-xs">
+                      <FileText size={15} /> View Task Breakdown
                     </button>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </section>
       )}
 
       {/* CREATE REQUEST MODAL */}
       {showFormModal && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box" style={{
-            maxWidth: 'min(92vw, 850px)',
-            border: '1px solid #24334D'
-          }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#DFE2EE', marginBottom: '8px' }}>
+          <div className="glass-panel modal-box max-w-3xl bg-[#1A2438] border border-[#24334D]">
+            <h2 className="text-xl font-bold text-[#DFE2EE] font-display mb-2">
               {formStep === 1 ? 'New Maintenance Request Entry Form' : 'Review & Confirm Request Submission'}
             </h2>
-            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginBottom: '24px' }}>
-              Phase 1 Raw Input Collection • Logged in Engineer: <strong>{user?.fullName}</strong> ({dept})
+            <p className="text-xs text-[#94A3B8] mb-6 font-mono">
+              Phase 1 Raw Input Collection • Logged in Engineer: <strong className="text-[#DFE2EE]">{user?.fullName}</strong> ({dept})
             </p>
 
             {errorMsg && (
-              <div style={{ padding: '12px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '8px', marginBottom: '20px', fontSize: '0.88rem' }}>
-                <AlertTriangle size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                {errorMsg}
+              <div className="p-3 bg-red-500/15 border border-red-500/40 text-red-400 rounded-xl mb-4 text-xs flex items-center gap-2">
+                <AlertTriangle size={16} />
+                <span>{errorMsg}</span>
               </div>
             )}
 
             {formStep === 1 ? (
-              <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }}>
-                {/* SECTION 1: REQUEST & LOCATION */}
-                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#3B82F6', fontWeight: 700, marginBottom: '14px' }}>[1] REQUEST & LOCATION INFORMATION</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+              <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }} className="space-y-5">
+                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
+                  <h4 className="text-xs font-mono font-bold text-blue-400 uppercase">[1] REQUEST & LOCATION INFORMATION</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="label-text">Request ID (Auto-Generated by Backend)</label>
-                      <input type="text" className="input-field" value="[Auto-Generated Unique ID]" readOnly disabled style={{ opacity: 0.75, cursor: 'not-allowed', background: '#1A2438' }} />
+                      <label className="block text-xs font-semibold text-[#94A3B8] mb-1">Request ID (Backend Auto-Gen)</label>
+                      <input type="text" className="input-field bg-[#101726] opacity-70 cursor-not-allowed" value="[Auto-Generated Unique ID]" readOnly disabled />
                     </div>
                     <div>
-                      <label className="label-text">Department Context</label>
-                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} placeholder="eg: Engineering (Track Maintenance)" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Department Context</label>
+                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} placeholder="eg: Engineering" required />
                     </div>
                     <div>
-                      <label className="label-text">Corridor ID</label>
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Corridor ID</label>
                       <select className="input-field" value={formData.corridor_id} onChange={e => setFormData({ ...formData, corridor_id: e.target.value })}>
                         <option value="C1">C1 (Salem - Chennai)</option>
                         <option value="C2">C2 (Bangalore - Chennai)</option>
@@ -380,53 +430,33 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="label-text">Location (KM)</label>
-                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="eg: KM 128/2 - Salem Section" required />
-                    </div>
-                    <div>
-                      <label className="label-text">Point A</label>
-                      <input type="text" className="input-field" value={formData.point_a} onChange={e => setFormData({ ...formData, point_a: e.target.value })} placeholder="eg: Salem Junction Station" required />
-                    </div>
-                    <div>
-                      <label className="label-text">Point B</label>
-                      <input type="text" className="input-field" value={formData.point_b} onChange={e => setFormData({ ...formData, point_b: e.target.value })} placeholder="eg: Erode Junction Station" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Location (KM)</label>
+                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="eg: KM 128/2" required />
                     </div>
                   </div>
                 </div>
 
-                {/* SECTION 2: ASSET & FAULT DETAILS */}
-                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#8B5CF6', fontWeight: 700, marginBottom: '14px' }}>[2] ASSET & FAULT / DEFECT DETAILS</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '14px' }}>
+                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
+                  <h4 className="text-xs font-mono font-bold text-purple-400 uppercase">[2] ASSET & DEFECT DETAILS</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="label-text">Asset ID</label>
-                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} placeholder="eg: AST-C1-015 - Rail Joint" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Asset ID</label>
+                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} placeholder="eg: TRK003" required />
                     </div>
                     <div>
-                      <label className="label-text">Asset Type</label>
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Asset Type</label>
                       <select className="input-field" value={formData.asset_type} onChange={e => setFormData({ ...formData, asset_type: e.target.value })}>
                         <option value="Signal">Signal</option>
                         <option value="Track">Track</option>
                         <option value="OHE">OHE</option>
-                        <option value="Point Machine">Point Machine</option>
-                        <option value="Transformer">Transformer</option>
                       </select>
                     </div>
                     <div>
-                      <label className="label-text">Maintenance Type</label>
-                      <select className="input-field" value={formData.maintenance_type} onChange={e => setFormData({ ...formData, maintenance_type: e.target.value })}>
-                        <option value="Corrective">Corrective Maintenance</option>
-                        <option value="Preventive">Preventive Maintenance</option>
-                        <option value="Emergency">Emergency Maintenance</option>
-                        <option value="Inspection">Inspection & Testing</option>
-                      </select>
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Defect Type</label>
+                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} placeholder="eg: Rail Crack" required />
                     </div>
                     <div>
-                      <label className="label-text">Defect / Fault Type</label>
-                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} placeholder="eg: Heavy Rail Joint Fracture & Thermal Stress" required />
-                    </div>
-                    <div>
-                      <label className="label-text">Defect Severity</label>
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Defect Severity</label>
                       <select className="input-field" value={formData.defect_severity} onChange={e => setFormData({ ...formData, defect_severity: e.target.value })}>
                         <option value="Critical">Critical</option>
                         <option value="High">High</option>
@@ -434,73 +464,54 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                         <option value="Low">Low</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="label-text">Safety Risk Level</label>
-                      <select className="input-field" value={formData.safety_risk} onChange={e => setFormData({ ...formData, safety_risk: e.target.value })}>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style={{ marginBottom: '14px' }}>
-                    <label className="label-text">Fault Description (Engineer Notes)</label>
-                    <textarea className="input-field" rows={2} value={formData.fault_description} onChange={e => setFormData({ ...formData, fault_description: e.target.value })} placeholder="eg: Observed defect during routine inspection. Requires immediate maintenance block." required />
                   </div>
                 </div>
 
-                {/* SECTION 3: RESOURCES & DUE DATE */}
-                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '24px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#F59E0B', fontWeight: 700, marginBottom: '14px' }}>[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                <div className="bg-[#151E2E] border border-[#24334D] p-4 rounded-xl space-y-4">
+                  <h4 className="text-xs font-mono font-bold text-amber-400 uppercase">[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="label-text">Required Duration (Hours)</label>
-                      <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} placeholder="eg: 2.5" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Duration (Hours)</label>
+                      <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="label-text">Required Workers (Crew)</label>
-                      <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} placeholder="eg: 4" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Workers (Crew)</label>
+                      <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
                     </div>
                     <div>
-                      <label className="label-text">Required Equipment (Search Database)</label>
-                      <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required placeholder="eg: EQ211 - Hydraulic Track Tamping Machine" />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Required Equipment</label>
+                      <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required />
                     </div>
                     <div>
-                      <label className="label-text">Due Date</label>
-                      <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} placeholder="eg: 2026-09-15" required />
+                      <label className="block text-xs font-semibold text-[#C2C6D6] mb-1">Due Date</label>
+                      <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={() => setShowFormModal(false)} className="btn btn-secondary">Cancel</button>
-                  <button type="submit" className="btn btn-emerald">Proceed to Review Preview →</button>
+                  <button type="submit" className="btn btn-primary">Proceed to Review →</button>
                 </div>
               </form>
             ) : (
-              <div>
-                {/* PREVIEW CONFIRMATION SCREEN */}
-                <div style={{ background: '#151E2E', padding: '20px', borderRadius: '10px', marginBottom: '24px' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3B82F6', marginBottom: '14px' }}>Review Maintenance Request Summary</h3>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', fontSize: '0.88rem', color: '#C2C6D6' }}>
-                    <div>Request ID: <strong style={{ color: '#DFE2EE' }}>{formData.request_id}</strong></div>
-                    <div>Engineer: <strong style={{ color: '#DFE2EE' }}>{user?.fullName}</strong></div>
-                    <div>Department: <strong style={{ color: '#DFE2EE' }}>{formData.department}</strong></div>
-                    <div>Asset ID: <strong style={{ color: '#DFE2EE' }}>{formData.asset_id} ({formData.asset_type})</strong></div>
-                    <div>Location: <strong style={{ color: '#DFE2EE' }}>Corridor {formData.corridor_id} ({formData.location})</strong></div>
-                    <div>Defect Type: <strong style={{ color: '#DFE2EE' }}>{formData.defect_type}</strong></div>
-                    <div>Severity: <strong style={{ color: '#EF4444' }}>{formData.defect_severity}</strong></div>
-                    <div>Duration: <strong style={{ color: '#F59E0B' }}>{formData.required_duration_hours} hours</strong></div>
-                    <div>Workers Required: <strong style={{ color: '#10B981' }}>{formData.required_workers} crew</strong></div>
-                    <div>Equipment Required: <strong style={{ color: '#8B5CF6' }}>{formData.required_equipment}</strong></div>
-                    <div>Due Date: <strong style={{ color: '#DFE2EE' }}>{formData.due_date}</strong></div>
+              <div className="space-y-6">
+                <div className="bg-[#151E2E] border border-[#24334D] p-5 rounded-xl space-y-3 font-sans text-sm">
+                  <h3 className="text-base font-bold text-blue-400 font-display mb-2">Review Maintenance Request Details</h3>
+                  <div className="grid grid-cols-2 gap-3 text-xs font-mono text-[#C2C6D6]">
+                    <div>Request ID: <strong className="text-[#DFE2EE]">{formData.request_id}</strong></div>
+                    <div>Engineer: <strong className="text-[#DFE2EE]">{user?.fullName}</strong></div>
+                    <div>Department: <strong className="text-[#DFE2EE]">{formData.department}</strong></div>
+                    <div>Asset ID: <strong className="text-[#DFE2EE]">{formData.asset_id}</strong></div>
+                    <div>Location: <strong className="text-[#DFE2EE]">{formData.location}</strong></div>
+                    <div>Severity: <strong className="text-red-400">{formData.defect_severity}</strong></div>
+                    <div>Duration: <strong className="text-amber-400">{formData.required_duration_hours} hrs</strong></div>
+                    <div>Crew: <strong className="text-emerald-400">{formData.required_workers} workers</strong></div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
-                  <button type="button" onClick={() => setFormStep(1)} className="btn btn-secondary">← Back & Edit Form</button>
+                <div className="flex justify-between gap-3">
+                  <button type="button" onClick={() => setFormStep(1)} className="btn btn-secondary">← Back & Edit</button>
                   <button type="button" onClick={handleCreateSubmit} disabled={submitting} className="btn btn-emerald">
                     {submitting ? 'Submitting...' : 'Confirm & Save to Database'}
                   </button>
@@ -514,27 +525,36 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
       {/* REQUEST DETAIL MODAL */}
       {selectedReqDetail && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box" style={{ maxWidth: 'min(92vw, 700px)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE' }}>Request Details — {selectedReqDetail.request_id}</h3>
-              <button onClick={() => setSelectedReqDetail(null)} className="btn btn-secondary" style={{ padding: '4px 8px' }}>Close</button>
+          <div className="glass-panel modal-box max-w-xl bg-[#1A2438] border border-[#24334D]">
+            <div className="flex items-center justify-between mb-4 border-b border-[#24334D] pb-3">
+              <h3 className="text-base font-bold text-[#DFE2EE] font-display">
+                Request Details — {selectedReqDetail.request_id}
+              </h3>
+              <button onClick={() => setSelectedReqDetail(null)} className="btn btn-secondary text-xs py-1 px-3.5">Close</button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', fontSize: '0.88rem', color: '#C2C6D6' }}>
-              <div>Department: <strong style={{ color: '#DFE2EE' }}>{selectedReqDetail.department}</strong></div>
-              <div>Asset ID: <strong style={{ color: '#DFE2EE' }}>{selectedReqDetail.asset_id}</strong></div>
-              <div>Defect Type: <strong style={{ color: '#3B82F6' }}>{selectedReqDetail.defect_type}</strong></div>
-              <div>Defect Reason: <strong>{selectedReqDetail.defect_reason}</strong></div>
-              <div>Severity: <strong style={{ color: '#EF4444' }}>{selectedReqDetail.defect_severity}</strong></div>
-              <div>Safety Risk: <strong>{selectedReqDetail.safety_risk}</strong></div>
-              <div>Duration: <strong>{selectedReqDetail.required_duration_hours} hours</strong></div>
-              <div>Workers Required: <strong>{selectedReqDetail.required_workers}</strong></div>
-              <div>Equipment Required: <strong>{selectedReqDetail.required_equipment}</strong></div>
-              <div>Due Date: <strong>{selectedReqDetail.due_date}</strong></div>
+            <div className="grid grid-cols-2 gap-3 text-xs font-mono text-[#C2C6D6]">
+              <div>Department: <strong className="text-[#DFE2EE]">{selectedReqDetail.department}</strong></div>
+              <div>Asset ID: <strong className="text-[#DFE2EE]">{selectedReqDetail.asset_id}</strong></div>
+              <div>Defect Type: <strong className="text-blue-400">{selectedReqDetail.defect_type}</strong></div>
+              <div>Severity: <strong className="text-red-400">{selectedReqDetail.defect_severity}</strong></div>
+              <div>Safety Risk: <strong className="text-amber-400">{selectedReqDetail.safety_risk}</strong></div>
+              <div>Duration: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_duration_hours} hours</strong></div>
+              <div>Crew Required: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_workers}</strong></div>
+              <div>Equipment: <strong className="text-[#DFE2EE]">{selectedReqDetail.required_equipment}</strong></div>
+              <div>Due Date: <strong className="text-[#DFE2EE]">{selectedReqDetail.due_date}</strong></div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Mission Telemetry Footer */}
+      <footer className="flex items-center justify-between text-xs font-mono text-[#64748B] border-t border-[#24334D] pt-4">
+        <div>
+          ● LIVE DATABASE: <span className="text-emerald-400 font-bold">CONNECTED</span> • API: ACTIVE
+        </div>
+        <div>ZONE: NR-HQ / DLI</div>
+      </footer>
     </div>
   );
 };
