@@ -50,8 +50,8 @@ export const PipelineRunner = () => {
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white' }}>Execute Optimization Pipeline</h1>
-        <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Execute Optimization Pipeline</h1>
+        <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
           Execute actual 3-Phase Railway Maintenance Pipeline (P1 → P2 → P3 CP-SAT)
         </p>
       </div>
@@ -76,14 +76,14 @@ export const PipelineRunner = () => {
                   fontWeight: 800,
                   fontSize: '1.1rem',
                   background: activeStep > s.step ? '#10b981' : activeStep === s.step ? '#3b82f6' : '#334155',
-                  color: 'white',
+                  color: '#DFE2EE',
                   boxShadow: activeStep === s.step ? '0 0 16px rgba(59, 130, 246, 0.6)' : 'none'
                 }}>
                   {activeStep > s.step ? <CheckCircle size={24} /> : s.step}
                 </div>
                 <div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'white' }}>{s.title}</div>
-                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{s.desc}</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: '#DFE2EE' }}>{s.title}</div>
+                  <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>{s.desc}</div>
                 </div>
               </div>
               {idx < 2 && (
@@ -109,14 +109,14 @@ export const PipelineRunner = () => {
       {/* Execution Logs & Status */}
       {logs.length > 0 && (
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: '14px' }}>Live Pipeline Execution Logs</h3>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#DFE2EE', marginBottom: '14px' }}>Live Pipeline Execution Logs</h3>
           <div style={{
             background: '#090d16',
             borderRadius: '8px',
             padding: '16px',
             fontFamily: 'var(--font-mono)',
             fontSize: '0.85rem',
-            color: '#38bdf8',
+            color: '#3B82F6',
             maxHeight: '240px',
             overflowY: 'auto'
           }}>
@@ -130,10 +130,10 @@ export const PipelineRunner = () => {
       {/* Result Summary */}
       {resultSummary && (
         <div className="glass-panel" style={{ padding: '28px', borderLeft: '4px solid #8b5cf6' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', marginBottom: '12px' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE', marginBottom: '12px' }}>
             Optimization Complete — Final Block Plan Ready
           </h3>
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '20px' }}>
+          <p style={{ color: '#94A3B8', fontSize: '0.9rem', marginBottom: '20px' }}>
             CP-SAT optimizer allocated {resultSummary.allocated_groups} block groups satisfying all train gap, worker, and equipment constraints.
           </p>
           <a href="/final-plan" className="btn btn-primary">

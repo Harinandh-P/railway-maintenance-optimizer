@@ -34,7 +34,7 @@ const ProtectedLayout = () => {
   const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
-    return <div style={{ color: 'white', padding: '40px' }}>Loading Portal...</div>;
+    return <div style={{ color: '#DFE2EE', padding: '40px' }}>Loading Portal...</div>;
   }
 
   if (!user) {

@@ -18,10 +18,10 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
     <div className="glass-panel" style={{ padding: '24px', marginBottom: '32px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <div>
-          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'white' }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#DFE2EE' }}>
             Interactive Train Occupation vs. Maintenance Block Timeline
           </h3>
-          <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '2px' }}>
+          <p style={{ fontSize: '0.82rem', color: '#94A3B8', marginTop: '2px' }}>
             24-Hour Corridor Occupation Analysis (Actual Phase 2 & Phase 3 JSON Data)
           </p>
         </div>
@@ -30,21 +30,21 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.78rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#f43f5e' }} />
-            <span style={{ color: '#cbd5e1' }}>Train Occupation</span>
+            <span style={{ color: '#C2C6D6' }}>Train Occupation</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#06b6d4' }} />
-            <span style={{ color: '#cbd5e1' }}>Candidate Gap</span>
+            <span style={{ color: '#C2C6D6' }}>Candidate Gap</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#8b5cf6' }} />
-            <span style={{ color: '#cbd5e1' }}>Selected Final Block</span>
+            <span style={{ color: '#C2C6D6' }}>Selected Final Block</span>
           </div>
         </div>
       </div>
 
       {/* 24-Hour Scale Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#64748b', marginBottom: '8px', paddingLeft: '140px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#64748B', marginBottom: '8px', paddingLeft: '140px' }}>
         <span>00:00</span>
         <span>04:00</span>
         <span>08:00</span>
@@ -71,13 +71,13 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
           );
 
           return (
-            <div key={idx} style={{ background: 'rgba(15, 23, 42, 0.7)', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+            <div key={idx} style={{ background: '#151E2E', padding: '12px 16px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '130px', fontSize: '0.82rem', fontWeight: 600, color: 'white' }}>
+                <div style={{ width: '130px', fontSize: '0.82rem', fontWeight: 600, color: '#DFE2EE' }}>
                   Gap {gap.gap_id || `G-${idx+1}`} ({gap.corridor || 'C1'})
                 </div>
 
-                <div style={{ flex: 1, position: 'relative', height: '32px', background: '#1e293b', borderRadius: '6px', overflow: 'hidden' }}>
+                <div style={{ flex: 1, position: 'relative', height: '32px', background: '#1A2438', borderRadius: '6px', overflow: 'hidden' }}>
                   {/* Previous Train Occupancy */}
                   {prevTrainMin !== null && (
                     <div
@@ -92,7 +92,7 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '0.68rem',
-                        color: 'white',
+                        color: '#DFE2EE',
                         fontWeight: 700
                       }}
                       title={`Train Occupation: ${gap.previous_train?.train_name || 'Prev Train'}`}
@@ -138,7 +138,7 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '0.75rem',
-                        color: 'white',
+                        color: '#DFE2EE',
                         fontWeight: 700,
                         boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)'
                       }}
@@ -162,7 +162,7 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '0.68rem',
-                        color: 'white',
+                        color: '#DFE2EE',
                         fontWeight: 700
                       }}
                       title={`Train Occupation: ${gap.next_train?.train_name || 'Next Train'}`}
@@ -177,7 +177,7 @@ export const BlockTimeline = ({ candidateGaps = [], finalBlocks = [] }) => {
         })}
 
         {candidateGaps.length === 0 && (
-          <div style={{ textAlign: 'center', color: '#64748b', padding: '20px' }}>
+          <div style={{ textAlign: 'center', color: '#64748B', padding: '20px' }}>
             No candidate gap timeline data available. Please execute optimization pipeline.
           </div>
         )}

@@ -30,7 +30,7 @@ export const Phase2Results = () => {
     }
   };
 
-  if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Phase 2 Output...</div>;
+  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Phase 2 Output...</div>;
 
   const requests = phase2Data?.requests || [];
   const allCandidateGaps = [];
@@ -43,8 +43,8 @@ export const Phase2Results = () => {
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white' }}>Phase 2 Candidate Gap Analysis</h1>
-        <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Phase 2 Candidate Gap Analysis</h1>
+        <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
           Traffic Analysis & Section-Specific Candidate Gap Generation Output
         </p>
       </div>
@@ -62,10 +62,10 @@ export const Phase2Results = () => {
             <div key={rIdx} className="glass-panel" style={{ padding: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#DFE2EE' }}>
                     Request {reqInfo.request_id} — {reqInfo.department} ({reqInfo.asset_type})
                   </h3>
-                  <div style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '2px' }}>
+                  <div style={{ fontSize: '0.82rem', color: '#94A3B8', marginTop: '2px' }}>
                     Corridor: {corridorInfo.corridor_id} | Section: {corridorInfo.section_id} (KM {corridorInfo.from_km} → KM {corridorInfo.to_km})
                   </div>
                 </div>
@@ -83,25 +83,25 @@ export const Phase2Results = () => {
                     <div
                       key={gIdx}
                       style={{
-                        background: 'rgba(15, 23, 42, 0.6)',
+                        background: '#151E2E',
                         border: `1px solid ${isFeasible ? 'rgba(6, 182, 212, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
                         borderRadius: '8px',
                         padding: '14px'
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>Gap {gap.gap_id}</span>
+                        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#DFE2EE' }}>Gap {gap.gap_id}</span>
                         <span className={`badge ${isFeasible ? 'badge-candidate' : 'badge-critical'}`}>
                           {isFeasible ? 'FEASIBLE CANDIDATE' : 'REJECTED (SHORT)'}
                         </span>
                       </div>
 
-                      <div style={{ fontSize: '0.85rem', color: '#38bdf8', fontWeight: 600, marginBottom: '6px' }}>
+                      <div style={{ fontSize: '0.85rem', color: '#3B82F6', fontWeight: 600, marginBottom: '6px' }}>
                         <Clock size={14} style={{ display: 'inline', marginRight: '6px' }} />
                         {gap.start} → {gap.end} ({gap.duration_minutes} min)
                       </div>
 
-                      <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                      <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
                         Required: {gap.required_duration_minutes} min • Traffic Density: {gap.traffic_density_level}
                       </div>
                     </div>

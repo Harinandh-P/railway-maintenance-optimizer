@@ -47,7 +47,7 @@ export const Equipment = () => {
     { key: 'status', label: 'Status', placeholder: 'eg: Available' }
   ];
 
-  if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Equipment Database...</div>;
+  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Equipment Database...</div>;
 
   return (
     <div>

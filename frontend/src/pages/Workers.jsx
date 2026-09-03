@@ -46,7 +46,7 @@ export const Workers = () => {
     { key: 'status', label: 'Status', placeholder: 'eg: Available' }
   ];
 
-  if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Workers Database...</div>;
+  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Workers Database...</div>;
 
   return (
     <div>

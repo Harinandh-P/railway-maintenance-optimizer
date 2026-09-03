@@ -98,7 +98,7 @@ export const EngineerDashboard = () => {
   };
 
   if (loading) {
-    return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Engineer Dashboard...</div>;
+    return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Engineer Dashboard...</div>;
   }
 
   // Filter requests for engineer department safely
@@ -121,12 +121,12 @@ export const EngineerDashboard = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white' }}>Engineer Maintenance Operations</h1>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Engineer Maintenance Operations</h1>
             <span className="badge badge-candidate" style={{ fontSize: '0.8rem', padding: '4px 12px' }}>
               DEPARTMENT: {dept}
             </span>
           </div>
-          <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+          <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
             Logged in as: <strong>{user?.fullName || user?.username}</strong> ({user?.role})
           </p>
         </div>
@@ -137,7 +137,7 @@ export const EngineerDashboard = () => {
       </div>
 
       {successMsg && (
-        <div style={{ padding: '14px 18px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#34d399', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem' }}>
+        <div style={{ padding: '14px 18px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#10B981', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem' }}>
           <CheckCircle size={18} style={{ display: 'inline', marginRight: '8px' }} />
           {successMsg}
         </div>
@@ -146,24 +146,24 @@ export const EngineerDashboard = () => {
       {/* Engineer Metrics Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px', marginBottom: '32px' }}>
         <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600 }}>MY DEPARTMENT REQUESTS</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginTop: '4px' }}>{filteredRequests.length}</div>
+          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>MY DEPARTMENT REQUESTS</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#DFE2EE', marginTop: '4px' }}>{filteredRequests.length}</div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600 }}>PENDING OPTIMIZATION</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>{filteredRequests.length}</div>
+          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>PENDING OPTIMIZATION</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3B82F6', marginTop: '4px' }}>{filteredRequests.length}</div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600 }}>ALLOCATED BLOCKS</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#34d399', marginTop: '4px' }}>{allocatedBlocks.length}</div>
+          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>ALLOCATED BLOCKS</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10B981', marginTop: '4px' }}>{allocatedBlocks.length}</div>
         </div>
       </div>
 
       {/* Requests List */}
       <div className="glass-panel" style={{ padding: '24px', marginBottom: '32px' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '18px' }}>
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#DFE2EE', marginBottom: '18px' }}>
           {dept} Department Maintenance Requests ({filteredRequests.length})
         </h3>
 
@@ -192,7 +192,7 @@ export const EngineerDashboard = () => {
                   <td>{r.asset_id}</td>
                   <td>{r.asset_type}</td>
                   <td>{r.corridor_id} ({r.location})</td>
-                  <td><span style={{ color: 'white', fontWeight: 600 }}>{r.defect_type}</span></td>
+                  <td><span style={{ color: '#DFE2EE', fontWeight: 600 }}>{r.defect_type}</span></td>
                   <td>
                     <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
                       {r.defect_severity}
@@ -224,17 +224,17 @@ export const EngineerDashboard = () => {
         }}>
           <div className="glass-panel" style={{
             width: '100%', maxWidth: '850px', maxHeight: '92vh', overflowY: 'auto', padding: '32px',
-            border: '1px solid rgba(59, 130, 246, 0.4)'
+            border: '1px solid #24334D'
           }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#DFE2EE', marginBottom: '8px' }}>
               {formStep === 1 ? 'New Maintenance Request Entry Form' : 'Review & Confirm Request Submission'}
             </h2>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '24px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginBottom: '24px' }}>
               Phase 1 Raw Input Collection • Logged in Engineer: <strong>{user?.fullName}</strong> ({dept})
             </p>
 
             {errorMsg && (
-              <div style={{ padding: '12px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fb7185', borderRadius: '8px', marginBottom: '20px', fontSize: '0.88rem' }}>
+              <div style={{ padding: '12px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '8px', marginBottom: '20px', fontSize: '0.88rem' }}>
                 <AlertTriangle size={16} style={{ display: 'inline', marginRight: '6px' }} />
                 {errorMsg}
               </div>
@@ -243,8 +243,8 @@ export const EngineerDashboard = () => {
             {formStep === 1 ? (
               <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }}>
                 {/* SECTION 1: REQUEST & LOCATION */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#60a5fa', fontWeight: 700, marginBottom: '14px' }}>[1] REQUEST & LOCATION INFORMATION</h4>
+                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '0.9rem', color: '#3B82F6', fontWeight: 700, marginBottom: '14px' }}>[1] REQUEST & LOCATION INFORMATION</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                     <div>
                       <label className="label-text">Request ID</label>
@@ -278,8 +278,8 @@ export const EngineerDashboard = () => {
                 </div>
 
                 {/* SECTION 2: ASSET & FAULT DETAILS */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#c084fc', fontWeight: 700, marginBottom: '14px' }}>[2] ASSET & FAULT / DEFECT DETAILS</h4>
+                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '0.9rem', color: '#8B5CF6', fontWeight: 700, marginBottom: '14px' }}>[2] ASSET & FAULT / DEFECT DETAILS</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '14px' }}>
                     <div>
                       <label className="label-text">Asset ID</label>
@@ -334,8 +334,8 @@ export const EngineerDashboard = () => {
                 </div>
 
                 {/* SECTION 3: RESOURCES & DUE DATE */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '18px', borderRadius: '10px', marginBottom: '24px' }}>
-                  <h4 style={{ fontSize: '0.9rem', color: '#fbbf24', fontWeight: 700, marginBottom: '14px' }}>[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
+                <div style={{ background: '#151E2E', padding: '18px', borderRadius: '10px', marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '0.9rem', color: '#F59E0B', fontWeight: 700, marginBottom: '14px' }}>[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                     <div>
                       <label className="label-text">Required Duration (Hours)</label>
@@ -364,21 +364,21 @@ export const EngineerDashboard = () => {
             ) : (
               <div>
                 {/* PREVIEW CONFIRMATION SCREEN */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.7)', padding: '20px', borderRadius: '10px', marginBottom: '24px' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#38bdf8', marginBottom: '14px' }}>Review Maintenance Request Summary</h3>
+                <div style={{ background: '#151E2E', padding: '20px', borderRadius: '10px', marginBottom: '24px' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3B82F6', marginBottom: '14px' }}>Review Maintenance Request Summary</h3>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', fontSize: '0.88rem', color: '#cbd5e1' }}>
-                    <div>Request ID: <strong style={{ color: 'white' }}>{formData.request_id}</strong></div>
-                    <div>Engineer: <strong style={{ color: 'white' }}>{user?.fullName}</strong></div>
-                    <div>Department: <strong style={{ color: 'white' }}>{formData.department}</strong></div>
-                    <div>Asset ID: <strong style={{ color: 'white' }}>{formData.asset_id} ({formData.asset_type})</strong></div>
-                    <div>Location: <strong style={{ color: 'white' }}>Corridor {formData.corridor_id} ({formData.location})</strong></div>
-                    <div>Defect Type: <strong style={{ color: 'white' }}>{formData.defect_type}</strong></div>
-                    <div>Severity: <strong style={{ color: '#fb7185' }}>{formData.defect_severity}</strong></div>
-                    <div>Duration: <strong style={{ color: '#fbbf24' }}>{formData.required_duration_hours} hours</strong></div>
-                    <div>Workers Required: <strong style={{ color: '#34d399' }}>{formData.required_workers} crew</strong></div>
-                    <div>Equipment Required: <strong style={{ color: '#c084fc' }}>{formData.required_equipment}</strong></div>
-                    <div>Due Date: <strong style={{ color: 'white' }}>{formData.due_date}</strong></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', fontSize: '0.88rem', color: '#C2C6D6' }}>
+                    <div>Request ID: <strong style={{ color: '#DFE2EE' }}>{formData.request_id}</strong></div>
+                    <div>Engineer: <strong style={{ color: '#DFE2EE' }}>{user?.fullName}</strong></div>
+                    <div>Department: <strong style={{ color: '#DFE2EE' }}>{formData.department}</strong></div>
+                    <div>Asset ID: <strong style={{ color: '#DFE2EE' }}>{formData.asset_id} ({formData.asset_type})</strong></div>
+                    <div>Location: <strong style={{ color: '#DFE2EE' }}>Corridor {formData.corridor_id} ({formData.location})</strong></div>
+                    <div>Defect Type: <strong style={{ color: '#DFE2EE' }}>{formData.defect_type}</strong></div>
+                    <div>Severity: <strong style={{ color: '#EF4444' }}>{formData.defect_severity}</strong></div>
+                    <div>Duration: <strong style={{ color: '#F59E0B' }}>{formData.required_duration_hours} hours</strong></div>
+                    <div>Workers Required: <strong style={{ color: '#10B981' }}>{formData.required_workers} crew</strong></div>
+                    <div>Equipment Required: <strong style={{ color: '#8B5CF6' }}>{formData.required_equipment}</strong></div>
+                    <div>Due Date: <strong style={{ color: '#DFE2EE' }}>{formData.due_date}</strong></div>
                   </div>
                 </div>
 
@@ -403,16 +403,16 @@ export const EngineerDashboard = () => {
         }}>
           <div className="glass-panel" style={{ width: '100%', maxWidth: '700px', padding: '28px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>Request Details — {selectedReqDetail.request_id}</h3>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE' }}>Request Details — {selectedReqDetail.request_id}</h3>
               <button onClick={() => setSelectedReqDetail(null)} className="btn btn-secondary" style={{ padding: '4px 8px' }}>Close</button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', fontSize: '0.88rem', color: '#cbd5e1' }}>
-              <div>Department: <strong style={{ color: 'white' }}>{selectedReqDetail.department}</strong></div>
-              <div>Asset ID: <strong style={{ color: 'white' }}>{selectedReqDetail.asset_id}</strong></div>
-              <div>Defect Type: <strong style={{ color: '#38bdf8' }}>{selectedReqDetail.defect_type}</strong></div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', fontSize: '0.88rem', color: '#C2C6D6' }}>
+              <div>Department: <strong style={{ color: '#DFE2EE' }}>{selectedReqDetail.department}</strong></div>
+              <div>Asset ID: <strong style={{ color: '#DFE2EE' }}>{selectedReqDetail.asset_id}</strong></div>
+              <div>Defect Type: <strong style={{ color: '#3B82F6' }}>{selectedReqDetail.defect_type}</strong></div>
               <div>Defect Reason: <strong>{selectedReqDetail.defect_reason}</strong></div>
-              <div>Severity: <strong style={{ color: '#fb7185' }}>{selectedReqDetail.defect_severity}</strong></div>
+              <div>Severity: <strong style={{ color: '#EF4444' }}>{selectedReqDetail.defect_severity}</strong></div>
               <div>Safety Risk: <strong>{selectedReqDetail.safety_risk}</strong></div>
               <div>Duration: <strong>{selectedReqDetail.required_duration_hours} hours</strong></div>
               <div>Workers Required: <strong>{selectedReqDetail.required_workers}</strong></div>

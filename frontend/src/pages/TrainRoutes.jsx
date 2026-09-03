@@ -106,7 +106,7 @@ export const TrainRoutes = () => {
         {/* Right Info Cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div style={{ padding: '12px 16px', background: '#151E2E', border: '1px solid #24334D', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', display: 'flex', alignItems: 'center', justify: 'center', color: '#3B82F6' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid #24334D', display: 'flex', alignItems: 'center', justify: 'center', color: '#3B82F6' }}>
               ⚡
             </div>
             <div>

@@ -16,15 +16,15 @@ export const EquipmentModal = ({ isOpen, onClose, blockId, assignedEquipment = [
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Wrench size={24} color="#fbbf24" />
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#DFE2EE' }}>
                 Assigned Machinery & Equipment — {blockId}
               </h2>
             </div>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '4px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '4px' }}>
               Real Equipment Assignment from Equipment Database
             </p>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '6px' }}>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '6px' }}>
             <X size={22} />
           </button>
         </div>
@@ -33,7 +33,7 @@ export const EquipmentModal = ({ isOpen, onClose, blockId, assignedEquipment = [
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
           {assignedEquipment.map((eq, idx) => (
             <div key={idx} style={{
-              background: 'rgba(30, 41, 59, 0.8)',
+              background: '#1E2B42',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '10px',
               padding: '16px',
@@ -45,21 +45,21 @@ export const EquipmentModal = ({ isOpen, onClose, blockId, assignedEquipment = [
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '1rem', fontWeight: 800, color: 'white' }}>{eq.equipment_name}</span>
+                  <span style={{ fontSize: '1rem', fontWeight: 800, color: '#DFE2EE' }}>{eq.equipment_name}</span>
                   <span className="badge badge-candidate" style={{ fontSize: '0.68rem' }}>{eq.equipment_id}</span>
                   <span className="badge badge-final" style={{ fontSize: '0.68rem' }}>{eq.equipment_type || 'Heavy Machinery'}</span>
                 </div>
-                <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '6px', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: '0.82rem', color: '#C2C6D6', marginTop: '6px', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                   <span><ShieldCheck size={13} style={{ display: 'inline', marginRight: '4px' }} /> Condition: {eq.condition || 'Good'}</span>
                   <span><MapPin size={13} style={{ display: 'inline', marginRight: '4px' }} /> Corridor: {eq.corridor || 'C1'}</span>
                 </div>
               </div>
 
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.78rem', color: '#fbbf24', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div style={{ fontSize: '0.78rem', color: '#F59E0B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <CheckCircle size={14} /> Reserved & Mobilized
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '4px' }}>
                   <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} /> {eq.assigned_start || '00:00'} — {eq.assigned_end || '03:00'} ({eq.assigned_date || '2026-08-28'})
                 </div>
               </div>
@@ -67,7 +67,7 @@ export const EquipmentModal = ({ isOpen, onClose, blockId, assignedEquipment = [
           ))}
 
           {assignedEquipment.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
+            <div style={{ textAlign: 'center', padding: '30px', color: '#94A3B8' }}>
               No specific assigned equipment details available.
             </div>
           )}

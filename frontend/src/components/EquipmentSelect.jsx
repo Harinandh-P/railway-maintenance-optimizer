@@ -74,7 +74,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
           display: 'flex',
           alignItems: 'center',
           justify: 'space-between',
-          background: '#0f172a',
+          background: '#0B0F17',
           border: '1px solid #334155',
           borderRadius: '8px',
           padding: '10px 14px',
@@ -101,7 +101,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             left: 0,
             right: 0,
             marginTop: '4px',
-            background: '#1e293b',
+            background: '#1A2438',
             border: '1px solid #334155',
             borderRadius: '8px',
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6)',
@@ -113,7 +113,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
           }}
         >
           {/* Search Input Box */}
-          <div style={{ padding: '10px 12px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '8px', background: '#0f172a' }}>
+          <div style={{ padding: '10px 12px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '8px', background: '#0B0F17' }}>
             <Search size={16} color="#94a3b8" />
             <input
               type="text"
@@ -124,7 +124,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: 'white',
+                color: '#DFE2EE',
                 outline: 'none',
                 width: '100%',
                 fontSize: '0.85rem'
@@ -132,23 +132,23 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             />
           </div>
 
-          <div style={{ padding: '6px 12px', background: 'rgba(15, 23, 42, 0.6)', fontSize: '0.75rem', color: '#94a3b8', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ padding: '6px 12px', background: '#151E2E', fontSize: '0.75rem', color: '#94A3B8', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             Available Equipment: <strong>{filteredEquipment.length}</strong> of {equipmentList.length}
           </div>
 
           {/* List Options */}
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {loading ? (
-              <div style={{ padding: '16px', color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center' }}>
+              <div style={{ padding: '16px', color: '#94A3B8', fontSize: '0.85rem', textAlign: 'center' }}>
                 Loading full equipment database...
               </div>
             ) : error ? (
-              <div style={{ padding: '16px', color: '#fb7185', fontSize: '0.85rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <div style={{ padding: '16px', color: '#EF4444', fontSize: '0.85rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                 <AlertCircle size={16} />
                 <span>{error}</span>
               </div>
             ) : filteredEquipment.length === 0 ? (
-              <div style={{ padding: '16px', color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center' }}>
+              <div style={{ padding: '16px', color: '#94A3B8', fontSize: '0.85rem', textAlign: 'center' }}>
                 No matching equipment found
               </div>
             ) : (
@@ -168,10 +168,10 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
                   onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 >
-                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'white' }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#DFE2EE' }}>
                     {eq.equipment_id} — {eq.equipment_name}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
                     Type: <strong>{eq.equipment_type || 'General'}</strong> • Category: <strong>{eq.equipment_category || 'Maintenance'}</strong> • Corridor: <strong>{eq.corridor || 'All'}</strong>
                   </div>
                 </div>

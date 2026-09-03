@@ -47,7 +47,7 @@ export const FinalBlockPlan = () => {
   };
 
   if (loading) {
-    return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Final Block Plan...</div>;
+    return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Final Block Plan...</div>;
   }
 
   const blocks = planData?.final_block_plan || [];
@@ -89,8 +89,8 @@ export const FinalBlockPlan = () => {
       {/* Header Banner */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white' }}>Final Maintenance Block Schedule</h1>
-          <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Final Maintenance Block Schedule</h1>
+          <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
             Operational Block Timetable & Real Workforce / Equipment Assignments
           </p>
         </div>
@@ -104,12 +104,12 @@ export const FinalBlockPlan = () => {
 
       {/* Allocated Maintenance Blocks Section */}
       {blocks.length === 0 ? (
-        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
+        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#94A3B8' }}>
           No final maintenance blocks generated yet. Please execute the optimization pipeline.
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#DFE2EE' }}>
             Allocated Maintenance Blocks ({blocks.length})
           </h3>
 
@@ -122,13 +122,13 @@ export const FinalBlockPlan = () => {
                     <CalendarCheck size={26} color="#c084fc" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'white', letterSpacing: '-0.3px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#DFE2EE', letterSpacing: '-0.3px' }}>
                       {block.block_id} — Corridor {block.corridor} ({block.work_area})
                     </h3>
-                    <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span
                         onClick={() => setSelectedGroupDetail(block)}
-                        style={{ cursor: 'pointer', color: '#60a5fa', textDecoration: 'underline', fontWeight: 700 }}
+                        style={{ cursor: 'pointer', color: '#3B82F6', textDecoration: 'underline', fontWeight: 700 }}
                         title="Click to view complete group breakdown"
                       >
                         Group {block.group_id} ({block.group_task_count || block.allocated_tasks?.length || 1} Tasks)
@@ -149,19 +149,19 @@ export const FinalBlockPlan = () => {
 
               {/* ENCAPSULATED WORK INCLUDED SECTION */}
               <div style={{
-                background: 'rgba(30, 41, 59, 0.75)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: '#151E2E',
+                border: '1px solid #24334D',
                 borderRadius: '10px',
                 padding: '16px',
                 marginBottom: '18px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#3B82F6', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <FileText size={16} /> Work Included ({block.group_task_count || block.allocated_tasks?.length || 1} Maintenance Requests)
                   </div>
                   <button
                     onClick={() => setSelectedGroupDetail(block)}
-                    style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.78rem', textDecoration: 'underline' }}
+                    style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '0.78rem', textDecoration: 'underline' }}
                   >
                     View Complete Tasks →
                   </button>
@@ -169,12 +169,12 @@ export const FinalBlockPlan = () => {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {block.group_work_summary?.map((w, wIdx) => (
-                    <div key={wIdx} style={{ fontSize: '0.88rem', color: 'white', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: '#38bdf8' }}>•</span>
+                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ color: '#3B82F6' }}>•</span>
                       <span>{w}</span>
                     </div>
                   )) || (
-                    <div style={{ fontSize: '0.88rem', color: 'white', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600 }}>
                       • {block.allocated_tasks?.join(', ')}
                     </div>
                   )}
@@ -186,37 +186,37 @@ export const FinalBlockPlan = () => {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '16px',
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: '#101726',
                 padding: '20px',
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 marginBottom: '20px'
               }}>
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px' }}>SCHEDULED DATE</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>SCHEDULED DATE</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE', marginTop: '4px' }}>
                     {block.date}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px' }}>START — END TIME</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>START — END TIME</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#3B82F6', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Clock size={18} />
                     {block.block_start || '00:00'} — {block.block_end || '03:00'}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px' }}>ALLOCATED DURATION</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fbbf24', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>ALLOCATED DURATION</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#F59E0B', marginTop: '4px' }}>
                     {block.allocated_duration_minutes} MINUTES
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px' }}>PRIORITY / RISK SCORE</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#f43f5e', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>PRIORITY / RISK SCORE</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#EF4444', marginTop: '4px' }}>
                     Prio: {block.priority} • Risk: {block.risk_score}
                   </div>
                 </div>
@@ -235,11 +235,11 @@ export const FinalBlockPlan = () => {
                   justifyContent: 'space-between'
                 }}>
                   <div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600 }}>WORKFORCE ASSIGNMENT</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'white', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600 }}>WORKFORCE ASSIGNMENT</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#DFE2EE', marginTop: '2px' }}>
                       Required: {block.workers_required} • Available: {block.workers_available}
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#34d399', fontWeight: 800, marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.85rem', color: '#10B981', fontWeight: 800, marginTop: '2px' }}>
                       Assigned: {block.assigned_worker_details?.length || block.workers_required} Employees
                     </div>
                   </div>
@@ -265,11 +265,11 @@ export const FinalBlockPlan = () => {
                   justifyContent: 'space-between'
                 }}>
                   <div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600 }}>EQUIPMENT RESERVATION</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'white', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600 }}>EQUIPMENT RESERVATION</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#DFE2EE', marginTop: '2px' }}>
                       Machinery: {block.assigned_equipment?.join(', ') || 'Track Machine'}
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#fbbf24', fontWeight: 800, marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.85rem', color: '#F59E0B', fontWeight: 800, marginTop: '2px' }}>
                       Status: Mobilized & Verified
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export const FinalBlockPlan = () => {
                   <button
                     onClick={() => setSelectedEquipBlock(block)}
                     className="btn btn-secondary"
-                    style={{ fontSize: '0.8rem', padding: '8px 14px', borderColor: 'rgba(245, 158, 11, 0.4)', color: '#fbbf24' }}
+                    style={{ fontSize: '0.8rem', padding: '8px 14px', borderColor: 'rgba(245, 158, 11, 0.4)', color: '#F59E0B' }}
                     title="Click to view assigned machinery ID, type, condition, and status"
                   >
                     <Wrench size={16} /> View Equipment Details
@@ -286,15 +286,15 @@ export const FinalBlockPlan = () => {
               </div>
 
               {/* Rationale Footer */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: 'rgba(15, 23, 42, 0.6)', padding: '12px 16px', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#94a3b8', flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: '#151E2E', padding: '12px 16px', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#94A3B8', flex: 1 }}>
                   <ShieldCheck size={16} color="#10b981" />
                   <span>{block.reason}</span>
                 </div>
                 <button
                   onClick={() => setSelectedBlockForDetail(block)}
                   className="btn btn-secondary"
-                  style={{ fontSize: '0.8rem', padding: '6px 14px', borderColor: 'rgba(56, 189, 248, 0.4)', color: '#38bdf8', whiteSpace: 'nowrap' }}
+                  style={{ fontSize: '0.8rem', padding: '6px 14px', borderColor: 'rgba(56, 189, 248, 0.4)', color: '#3B82F6', whiteSpace: 'nowrap' }}
                 >
                   <HelpCircle size={16} /> Explain Why
                 </button>
@@ -307,7 +307,7 @@ export const FinalBlockPlan = () => {
       {/* Unallocated Groups Section */}
       {unallocated.length > 0 && (
         <div style={{ marginTop: '32px' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#f43f5e', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#EF4444', marginBottom: '16px' }}>
             Unallocated Maintenance Groups ({unallocated.length})
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -315,12 +315,12 @@ export const FinalBlockPlan = () => {
               <div key={i} className="glass-panel" style={{ padding: '24px', borderLeft: '5px solid #f43f5e' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#DFE2EE' }}>
                       Group {u.group_id} ({u.group_task_count || u.tasks?.length || 1} Tasks)
                     </h4>
                     <button
                       onClick={() => setSelectedGroupDetail(u)}
-                      style={{ background: 'transparent', border: 'none', color: '#60a5fa', cursor: 'pointer', fontSize: '0.8rem', textDecoration: 'underline' }}
+                      style={{ background: 'transparent', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '0.8rem', textDecoration: 'underline' }}
                     >
                       View Group Details →
                     </button>
@@ -329,22 +329,22 @@ export const FinalBlockPlan = () => {
                 </div>
 
                 {/* UNALLOCATED WORK INCLUDED BOX */}
-                <div style={{ background: 'rgba(30, 41, 59, 0.75)', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '8px', padding: '14px', marginBottom: '12px' }}>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fb7185', textTransform: 'uppercase', marginBottom: '6px' }}>
+                <div style={{ background: '#151E2E', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '8px', padding: '14px', marginBottom: '12px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EF4444', textTransform: 'uppercase', marginBottom: '6px' }}>
                     Work Included (Unallocated)
                   </div>
                   {u.group_work_summary?.map((w, wIdx) => (
-                    <div key={wIdx} style={{ fontSize: '0.88rem', color: 'white', fontWeight: 600, marginTop: '2px' }}>
+                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600, marginTop: '2px' }}>
                       • {w}
                     </div>
                   )) || (
-                    <div style={{ fontSize: '0.88rem', color: 'white', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600 }}>
                       • Tasks: {u.tasks?.join(', ')}
                     </div>
                   )}
                 </div>
 
-                <p style={{ fontSize: '0.88rem', color: '#94a3b8' }}>
+                <p style={{ fontSize: '0.88rem', color: '#94A3B8' }}>
                   <strong>Non-allocation Reason:</strong> {u.reason}
                 </p>
               </div>

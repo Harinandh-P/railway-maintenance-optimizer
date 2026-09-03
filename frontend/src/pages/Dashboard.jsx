@@ -58,7 +58,7 @@ export const Dashboard = () => {
   };
 
   if (loading) {
-    return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Dashboard Metrics...</div>;
+    return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Dashboard Metrics...</div>;
   }
 
   // Calculate Distributions safely
@@ -80,7 +80,7 @@ export const Dashboard = () => {
 
   const statCards = [
     { title: 'Total Maintenance Requests', value: metrics?.total_maintenance_requests || 0, icon: TrainTrack, color: '#3b82f6' },
-    { title: 'High-Risk Requests', value: metrics?.high_risk_requests || 0, icon: AlertTriangle, color: '#f43f5e' },
+    { title: 'High-Risk Requests', value: metrics?.high_risk_requests || 0, icon: AlertTriangle, color: '#EF4444' },
     { title: 'Candidate Gaps (Phase 2)', value: metrics?.candidate_gaps_generated || 0, icon: Layers, color: '#06b6d4' },
     { title: 'Final Selected Blocks (Phase 3)', value: allocatedCount, icon: CalendarCheck, color: '#8b5cf6' },
     { title: 'Available Workers', value: `${metrics?.available_workers || 0} / ${metrics?.total_workers || 0}`, icon: Users, color: '#10b981' },
@@ -92,8 +92,8 @@ export const Dashboard = () => {
       {/* Page Banner */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white' }}>Operations Dashboard</h1>
-          <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Operations Dashboard</h1>
+          <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
             System overview for Railway Maintenance Block Optimization
           </p>
         </div>
@@ -104,7 +104,7 @@ export const Dashboard = () => {
       </div>
 
       {errorBanner && (
-        <div style={{ padding: '14px 18px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fb7185', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ padding: '14px 18px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '10px', marginBottom: '24px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <AlertTriangle size={18} />
           <span>Notice: {errorBanner}</span>
         </div>
@@ -117,12 +117,12 @@ export const Dashboard = () => {
           return (
             <div key={idx} className="glass-panel glass-panel-interactive" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#94a3b8' }}>{card.title}</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#94A3B8' }}>{card.title}</span>
                 <div style={{ background: `${card.color}20`, padding: '8px', borderRadius: '8px' }}>
                   <Icon size={20} color={card.color} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white' }}>{card.value}</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#DFE2EE' }}>{card.value}</div>
             </div>
           );
         })}
@@ -134,7 +134,7 @@ export const Dashboard = () => {
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
             <PieChart size={20} color="#38bdf8" />
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'white' }}>Defect Severity Distribution</h3>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#DFE2EE' }}>Defect Severity Distribution</h3>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -144,10 +144,10 @@ export const Dashboard = () => {
               return (
                 <div key={key}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px' }}>
-                    <span style={{ color: 'white', fontWeight: 600 }}>{key}</span>
-                    <span style={{ color: '#94a3b8' }}>{val} ({pct}%)</span>
+                    <span style={{ color: '#DFE2EE', fontWeight: 600 }}>{key}</span>
+                    <span style={{ color: '#94A3B8' }}>{val} ({pct}%)</span>
                   </div>
-                  <div style={{ height: '8px', background: '#1e293b', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '8px', background: '#1A2438', borderRadius: '4px', overflow: 'hidden' }}>
                     <div style={{ width: `${pct}%`, height: '100%', background: colors[key] || '#3b82f6' }} />
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export const Dashboard = () => {
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
             <GitCommit size={20} color="#c084fc" />
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'white' }}>Requests by Corridor</h3>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#DFE2EE' }}>Requests by Corridor</h3>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -170,10 +170,10 @@ export const Dashboard = () => {
               return (
                 <div key={corr}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px' }}>
-                    <span style={{ color: 'white', fontWeight: 600 }}>Corridor {corr}</span>
-                    <span style={{ color: '#94a3b8' }}>{val} requests</span>
+                    <span style={{ color: '#DFE2EE', fontWeight: 600 }}>Corridor {corr}</span>
+                    <span style={{ color: '#94A3B8' }}>{val} requests</span>
                   </div>
-                  <div style={{ height: '8px', background: '#1e293b', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '8px', background: '#1A2438', borderRadius: '4px', overflow: 'hidden' }}>
                     <div style={{ width: `${pct}%`, height: '100%', background: '#8b5cf6' }} />
                   </div>
                 </div>
@@ -186,16 +186,16 @@ export const Dashboard = () => {
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
             <BarChart3 size={20} color="#34d399" />
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'white' }}>Phase 3 Allocation Ratio</h3>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#DFE2EE' }}>Phase 3 Allocation Ratio</h3>
           </div>
 
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
-            <div style={{ fontSize: '2.4rem', fontWeight: 800, color: '#34d399' }}>
+            <div style={{ fontSize: '2.4rem', fontWeight: 800, color: '#10B981' }}>
               {allocatedCount} / {allocatedCount + unallocatedCount}
             </div>
-            <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Block Groups Successfully Allocated</span>
+            <span style={{ fontSize: '0.85rem', color: '#94A3B8' }}>Block Groups Successfully Allocated</span>
 
-            <div style={{ display: 'flex', gap: '8px', height: '12px', background: '#1e293b', borderRadius: '6px', overflow: 'hidden', marginTop: '20px' }}>
+            <div style={{ display: 'flex', gap: '8px', height: '12px', background: '#1A2438', borderRadius: '6px', overflow: 'hidden', marginTop: '20px' }}>
               <div style={{ width: `${(allocatedCount / (allocatedCount + unallocatedCount || 1)) * 100}%`, background: '#10b981' }} title="Allocated" />
               <div style={{ width: `${(unallocatedCount / (allocatedCount + unallocatedCount || 1)) * 100}%`, background: '#f43f5e' }} title="Unallocated" />
             </div>
@@ -208,9 +208,9 @@ export const Dashboard = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <CheckCircle2 size={20} color="#10b981" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>Backend Pipeline Integrated & Verified</h3>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#DFE2EE' }}>Backend Pipeline Integrated & Verified</h3>
           </div>
-          <p style={{ fontSize: '0.88rem', color: '#94a3b8' }}>
+          <p style={{ fontSize: '0.88rem', color: '#94A3B8' }}>
             Phase 1 (Priority/Risk) → Phase 2 (Section Movement Gaps) → Phase 3 (CP-SAT Optimization) ready for execution.
           </p>
         </div>

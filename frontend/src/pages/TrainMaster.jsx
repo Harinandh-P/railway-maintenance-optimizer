@@ -49,7 +49,7 @@ export const TrainMaster = () => {
     { key: 'operational_status', label: 'Status', placeholder: 'eg: Active' }
   ];
 
-  if (loading) return <div style={{ color: '#94a3b8', padding: '40px' }}>Loading Train Master...</div>;
+  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Train Master...</div>;
 
   return (
     <div>

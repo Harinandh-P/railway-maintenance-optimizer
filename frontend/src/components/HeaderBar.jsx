@@ -156,7 +156,7 @@ export const HeaderBar = () => {
             height: '16px',
             borderRadius: '50%',
             background: '#8B5CF6',
-            color: 'white',
+            color: '#DFE2EE',
             fontSize: '0.65rem',
             fontWeight: 700,
             fontFamily: "'JetBrains Mono', monospace",

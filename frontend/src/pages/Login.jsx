@@ -59,7 +59,7 @@ export const Login = () => {
         </div>
 
         {error && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fb7185', borderRadius: '8px', marginBottom: '20px', fontSize: '0.88rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '8px', marginBottom: '20px', fontSize: '0.88rem' }}>
             <AlertCircle size={18} />
             <span>{error}</span>
           </div>
@@ -67,11 +67,11 @@ export const Login = () => {
 
         <form onSubmit={handleSubmit} autoComplete="on">
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#C2C6D6', marginBottom: '8px' }}>
               Username
             </label>
             <div style={{ position: 'relative' }}>
-              <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
               <input
                 type="text"
                 className="input-field"
@@ -86,11 +86,11 @@ export const Login = () => {
           </div>
 
           <div style={{ marginBottom: '28px' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#C2C6D6', marginBottom: '8px' }}>
               Password
             </label>
             <div style={{ position: 'relative' }}>
-              <Lock size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <Lock size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 className="input-field"
@@ -111,7 +111,7 @@ export const Login = () => {
                   transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
-                  color: '#64748b',
+                  color: '#64748B',
                   cursor: 'pointer',
                   padding: '4px',
                   display: 'flex',
