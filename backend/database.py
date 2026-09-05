@@ -69,6 +69,8 @@ def execute_statement(statement: str, params: tuple = ()) -> int:
         return rowcount
 
 def init_db():
+    from backend.auth import hash_password, generate_salt
+
     if is_postgres():
         engine = get_postgres_engine()
         with engine.begin() as conn:
@@ -77,12 +79,15 @@ def init_db():
                 user_id SERIAL PRIMARY KEY,
                 username VARCHAR(100) UNIQUE NOT NULL,
                 password_hash VARCHAR(255) NOT NULL,
+                salt VARCHAR(100),
                 full_name VARCHAR(150) NOT NULL,
                 role VARCHAR(20) NOT NULL CHECK(role IN ('ADMIN', 'OPERATOR')),
                 department VARCHAR(50) DEFAULT 'ALL',
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
             """)
+
+            conn.exec_driver_sql("ALTER TABLE users ADD COLUMN IF NOT EXISTS salt VARCHAR(100);")
 
             conn.exec_driver_sql("""
             CREATE TABLE IF NOT EXISTS audit_log (
@@ -277,42 +282,28 @@ def init_db():
 
             conn.exec_driver_sql("ALTER TABLE maintenance_requests ADD COLUMN IF NOT EXISTS created_by VARCHAR(100);")
 
-            from backend.auth import hash_password
-            aroha_pass = hash_password("Aroha2026")
-            employee_pass = hash_password("Emp2026")
-            engineer_pass = hash_password("engineer123")
-
             conn.exec_driver_sql("DELETE FROM users WHERE username IN ('admin', 'operator');")
 
-            conn.exec_driver_sql("""
-            INSERT INTO users (username, password_hash, full_name, role, department)
-            VALUES ('Aroha', %s, 'Aroha Control Officer', 'ADMIN', 'ALL')
-            ON CONFLICT(username) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, department = EXCLUDED.department;
-            """, (aroha_pass,))
+            users_seed = [
+                ('Aroha', 'Aroha2026', 'Aroha Control Officer', 'ADMIN', 'ALL'),
+                ('Employee', 'Emp2026', 'Railway Operator Employee', 'OPERATOR', 'ALL'),
+                ('eng_signal', 'engineer123', 'Signal Maintenance Engineer', 'OPERATOR', 'SIGNAL'),
+                ('eng_electrical', 'engineer123', 'Electrical Maintenance Engineer', 'OPERATOR', 'ELECTRICAL'),
+                ('eng_track', 'engineer123', 'Track Maintenance Engineer', 'OPERATOR', 'TRACK')
+            ]
 
-            conn.exec_driver_sql("""
-            INSERT INTO users (username, password_hash, full_name, role, department)
-            VALUES ('Employee', %s, 'Railway Operator Employee', 'OPERATOR', 'ALL')
-            ON CONFLICT(username) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, department = EXCLUDED.department;
-            """, (employee_pass,))
-
-            conn.exec_driver_sql("""
-            INSERT INTO users (username, password_hash, full_name, role, department)
-            VALUES ('eng_signal', %s, 'Signal Maintenance Engineer', 'OPERATOR', 'SIGNAL')
-            ON CONFLICT(username) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, department = EXCLUDED.department;
-            """, (engineer_pass,))
-
-            conn.exec_driver_sql("""
-            INSERT INTO users (username, password_hash, full_name, role, department)
-            VALUES ('eng_electrical', %s, 'Electrical Maintenance Engineer', 'OPERATOR', 'ELECTRICAL')
-            ON CONFLICT(username) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, department = EXCLUDED.department;
-            """, (engineer_pass,))
-
-            conn.exec_driver_sql("""
-            INSERT INTO users (username, password_hash, full_name, role, department)
-            VALUES ('eng_track', %s, 'Track Maintenance Engineer', 'OPERATOR', 'TRACK')
-            ON CONFLICT(username) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role, department = EXCLUDED.department;
-            """, (engineer_pass,))
+            for u_name, u_pwd, u_fname, u_role, u_dept in users_seed:
+                s_salt = generate_salt()
+                s_hash = hash_password(u_pwd, s_salt)
+                conn.exec_driver_sql("""
+                INSERT INTO users (username, password_hash, salt, full_name, role, department)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT(username) DO UPDATE SET
+                    password_hash = EXCLUDED.password_hash,
+                    salt = EXCLUDED.salt,
+                    role = EXCLUDED.role,
+                    department = EXCLUDED.department;
+                """, (u_name, s_hash, s_salt, u_fname, u_role, u_dept))
 
         print("[DATABASE] PostgreSQL schema initialized successfully.")
 
@@ -330,12 +321,18 @@ def init_db():
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
+            salt TEXT,
             full_name TEXT NOT NULL,
             role TEXT NOT NULL CHECK(role IN ('ADMIN', 'OPERATOR')),
             department TEXT DEFAULT 'ALL',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
         """)
+
+        cursor.execute("PRAGMA table_info(users)")
+        user_cols = [c[1] for c in cursor.fetchall()]
+        if "salt" not in user_cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN salt TEXT")
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS audit_log (
@@ -379,7 +376,6 @@ def init_db():
         )
         """)
 
-        # Add created_by column if missing in existing SQLite table
         cursor.execute("PRAGMA table_info(maintenance_requests)")
         cols = [c[1] for c in cursor.fetchall()]
         if "created_by" not in cols:
@@ -534,42 +530,28 @@ def init_db():
         )
         """)
 
-        from backend.auth import hash_password
-        aroha_pass = hash_password("Aroha2026")
-        employee_pass = hash_password("Emp2026")
-        engineer_pass = hash_password("engineer123")
-
         cursor.execute("DELETE FROM users WHERE username IN ('admin', 'operator');")
 
-        cursor.execute("""
-        INSERT INTO users (username, password_hash, full_name, role, department)
-        VALUES ('Aroha', ?, 'Aroha Control Officer', 'ADMIN', 'ALL')
-        ON CONFLICT(username) DO UPDATE SET password_hash = excluded.password_hash, role = excluded.role, department = excluded.department
-        """, (aroha_pass,))
+        users_seed = [
+            ('Aroha', 'Aroha2026', 'Aroha Control Officer', 'ADMIN', 'ALL'),
+            ('Employee', 'Emp2026', 'Railway Operator Employee', 'OPERATOR', 'ALL'),
+            ('eng_signal', 'engineer123', 'Signal Maintenance Engineer', 'OPERATOR', 'SIGNAL'),
+            ('eng_electrical', 'engineer123', 'Electrical Maintenance Engineer', 'OPERATOR', 'ELECTRICAL'),
+            ('eng_track', 'engineer123', 'Track Maintenance Engineer', 'OPERATOR', 'TRACK')
+        ]
 
-        cursor.execute("""
-        INSERT INTO users (username, password_hash, full_name, role, department)
-        VALUES ('Employee', ?, 'Railway Operator Employee', 'OPERATOR', 'ALL')
-        ON CONFLICT(username) DO UPDATE SET password_hash = excluded.password_hash, role = excluded.role, department = excluded.department
-        """, (employee_pass,))
-
-        cursor.execute("""
-        INSERT INTO users (username, password_hash, full_name, role, department)
-        VALUES ('eng_signal', ?, 'Signal Maintenance Engineer', 'OPERATOR', 'SIGNAL')
-        ON CONFLICT(username) DO UPDATE SET password_hash = excluded.password_hash, role = excluded.role, department = excluded.department
-        """, (engineer_pass,))
-
-        cursor.execute("""
-        INSERT INTO users (username, password_hash, full_name, role, department)
-        VALUES ('eng_electrical', ?, 'Electrical Maintenance Engineer', 'OPERATOR', 'ELECTRICAL')
-        ON CONFLICT(username) DO UPDATE SET password_hash = excluded.password_hash, role = excluded.role, department = excluded.department
-        """, (engineer_pass,))
-
-        cursor.execute("""
-        INSERT INTO users (username, password_hash, full_name, role, department)
-        VALUES ('eng_track', ?, 'Track Maintenance Engineer', 'OPERATOR', 'TRACK')
-        ON CONFLICT(username) DO UPDATE SET password_hash = excluded.password_hash, role = excluded.role, department = excluded.department
-        """, (engineer_pass,))
+        for u_name, u_pwd, u_fname, u_role, u_dept in users_seed:
+            s_salt = generate_salt()
+            s_hash = hash_password(u_pwd, s_salt)
+            cursor.execute("""
+            INSERT INTO users (username, password_hash, salt, full_name, role, department)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(username) DO UPDATE SET
+                password_hash = excluded.password_hash,
+                salt = excluded.salt,
+                role = excluded.role,
+                department = excluded.department
+            """, (u_name, s_hash, s_salt, u_fname, u_role, u_dept))
 
         conn.commit()
         conn.close()

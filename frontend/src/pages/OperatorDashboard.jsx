@@ -29,7 +29,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   const dept = user?.department || 'TRACK';
 
   const initialFormState = {
-    request_id: `REQ${Math.floor(100 + Math.random() * 900)}`,
+    request_id: 'Auto-Generated on Submission',
     request_datetime: new Date().toISOString().slice(0, 16).replace('T', ' '),
     department: dept === 'ALL' ? 'Engineering' : (dept === 'SIGNAL' ? 'S&T' : (dept === 'ELECTRICAL' ? 'Traction' : 'Engineering')),
     asset_id: dept === 'SIGNAL' ? 'SIG003' : (dept === 'ELECTRICAL' ? 'OHE003' : 'TRK003'),
@@ -155,14 +155,15 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         required_workers: parseInt(formData.required_workers)
       };
 
-      await api.post('/data/maintenance-requests/create', payload);
-      setSuccessMsg(`Maintenance Request ${formData.request_id} submitted & saved to database successfully!`);
+      const res = await api.post('/data/maintenance-requests/create', payload);
+      const createdId = res.data?.data?.request_id || formData.request_id;
+      setSuccessMsg(`Maintenance Request ${createdId} submitted & saved to database successfully!`);
       setShowFormModal(false);
       setFormStep(1);
       await fetchData();
       setFormData({
         ...initialFormState,
-        request_id: `REQ${Math.floor(100 + Math.random() * 900)}`
+        request_id: 'Auto-Generated on Submission'
       });
     } catch (err) {
       console.error('Create maintenance request failed:', err);

@@ -49,7 +49,6 @@ export const ProfileDropdown = () => {
     setUnameErr(null);
 
     try {
-      // Passkey is validated 100% SERVER-SIDE via POST /api/auth/change-username
       const res = await api.post('/auth/change-username', {
         current_username: user?.username,
         new_username: newUsername,
@@ -108,127 +107,57 @@ export const ProfileDropdown = () => {
   };
 
   return (
-    <div ref={dropdownRef} style={{ position: 'relative' }}>
+    <div ref={dropdownRef} className="relative">
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        style={{
-          background: '#f8fafc',
-          border: '1px solid #e2e8f0',
-          borderRadius: '12px',
-          padding: '8px 14px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          color: '#1a2638',
-          cursor: 'pointer',
-          transition: 'all 0.18s ease',
-          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.08)'
-        }}
+        className="tactile-card px-3.5 py-2 rounded-xl flex items-center gap-2.5 text-slate-800 hover:text-slate-900 shadow-neu-flat tactile-btn"
       >
-        <div style={{
-          background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-          width: '32px',
-          height: '32px',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4)'
-        }}>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center shadow-neu-btn-blue text-white">
           <User size={18} color="white" />
         </div>
-        <div style={{ textAlign: 'left' }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#1a2638', lineHeight: '1.2', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName || user?.username}</div>
-          <div style={{ fontSize: '0.70rem', color: '#71829d', fontFamily: "'JetBrains Mono', monospace" }}>{user?.role} ({user?.department || 'ALL'})</div>
+        <div className="text-left">
+          <div className="text-xs font-bold text-slate-900 leading-tight font-display">{user?.fullName || user?.username}</div>
+          <div className="text-[10px] text-slate-500 font-mono">{user?.role} ({user?.department || 'ALL'})</div>
         </div>
-        <ChevronDown size={16} color="#94A3B8" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+        <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="glass-panel" style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 'calc(100% + 8px)',
-          width: '240px',
-          zIndex: 500,
-          padding: '8px',
-          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.6)',
-          background: '#f8faff',
-          border: '1px solid #e2e8f0'
-        }}>
-          <div style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', marginBottom: '4px' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1a2638', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName}</div>
-            <div style={{ fontSize: '0.75rem', color: '#71829d', fontFamily: "'JetBrains Mono', monospace" }}>Username: <strong>{user?.username}</strong></div>
+        <div className="tactile-card absolute right-0 bottom-full mb-2 w-60 z-50 p-2 shadow-neu-flat bg-slate-50 border border-slate-200/80 rounded-2xl">
+          <div className="px-3 py-2 border-b border-slate-200/80 mb-1">
+            <div className="text-xs font-bold text-slate-900 font-display">{user?.fullName}</div>
+            <div className="text-[11px] text-slate-500 font-mono">Username: <strong className="text-slate-700">{user?.username}</strong></div>
           </div>
 
           {isAdmin && (
-            <>
+            <div className="space-y-1">
               <button
                 onClick={() => { setIsOpen(false); setShowUsernameModal(true); setUnameMsg(null); setUnameErr(null); }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '10px 12px',
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#71829d',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  textAlign: 'left'
-                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-blue-600 rounded-lg tactile-pill text-left transition-colors"
               >
-                <KeyRound size={16} color="#38bdf8" /> Change Username
+                <KeyRound size={15} className="text-blue-500" />
+                <span>Change Username</span>
               </button>
 
               <button
                 onClick={() => { setIsOpen(false); setShowPasswordModal(true); setPassMsg(null); setPassErr(null); }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '10px 12px',
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#71829d',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  textAlign: 'left'
-                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-purple-600 rounded-lg tactile-pill text-left transition-colors"
               >
-                <Lock size={16} color="#c084fc" /> Change Password
+                <Lock size={15} className="text-purple-500" />
+                <span>Change Password</span>
               </button>
-            </>
+            </div>
           )}
 
-          <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '4px', paddingTop: '4px' }}>
+          <div className="border-t border-slate-200/80 mt-1 pt-1">
             <button
               onClick={() => { setIsOpen(false); logout(); }}
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '10px 12px',
-                background: 'transparent',
-                border: 'none',
-                color: '#EF4444',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                textAlign: 'left'
-              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-rose-600 hover:text-rose-700 rounded-lg tactile-pill text-left transition-colors"
             >
-              <LogOut size={16} /> Logout
+              <LogOut size={15} />
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -237,47 +166,52 @@ export const ProfileDropdown = () => {
       {/* CHANGE USERNAME MODAL */}
       {showUsernameModal && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box" style={{ maxWidth: 'min(92vw, 480px)', border: '1px solid rgba(56, 189, 248, 0.4)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1a2638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <KeyRound size={20} color="#38bdf8" /> Change Admin Username
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#71829d', marginBottom: '20px' }}>
+          <div className="modal-box max-w-md">
+            <div className="flex items-center justify-between mb-3 border-b border-slate-200 pb-2.5">
+              <h3 className="text-base font-bold text-slate-900 font-display flex items-center gap-2">
+                <KeyRound size={18} className="text-blue-600" />
+                <span>Change Admin Username</span>
+              </h3>
+              <button onClick={() => setShowUsernameModal(false)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-slate-600">Close</button>
+            </div>
+
+            <p className="text-xs text-slate-500 font-medium mb-4">
               Server-side passkey verification required.
             </p>
 
             {unameMsg && (
-              <div style={{ padding: '10px 14px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#10B981', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem' }}>
-                <CheckCircle size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                {unameMsg}
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs flex items-center gap-2 mb-4 font-semibold">
+                <CheckCircle size={16} />
+                <span>{unameMsg}</span>
               </div>
             )}
 
             {unameErr && (
-              <div style={{ padding: '10px 14px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem' }}>
-                <AlertTriangle size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                {unameErr}
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2 mb-4 font-semibold">
+                <AlertTriangle size={16} />
+                <span>{unameErr}</span>
               </div>
             )}
 
-            <form onSubmit={handleChangeUsername}>
-              <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Current Username</label>
-                <input type="text" className="input-field" value={user?.username || ''} readOnly style={{ opacity: 0.7 }} />
+            <form onSubmit={handleChangeUsername} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Current Username</label>
+                <input type="text" className="input-field opacity-60 cursor-not-allowed" value={user?.username || ''} readOnly disabled />
               </div>
 
-              <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>New Username</label>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">New Username</label>
                 <input type="text" className="input-field" value={newUsername} onChange={e => setNewUsername(e.target.value)} required placeholder="Enter new username" />
               </div>
 
-              <div style={{ marginBottom: '24px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#F59E0B', display: 'block', marginBottom: '6px' }}>Security Passkey</label>
-                <input type="password" className="input-field" value={passkey} onChange={e => setPasskey(e.target.value)} required placeholder="Enter 10-digit passkey" />
+              <div>
+                <label className="block text-xs font-semibold text-amber-600 mb-1">Security Passkey</label>
+                <input type="password" className="input-field" value={passkey} onChange={e => setPasskey(e.target.value)} required placeholder="Enter security passkey" />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                <button type="button" onClick={() => setShowUsernameModal(false)} className="btn btn-secondary">Cancel</button>
-                <button type="submit" disabled={unameLoading} className="btn btn-primary">
+              <div className="flex justify-end gap-3 pt-2 border-t border-slate-200">
+                <button type="button" onClick={() => setShowUsernameModal(false)} className="tactile-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900">Cancel</button>
+                <button type="submit" disabled={unameLoading} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2 rounded-xl shadow-neu-btn-blue disabled:opacity-50">
                   {unameLoading ? 'Validating...' : 'Update Username'}
                 </button>
               </div>
@@ -289,36 +223,40 @@ export const ProfileDropdown = () => {
       {/* CHANGE PASSWORD MODAL */}
       {showPasswordModal && (
         <div className="modal-overlay">
-          <div className="glass-panel modal-box" style={{ maxWidth: 'min(92vw, 480px)', border: '1px solid rgba(192, 132, 252, 0.4)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1a2638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Lock size={20} color="#c084fc" /> Change Admin Password
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#71829d', marginBottom: '20px' }}>
-              Update your account password.
+          <div className="modal-box max-w-md">
+            <div className="flex items-center justify-between mb-3 border-b border-slate-200 pb-2.5">
+              <h3 className="text-base font-bold text-slate-900 font-display flex items-center gap-2">
+                <Lock size={18} className="text-purple-600" />
+                <span>Change Admin Password</span>
+              </h3>
+              <button onClick={() => setShowPasswordModal(false)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-slate-600">Close</button>
+            </div>
+
+            <p className="text-xs text-slate-500 font-medium mb-4">
+              Update your account password with cryptographically secure per-user salt.
             </p>
 
             {passMsg && (
-              <div style={{ padding: '10px 14px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#10B981', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem' }}>
-                <CheckCircle size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                {passMsg}
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs flex items-center gap-2 mb-4 font-semibold">
+                <CheckCircle size={16} />
+                <span>{passMsg}</span>
               </div>
             )}
 
             {passErr && (
-              <div style={{ padding: '10px 14px', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#EF4444', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem' }}>
-                <AlertTriangle size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                {passErr}
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2 mb-4 font-semibold">
+                <AlertTriangle size={16} />
+                <span>{passErr}</span>
               </div>
             )}
 
-            <form onSubmit={handleChangePassword}>
-              <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Current Password</label>
-                <div style={{ position: 'relative' }}>
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Current Password</label>
+                <div className="relative">
                   <input
                     type={showCurrPass ? 'text' : 'password'}
-                    className="input-field"
-                    style={{ paddingRight: '40px' }}
+                    className="input-field pr-10"
                     value={currPassword}
                     onChange={e => setCurrPassword(e.target.value)}
                     required
@@ -327,7 +265,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowCurrPass(!showCurrPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     title={showCurrPass ? 'Hide password' : 'Show password'}
                   >
                     {showCurrPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -335,13 +273,12 @@ export const ProfileDropdown = () => {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>New Password</label>
-                <div style={{ position: 'relative' }}>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">New Password</label>
+                <div className="relative">
                   <input
                     type={showNewPass ? 'text' : 'password'}
-                    className="input-field"
-                    style={{ paddingRight: '40px' }}
+                    className="input-field pr-10"
                     value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
                     required
@@ -350,7 +287,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowNewPass(!showNewPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     title={showNewPass ? 'Hide password' : 'Show password'}
                   >
                     {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -358,13 +295,12 @@ export const ProfileDropdown = () => {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '24px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Confirm New Password</label>
-                <div style={{ position: 'relative' }}>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm New Password</label>
+                <div className="relative">
                   <input
                     type={showConfirmPass ? 'text' : 'password'}
-                    className="input-field"
-                    style={{ paddingRight: '40px' }}
+                    className="input-field pr-10"
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     required
@@ -373,7 +309,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPass(!showConfirmPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     title={showConfirmPass ? 'Hide password' : 'Show password'}
                   >
                     {showConfirmPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -381,9 +317,9 @@ export const ProfileDropdown = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                <button type="button" onClick={() => setShowPasswordModal(false)} className="btn btn-secondary">Cancel</button>
-                <button type="submit" disabled={passLoading} className="btn btn-emerald">
+              <div className="flex justify-end gap-3 pt-2 border-t border-slate-200">
+                <button type="button" onClick={() => setShowPasswordModal(false)} className="tactile-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900">Cancel</button>
+                <button type="submit" disabled={passLoading} className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-xs px-5 py-2 rounded-xl shadow-neu-btn-blue disabled:opacity-50">
                   {passLoading ? 'Updating...' : 'Update Password'}
                 </button>
               </div>

@@ -28,6 +28,7 @@ export const Dashboard = () => {
   const [errorBanner, setErrorBanner] = useState(null);
   const [pipelineSuccess, setPipelineSuccess] = useState(null);
   const [runningPipeline, setRunningPipeline] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Sorting State for Upcoming Schedule
   const [scheduleSortField, setScheduleSortField] = useState('date');
@@ -92,6 +93,7 @@ export const Dashboard = () => {
   }, [allocatedBlocks, scheduleSortField, scheduleSortOrder]);
 
   const handleRunFullPipeline = async () => {
+    setShowConfirmModal(false);
     setRunningPipeline(true);
     setPipelineSuccess(null);
     setErrorBanner(null);
@@ -172,7 +174,7 @@ export const Dashboard = () => {
 
         <div className="flex items-center gap-3 flex-wrap">
           <button
-            onClick={handleRunFullPipeline}
+            onClick={() => setShowConfirmModal(true)}
             disabled={runningPipeline}
             className="tactile-pill px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-2 tactile-btn"
           >
@@ -383,6 +385,44 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* FULL PIPELINE EXECUTION CONFIRMATION MODAL */}
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="modal-box max-w-md">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-200 pb-3">
+              <h3 className="text-base font-bold text-slate-900 font-display flex items-center gap-2">
+                <PlaySquare className="text-emerald-600" size={18} />
+                <span>Confirm Full Pipeline Execution</span>
+              </h3>
+              <button onClick={() => setShowConfirmModal(false)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-slate-600">Close</button>
+            </div>
+
+            <p className="text-xs text-slate-600 font-medium mb-6 leading-relaxed">
+              This will run Phase 1 → Phase 2 → Phase 3 and replace/update the current optimization output.
+            </p>
+
+            <div className="flex justify-end gap-3 border-t border-slate-200 pt-3">
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                className="tactile-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleRunFullPipeline}
+                disabled={runningPipeline}
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-xs px-5 py-2 rounded-xl shadow-neu-btn-blue flex items-center gap-2 disabled:opacity-50"
+              >
+                {runningPipeline ? <RefreshCw className="animate-spin" size={14} /> : <PlaySquare size={14} />}
+                <span>{runningPipeline ? 'Executing...' : 'Run Full Pipeline'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

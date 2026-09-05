@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Dict, Any
 import hashlib
+import secrets
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -14,12 +15,41 @@ class TokenData(BaseModel):
     role: str
     department: Optional[str] = "ALL"
 
-def hash_password(password: str) -> str:
-    salt = "railway_salt_2026"
-    return hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 100000).hex()
+def generate_salt() -> str:
+    return secrets.token_hex(16)
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return hash_password(plain_password) == hashed_password
+def hash_password(password: str, salt: Optional[str] = None) -> str:
+    use_salt = salt if salt else "legacy_salt_default"
+    return hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), use_salt.encode("utf-8"), 100000).hex()
+
+def verify_password(plain_password: str, user_record: Dict[str, Any]) -> bool:
+    if not user_record or not isinstance(user_record, dict):
+        return False
+
+    stored_hash = str(user_record.get("password_hash", ""))
+    stored_salt = user_record.get("salt")
+    username = str(user_record.get("username", ""))
+
+    if stored_salt and str(stored_salt).strip():
+        computed_hash = hash_password(plain_password, str(stored_salt).strip())
+        return computed_hash == stored_hash
+    else:
+        # Legacy fallback verification + automatic inline migration to per-user salt
+        legacy_hash = hash_password(plain_password, "legacy_salt_default")
+        if legacy_hash == stored_hash:
+            new_salt = generate_salt()
+            new_hash = hash_password(plain_password, new_salt)
+            try:
+                from backend.database import execute_statement
+                execute_statement(
+                    "UPDATE users SET password_hash = ?, salt = ? WHERE username = ?",
+                    (new_hash, new_salt, username)
+                )
+                print(f"[AUTH SECURITY] Upgraded user '{username}' to per-user random cryptographic salt.")
+            except Exception as e:
+                print(f"[AUTH MIGRATION NOTICE] Failed to store upgraded salt: {e}")
+            return True
+        return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()

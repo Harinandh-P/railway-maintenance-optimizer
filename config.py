@@ -57,8 +57,20 @@ class AppConfig:
     DATABASE_URL     = os.environ.get("DATABASE_URL")
     DB_PATH          = PROJECT_ROOT / "data" / "railway_optimizer.db"
 
-    # Auth & Security Passkey
-    SECRET_KEY       = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
-    ADMIN_PASSKEY    = os.environ.get("ADMIN_PASSKEY", "8825731104")
+    ENVIRONMENT      = os.environ.get("ENVIRONMENT", "development").lower()
+
+    # Auth & Security Configuration
+    SECRET_KEY       = os.environ.get("SECRET_KEY", "" if ENVIRONMENT == "production" else "dev-secret-key-local-only")
+    ADMIN_PASSKEY    = os.environ.get("ADMIN_PASSKEY", "" if ENVIRONMENT == "production" else "dev-admin-passkey-local-only")
     ALGORITHM        = "HS256"
     TOKEN_EXPIRE_MIN = 1440
+
+    @classmethod
+    def validate_security_config(cls):
+        if cls.ENVIRONMENT == "production":
+            if not os.environ.get("SECRET_KEY"):
+                raise RuntimeError("CRITICAL SECURITY ERROR: SECRET_KEY environment variable is required in production!")
+            if not os.environ.get("ADMIN_PASSKEY"):
+                raise RuntimeError("CRITICAL SECURITY ERROR: ADMIN_PASSKEY environment variable is required in production!")
+
+AppConfig.validate_security_config()

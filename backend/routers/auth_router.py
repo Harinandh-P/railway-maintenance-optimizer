@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from config import AppConfig
-from backend.auth import create_access_token, verify_password, hash_password, get_current_user, require_admin, TokenData
+from backend.auth import create_access_token, verify_password, hash_password, generate_salt, get_current_user, require_admin, TokenData
 from backend.database import execute_query, execute_statement
 from backend.services.audit_service import AuditService
 
@@ -72,7 +72,7 @@ async def login_for_access_token(
         )
 
     user = users[0]
-    if not verify_password(password, user["password_hash"]):
+    if not verify_password(password, user):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -167,13 +167,14 @@ def change_admin_password(
         raise HTTPException(status_code=404, detail="User account not found.")
 
     user = users[0]
-    if not verify_password(payload.current_password, user["password_hash"]):
+    if not verify_password(payload.current_password, user):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect current password.")
 
-    new_hash = hash_password(payload.new_password)
+    new_salt = generate_salt()
+    new_hash = hash_password(payload.new_password, new_salt)
     execute_statement(
-        "UPDATE users SET password_hash = ? WHERE username = ?",
-        (new_hash, current_user.username)
+        "UPDATE users SET password_hash = ?, salt = ? WHERE username = ?",
+        (new_hash, new_salt, current_user.username)
     )
 
     AuditService.log_action(
