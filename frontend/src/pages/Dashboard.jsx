@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   TrainTrack,
@@ -12,10 +12,16 @@ import {
   CheckCircle2,
   PieChart,
   BarChart3,
-  GitCommit
+  GitCommit,
+  Clock,
+  ArrowRight,
+  CheckSquare,
+  Square,
+  RotateCcw
 } from 'lucide-react';
 import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
+import { SortControl, naturalSort } from '../components/SortControl';
 
 export const Dashboard = () => {
   const [metrics, setMetrics] = useState({});
@@ -23,6 +29,18 @@ export const Dashboard = () => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
   const [errorBanner, setErrorBanner] = useState(null);
+  const [pipelineSuccess, setPipelineSuccess] = useState(null);
+  const [runningPipeline, setRunningPipeline] = useState(false);
+
+  // Request Selection State for Controlled Pipeline
+  const [selectedRequests, setSelectedRequests] = useState(new Set());
+
+  // Sorting States
+  const [scheduleSortField, setScheduleSortField] = useState('date');
+  const [scheduleSortOrder, setScheduleSortOrder] = useState('asc');
+
+  const [pendingSortField, setPendingSortField] = useState('request_id');
+  const [pendingSortOrder, setPendingSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchDashboardData();
@@ -58,6 +76,96 @@ export const Dashboard = () => {
     }
   };
 
+  const safeRequests = Array.isArray(requests) ? requests : [];
+  const allocatedBlocks = plan?.final_block_plan || [];
+
+  // Extract set of request IDs that are already scheduled
+  const allocatedReqIds = useMemo(() => {
+    const ids = new Set();
+    allocatedBlocks.forEach(block => {
+      (block.request_details_in_group || []).forEach(r => {
+        if (r && r.request_id) ids.add(String(r.request_id).trim());
+      });
+    });
+    return ids;
+  }, [allocatedBlocks]);
+
+  // Derive Pending Requests (Requests NOT yet allocated in Final Block Plan)
+  const pendingRequests = useMemo(() => {
+    return safeRequests.filter(r => r && r.request_id && !allocatedReqIds.has(String(r.request_id).trim()));
+  }, [safeRequests, allocatedReqIds]);
+
+  // Sorted Upcoming Schedule
+  const sortedUpcomingSchedule = useMemo(() => {
+    return naturalSort(allocatedBlocks, scheduleSortField, scheduleSortOrder);
+  }, [allocatedBlocks, scheduleSortField, scheduleSortOrder]);
+
+  // Sorted Pending Requests
+  const sortedPendingRequests = useMemo(() => {
+    return naturalSort(pendingRequests, pendingSortField, pendingSortOrder);
+  }, [pendingRequests, pendingSortField, pendingSortOrder]);
+
+  // Checkbox handlers
+  const toggleSelectRequest = (reqId) => {
+    setSelectedRequests(prev => {
+      const next = new Set(prev);
+      if (next.has(reqId)) {
+        next.delete(reqId);
+      } else {
+        next.add(reqId);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAllPending = () => {
+    const allIds = pendingRequests.map(r => String(r.request_id).trim());
+    setSelectedRequests(new Set(allIds));
+  };
+
+  const handleClearSelection = () => {
+    setSelectedRequests(new Set());
+  };
+
+  // Pipeline Execution Handlers
+  const handleRunSelectedPipeline = async () => {
+    if (selectedRequests.size === 0) return;
+    setRunningPipeline(true);
+    setPipelineSuccess(null);
+    setErrorBanner(null);
+
+    const selectedIds = Array.from(selectedRequests);
+    try {
+      const res = await api.post('/run/full-pipeline', { request_ids: selectedIds });
+      setPipelineSuccess(`Optimization Pipeline executed successfully for ${selectedIds.length} selected request(s)! Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
+      setSelectedRequests(new Set());
+      await fetchDashboardData();
+    } catch (err) {
+      console.error('Failed to run selected pipeline:', err);
+      setErrorBanner(err.response?.data?.detail || err.message || 'Pipeline execution failed');
+    } finally {
+      setRunningPipeline(false);
+    }
+  };
+
+  const handleRunFullPipeline = async () => {
+    setRunningPipeline(true);
+    setPipelineSuccess(null);
+    setErrorBanner(null);
+
+    try {
+      const res = await api.post('/run/full-pipeline');
+      setPipelineSuccess(`Full 3-Phase Optimization Pipeline executed successfully! Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
+      setSelectedRequests(new Set());
+      await fetchDashboardData();
+    } catch (err) {
+      console.error('Failed to run full pipeline:', err);
+      setErrorBanner(err.response?.data?.detail || err.message || 'Full pipeline execution failed');
+    } finally {
+      setRunningPipeline(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-slate-500 font-mono">
@@ -67,7 +175,6 @@ export const Dashboard = () => {
     );
   }
 
-  const safeRequests = Array.isArray(requests) ? requests : [];
   const priorityCount = { Critical: 0, High: 0, Medium: 0, Low: 0 };
   const corridorCount = {};
 
@@ -86,10 +193,25 @@ export const Dashboard = () => {
   const statCards = [
     { title: 'Total Maintenance Requests', value: metrics?.total_maintenance_requests || 0, icon: TrainTrack, color: 'text-blue-600', bg: 'bg-blue-100/70' },
     { title: 'High-Risk Requests', value: metrics?.high_risk_requests || 0, icon: AlertTriangle, color: 'text-rose-600', bg: 'bg-rose-100/70' },
-    { title: 'Candidate Gaps (Phase 2)', value: metrics?.candidate_gaps_generated || 0, icon: Layers, color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
+    { title: 'Pending Pipeline Requests', value: pendingRequests.length, icon: Layers, color: 'text-cyan-600', bg: 'bg-cyan-100/70' },
     { title: 'Final Selected Blocks (Phase 3)', value: allocatedCount, icon: CalendarCheck, color: 'text-purple-600', bg: 'bg-purple-100/70' },
     { title: 'Available Workers', value: `${metrics?.available_workers || 0} / ${metrics?.total_workers || 0}`, icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-100/70' },
     { title: 'Available Equipment', value: `${metrics?.available_equipment || 0} / ${metrics?.total_equipment || 0}`, icon: Wrench, color: 'text-amber-600', bg: 'bg-amber-100/70' }
+  ];
+
+  const scheduleSortOptions = [
+    { label: 'Scheduled Date', value: 'date' },
+    { label: 'Block Start Time', value: 'block_start' },
+    { label: 'Corridor', value: 'corridor' },
+    { label: 'Group / Block ID', value: 'block_id' }
+  ];
+
+  const pendingSortOptions = [
+    { label: 'Request ID', value: 'request_id' },
+    { label: 'Defect Severity', value: 'defect_severity' },
+    { label: 'Due Date', value: 'due_date' },
+    { label: 'Corridor ID', value: 'corridor_id' },
+    { label: 'Department', value: 'department' }
   ];
 
   return (
@@ -99,34 +221,44 @@ export const Dashboard = () => {
         <div>
           <div className="flex items-center gap-3 mb-1.5">
             <span className="text-xs font-mono font-bold text-blue-600 uppercase tracking-widest">
-              AROHA // ADMIN OPERATIONS DASHBOARD
+              AROHA // ADMIN OPERATIONS CONTROL
             </span>
             <span className="tactile-inset px-2.5 py-0.5 rounded-full text-[11px] font-mono text-slate-600 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               SYSTEM ONLINE
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 font-display uppercase tracking-tight">
-            RAILWAY MAINTENANCE DASHBOARD
+            RAILWAY OPERATIONS DASHBOARD
           </h1>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Real-Time System Overview & Optimization Telemetry • Sector NR-HQ / DLI
+            Real-Time Telemetry, Upcoming Maintenance Schedule & Controlled Pipeline Dispatcher
           </p>
         </div>
 
-        <NavLink
-          to="/pipeline"
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all"
-        >
-          <PlaySquare size={16} strokeWidth={2.5} />
-          <span>Run Optimization Pipeline</span>
-        </NavLink>
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={handleRunFullPipeline}
+            disabled={runningPipeline}
+            className="tactile-pill px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-2 tactile-btn"
+          >
+            <PlaySquare size={15} className="text-emerald-600" />
+            <span>{runningPipeline ? 'Executing...' : 'Run Full Pipeline'}</span>
+          </button>
+        </div>
       </section>
 
       {errorBanner && (
         <div className="tactile-pill border-l-4 border-rose-500 p-4 rounded-xl text-xs text-rose-700 font-semibold flex items-center gap-2">
           <AlertTriangle size={16} />
           <span>Notice: {errorBanner}</span>
+        </div>
+      )}
+
+      {pipelineSuccess && (
+        <div className="tactile-pill border-l-4 border-emerald-500 p-4 rounded-xl text-xs text-emerald-700 font-semibold flex items-center gap-2">
+          <CheckCircle2 size={16} />
+          <span>{pipelineSuccess}</span>
         </div>
       )}
 
@@ -149,6 +281,191 @@ export const Dashboard = () => {
           );
         })}
       </div>
+
+      {/* SECTION 1: UPCOMING SCHEDULE */}
+      <section className="tactile-card rounded-2xl p-6 shadow-neu-flat space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <CalendarCheck size={20} className="text-emerald-600" />
+              <h2 className="text-lg font-extrabold text-slate-900 font-display uppercase tracking-tight">
+                UPCOMING MAINTENANCE BLOCK SCHEDULE
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              Verified Phase 3 CP-SAT Block Allocations • Chronologically Ordered
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            <SortControl
+              options={scheduleSortOptions}
+              sortField={scheduleSortField}
+              onSortFieldChange={setScheduleSortField}
+              sortOrder={scheduleSortOrder}
+              onSortOrderChange={setScheduleSortOrder}
+            />
+
+            <NavLink
+              to="/final-block-plan"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-neu-btn-blue flex items-center gap-1.5"
+            >
+              <span>View Final Block Plan</span>
+              <ArrowRight size={14} />
+            </NavLink>
+          </div>
+        </div>
+
+        {sortedUpcomingSchedule.length === 0 ? (
+          <div className="tactile-card p-8 rounded-xl text-center font-mono text-xs text-slate-500">
+            No upcoming maintenance blocks. Run optimization pipeline to schedule pending requests.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedUpcomingSchedule.map((block, idx) => (
+              <div key={idx} className="tactile-card p-4 rounded-xl border-l-4 border-l-emerald-500 space-y-2 text-xs">
+                <div className="flex justify-between items-center font-bold text-slate-900 font-display">
+                  <span>{block.block_id} (Group {block.group_id})</span>
+                  <span className="badge badge-final">ALLOCATED</span>
+                </div>
+                <div className="font-mono text-blue-600 text-[11px] font-bold">
+                  Date: {block.date} • {block.block_start} — {block.block_end} ({block.allocated_duration_minutes}m)
+                </div>
+                <div className="text-slate-700 font-medium">
+                  Corridor <strong>{block.corridor}</strong> ({block.work_area || 'Section Work Area'})
+                </div>
+                <div className="tactile-inset p-2 rounded-lg text-[11px] text-slate-600 space-y-0.5">
+                  <div className="font-mono font-bold text-slate-700 uppercase">Tasks Included ({block.group_task_count || 1}):</div>
+                  {(block.group_work_summary || []).slice(0, 2).map((w, wIdx) => (
+                    <div key={wIdx} className="truncate">• {w}</div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-200/60">
+                  <span>Workers: <strong>{block.assigned_worker_details?.length || block.workers_required || 0}</strong></span>
+                  <span>Equip: <strong>{block.assigned_equipment_details?.length || 1}</strong></span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* SECTION 2: PENDING MAINTENANCE REQUESTS & CONTROLLED PIPELINE DISPATCHER */}
+      <section className="tactile-card rounded-2xl p-6 shadow-neu-flat space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <Layers size={20} className="text-blue-600" />
+              <h2 className="text-lg font-extrabold text-slate-900 font-display uppercase tracking-tight">
+                PENDING MAINTENANCE REQUESTS (UNSCHEDULED QUEUE)
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              Select specific requests to enter Phase 1 → Phase 2 → Phase 3 CP-SAT Optimization Solver.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            <SortControl
+              options={pendingSortOptions}
+              sortField={pendingSortField}
+              onSortFieldChange={setPendingSortField}
+              sortOrder={pendingSortOrder}
+              onSortOrderChange={setPendingSortOrder}
+            />
+          </div>
+        </div>
+
+        {/* Toolbar Controls */}
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-100/60 p-3.5 rounded-xl border border-slate-200/80">
+          <div className="flex items-center gap-3 flex-wrap text-xs">
+            <button
+              onClick={handleSelectAllPending}
+              disabled={pendingRequests.length === 0}
+              className="tactile-pill px-3 py-1.5 rounded-xl font-semibold text-slate-700 hover:text-blue-600 flex items-center gap-1.5 tactile-btn disabled:opacity-50"
+            >
+              <CheckSquare size={15} className="text-blue-600" />
+              <span>Select All ({pendingRequests.length})</span>
+            </button>
+
+            <button
+              onClick={handleClearSelection}
+              disabled={selectedRequests.size === 0}
+              className="tactile-pill px-3 py-1.5 rounded-xl font-semibold text-slate-700 hover:text-rose-600 flex items-center gap-1.5 tactile-btn disabled:opacity-50"
+            >
+              <Square size={15} className="text-slate-400" />
+              <span>Clear Selection</span>
+            </button>
+
+            <span className="font-mono text-slate-500 font-bold">
+              Selected: <strong className="text-blue-600">{selectedRequests.size}</strong> of {pendingRequests.length}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRunSelectedPipeline}
+              disabled={selectedRequests.size === 0 || runningPipeline}
+              className={`btn ${selectedRequests.size > 0 ? 'btn-primary' : 'bg-slate-300 text-slate-500 cursor-not-allowed'} text-xs px-4 py-2 flex items-center gap-1.5`}
+            >
+              <PlaySquare size={16} />
+              <span>{runningPipeline ? 'Optimizing...' : `Run Pipeline for Selected (${selectedRequests.size})`}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pending Requests List */}
+        {sortedPendingRequests.length === 0 ? (
+          <div className="tactile-card p-8 rounded-xl text-center font-mono text-xs text-slate-500">
+            No pending maintenance requests awaiting optimization.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedPendingRequests.map((r, idx) => {
+              const reqId = String(r.request_id).trim();
+              const isSelected = selectedRequests.has(reqId);
+              return (
+                <div
+                  key={idx}
+                  onClick={() => toggleSelectRequest(reqId)}
+                  className={`tactile-card p-4 rounded-xl cursor-pointer transition-all space-y-2 text-xs border ${
+                    isSelected ? 'border-blue-500 bg-blue-50/40 shadow-neu-flat ring-2 ring-blue-500/30' : 'border-white/80 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-mono font-bold text-slate-900">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => {}} // handled by parent div onClick
+                        className="w-4 h-4 rounded text-blue-600 cursor-pointer"
+                      />
+                      <span>{r.request_id}</span>
+                    </div>
+                    <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
+                      {r.defect_severity || 'Medium'}
+                    </span>
+                  </div>
+
+                  <div className="font-semibold text-slate-900 truncate">
+                    {r.defect_type} ({r.department})
+                  </div>
+
+                  <div className="font-mono text-[11px] text-slate-500">
+                    Location: <strong>{r.corridor_id}</strong> ({r.location})
+                  </div>
+
+                  <div className="flex justify-between items-center text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200/60">
+                    <span>Duration: <strong>{r.required_duration_hours}h</strong></span>
+                    <span>Workers: <strong>{r.required_workers}</strong></span>
+                    <span>Due: <strong>{r.due_date}</strong></span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       {/* Visual Distribution Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

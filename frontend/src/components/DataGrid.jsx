@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Download, FileSpreadsheet, Plus, Trash2, Save, RotateCcw, Upload, CheckCircle } from 'lucide-react';
 import api from '../services/api';
+import { SortControl, naturalSort } from './SortControl';
 
 export const DataGrid = ({
   title,
-  columns,
+  columns = [],
   data,
   onSave,
   onDeleteRow,
@@ -16,7 +17,7 @@ export const DataGrid = ({
 }) => {
   const [gridData, setGridData] = useState(data);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortCol, setSortCol] = useState(null);
+  const [sortCol, setSortCol] = useState(columns[0]?.key || null);
   const [sortDir, setSortDir] = useState('asc');
   const [isDirty, setIsDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -135,16 +136,10 @@ export const DataGrid = ({
     });
   }, [gridData, searchTerm]);
 
-  // Sort
+  // Sort using naturalSort helper (handles REQ1, REQ2, REQ10, dates, numbers)
   const sortedData = useMemo(() => {
     if (!sortCol) return filteredData;
-    return [...filteredData].sort((a, b) => {
-      const valA = a[sortCol] ?? '';
-      const valB = b[sortCol] ?? '';
-      if (valA < valB) return sortDir === 'asc' ? -1 : 1;
-      if (valA > valB) return sortDir === 'asc' ? 1 : -1;
-      return 0;
-    });
+    return naturalSort(filteredData, sortCol, sortDir);
   }, [filteredData, sortCol, sortDir]);
 
   const existingCount = useMemo(() => {
@@ -163,6 +158,10 @@ export const DataGrid = ({
       setSortDir('asc');
     }
   };
+
+  const sortOptions = useMemo(() => {
+    return columns.map(c => ({ value: c.key, label: c.label }));
+  }, [columns]);
 
   const getColMinWidth = (col) => {
     if (col.minWidth) return col.minWidth;
@@ -190,6 +189,15 @@ export const DataGrid = ({
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
+          {/* Reusable Sort Controls */}
+          <SortControl
+            options={sortOptions}
+            sortField={sortCol}
+            onSortFieldChange={(field) => setSortCol(field)}
+            sortOrder={sortDir}
+            onSortOrderChange={(dir) => setSortDir(dir)}
+          />
+
           {/* Search Box */}
           <div className="relative w-60">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />

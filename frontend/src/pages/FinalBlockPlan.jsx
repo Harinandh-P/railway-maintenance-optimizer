@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CalendarCheck, ShieldCheck, Clock, Users, Wrench, ChevronRight, Eye, AlertCircle, Layers, FileText, HelpCircle } from 'lucide-react';
 import api from '../services/api';
 import { BlockTimeline } from '../components/BlockTimeline';
@@ -6,11 +6,15 @@ import { WorkerModal } from '../components/WorkerModal';
 import { EquipmentModal } from '../components/EquipmentModal';
 import { BlockDetailModal } from '../components/BlockDetailModal';
 import { GroupDetailModal } from '../components/GroupDetailModal';
+import { SortControl, naturalSort } from '../components/SortControl';
 
 export const FinalBlockPlan = () => {
   const [planData, setPlanData] = useState(null);
   const [candidateGaps, setCandidateGaps] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [sortField, setSortField] = useState('date');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   // Modals state
   const [selectedBlockForDetail, setSelectedBlockForDetail] = useState(null);
@@ -46,12 +50,23 @@ export const FinalBlockPlan = () => {
     }
   };
 
+  const blocks = planData?.final_block_plan || [];
+  const unallocated = planData?.unallocated || [];
+
+  const sortedBlocks = useMemo(() => {
+    return naturalSort(blocks, sortField, sortOrder);
+  }, [blocks, sortField, sortOrder]);
+
+  const sortOptions = [
+    { label: 'Scheduled Date', value: 'date' },
+    { label: 'Start Time', value: 'block_start' },
+    { label: 'Block / Group ID', value: 'block_id' },
+    { label: 'Corridor', value: 'corridor' }
+  ];
+
   if (loading) {
     return <div style={{ color: '#71829d', padding: '40px' }}>Loading Final Block Plan...</div>;
   }
-
-  const blocks = planData?.final_block_plan || [];
-  const unallocated = planData?.unallocated || [];
 
   return (
     <div>
@@ -109,11 +124,20 @@ export const FinalBlockPlan = () => {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1a2638' }}>
-            Allocated Maintenance Blocks ({blocks.length})
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1a2638' }}>
+              Allocated Maintenance Blocks ({sortedBlocks.length})
+            </h3>
+            <SortControl
+              options={sortOptions}
+              sortField={sortField}
+              onSortFieldChange={setSortField}
+              sortOrder={sortOrder}
+              onSortOrderChange={setSortOrder}
+            />
+          </div>
 
-          {blocks.map((block, idx) => (
+          {sortedBlocks.map((block, idx) => (
             <div key={idx} className="glass-panel glass-panel-interactive" style={{ padding: '24px', borderLeft: '5px solid #8b5cf6' }}>
               {/* Top Banner Row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', flexWrap: 'wrap', gap: '12px' }}>

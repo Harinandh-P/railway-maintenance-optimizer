@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../services/api';
 import { Layers, Clock, AlertTriangle } from 'lucide-react';
 import { BlockTimeline } from '../components/BlockTimeline';
+import { SortControl, naturalSort } from '../components/SortControl';
 
 export const Phase2Results = () => {
   const [phase2Data, setPhase2Data] = useState(null);
   const [finalPlan, setFinalPlan] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [sortField, setSortField] = useState('request_id');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchData();
@@ -30,9 +34,29 @@ export const Phase2Results = () => {
     }
   };
 
+  const requests = phase2Data?.requests || [];
+
+  const formattedRequests = useMemo(() => {
+    return requests.map(r => ({
+      ...r,
+      request_id: r.request_information?.request_id || '',
+      department: r.request_information?.department || '',
+      corridor_id: r.corridor_analysis?.corridor_id || ''
+    }));
+  }, [requests]);
+
+  const sortedRequests = useMemo(() => {
+    return naturalSort(formattedRequests, sortField, sortOrder);
+  }, [formattedRequests, sortField, sortOrder]);
+
+  const sortOptions = [
+    { label: 'Request ID', value: 'request_id' },
+    { label: 'Department', value: 'department' },
+    { label: 'Corridor', value: 'corridor_id' }
+  ];
+
   if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Phase 2 Output...</div>;
 
-  const requests = phase2Data?.requests || [];
   const allCandidateGaps = [];
   requests.forEach(r => {
     (r.candidate_gaps || []).forEach(g => {
@@ -42,18 +66,27 @@ export const Phase2Results = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1a2638' }}>Phase 2 Candidate Gap Analysis</h1>
-        <p style={{ fontSize: '0.9rem', color: '#71829d', marginTop: '4px' }}>
-          Traffic Analysis & Section-Specific Candidate Gap Generation Output
-        </p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1a2638' }}>Phase 2 Candidate Gap Analysis</h1>
+          <p style={{ fontSize: '0.9rem', color: '#71829d', marginTop: '4px' }}>
+            Traffic Analysis & Section-Specific Candidate Gap Generation Output
+          </p>
+        </div>
+        <SortControl
+          options={sortOptions}
+          sortField={sortField}
+          onSortFieldChange={setSortField}
+          sortOrder={sortOrder}
+          onSortOrderChange={setSortOrder}
+        />
       </div>
 
       {/* Interactive Block Occupation Timeline */}
       <BlockTimeline candidateGaps={allCandidateGaps} finalBlocks={finalPlan} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        {requests.map((reqBlock, rIdx) => {
+        {sortedRequests.map((reqBlock, rIdx) => {
           const reqInfo = reqBlock.request_information || {};
           const corridorInfo = reqBlock.corridor_analysis || {};
           const gaps = reqBlock.candidate_gaps || [];

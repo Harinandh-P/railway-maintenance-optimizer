@@ -1,3 +1,5 @@
+from typing import Optional, List
+from pydantic import BaseModel
 import json
 import traceback
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -9,6 +11,9 @@ from phase3.runner import run_phase3
 from config import AppConfig
 
 router = APIRouter(prefix="/api/run", tags=["Pipeline Execution"])
+
+class PipelineRunModel(BaseModel):
+    request_ids: Optional[List[str]] = None
 
 @router.post("/phase1")
 def execute_phase1(current_user: TokenData = Depends(require_admin)):
@@ -44,14 +49,29 @@ def execute_phase3(current_user: TokenData = Depends(require_admin)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Phase 3 execution failed: {str(e)}")
 
 @router.post("/full-pipeline")
-def execute_full_pipeline(current_user: TokenData = Depends(require_admin)):
+def execute_full_pipeline(payload: Optional[PipelineRunModel] = None, current_user: TokenData = Depends(require_admin)):
     try:
         print("==================================================")
-        print("[PIPELINE] STARTING FULL 3-PHASE OPTIMIZATION PIPELINE")
+        print("[PIPELINE] STARTING 3-PHASE OPTIMIZATION PIPELINE")
         print("==================================================")
 
-        print("[PIPELINE] Executing Phase 1 Priority/Risk Scoring...")
-        p1 = run_phase1()
+        temp_file = None
+        if payload and payload.request_ids and len(payload.request_ids) > 0:
+            import pandas as pd
+            from backend.services.csv_service import CSVService
+            reqs = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+            selected_reqs = [r for r in reqs if str(r.get("request_id")).strip() in payload.request_ids]
+            if not selected_reqs:
+                raise HTTPException(status_code=400, detail="No matching requests found for selection")
+            
+            temp_file = AppConfig.OUTPUT_DIR / "selected_requests.csv"
+            temp_file.parent.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(selected_reqs).to_csv(temp_file, index=False)
+            print(f"[PIPELINE] Executing Phase 1 Priority/Risk Scoring for {len(selected_reqs)} selected requests...")
+            p1 = run_phase1(requests_csv=temp_file)
+        else:
+            print("[PIPELINE] Executing Phase 1 Priority/Risk Scoring for ALL requests...")
+            p1 = run_phase1()
 
         print("[PIPELINE] Executing Phase 2 Train Movement & Gap Analysis...")
         p2 = run_phase2()
@@ -71,12 +91,14 @@ def execute_full_pipeline(current_user: TokenData = Depends(require_admin)):
         )
         return {
             "status": "SUCCESS",
-            "message": "Full 3-Phase Optimization Pipeline Executed Successfully",
+            "message": "3-Phase Optimization Pipeline Executed Successfully",
             "phase1_requests": len(p1),
             "phase2_candidate_requests": len(p2.get("requests", [])),
             "phase3_allocated_groups": p3.get("allocated_groups", 0),
             "phase3_summary": p3
         }
+    except HTTPException:
+        raise
     except Exception as e:
         print("[FULL PIPELINE FAILURE TRACEBACK]:\n", traceback.format_exc())
         raise HTTPException(

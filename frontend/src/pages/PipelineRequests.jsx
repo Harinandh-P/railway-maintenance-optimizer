@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { PlaySquare, Clock, CheckCircle2, AlertTriangle, Layers, CalendarCheck, Eye, ArrowRight, RefreshCw, TrainTrack } from 'lucide-react';
 import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
+import { SortControl, naturalSort } from '../components/SortControl';
 
 export const PipelineRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -10,6 +11,9 @@ export const PipelineRequests = () => {
   const [loading, setLoading] = useState(true);
   const [selectedReq, setSelectedReq] = useState(null);
   const [errorBanner, setErrorBanner] = useState(null);
+
+  const [sortField, setSortField] = useState('request_id');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchData();
@@ -35,6 +39,18 @@ export const PipelineRequests = () => {
       setLoading(false);
     }
   };
+
+  const sortedRequests = useMemo(() => {
+    return naturalSort(requests, sortField, sortOrder);
+  }, [requests, sortField, sortOrder]);
+
+  const sortOptions = [
+    { label: 'Request ID', value: 'request_id' },
+    { label: 'Department', value: 'department' },
+    { label: 'Defect Severity', value: 'defect_severity' },
+    { label: 'Due Date', value: 'due_date' },
+    { label: 'Corridor', value: 'corridor_id' }
+  ];
 
   if (loading) {
     return (
@@ -140,12 +156,18 @@ export const PipelineRequests = () => {
 
       {/* Pipeline Requests Workstation Table */}
       <div className="tactile-card rounded-2xl flex flex-col justify-between overflow-hidden shadow-neu-flat">
-        <div className="border-b border-slate-200/80 px-6 py-3.5 bg-slate-100/50 flex items-center justify-between">
+        <div className="border-b border-slate-200/80 px-6 py-3.5 bg-slate-100/50 flex items-center justify-between flex-wrap gap-4">
           <div className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider">
-            Pipeline Queue Matrix ({requests.length} Items)
+            Pipeline Queue Matrix ({sortedRequests.length} Items)
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
-            <span>EMPLOYEE SUBMISSIONS → ADMIN PIPELINE REVIEW</span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <SortControl
+              options={sortOptions}
+              sortField={sortField}
+              onSortFieldChange={setSortField}
+              sortOrder={sortOrder}
+              onSortOrderChange={setSortOrder}
+            />
           </div>
         </div>
 
@@ -167,7 +189,7 @@ export const PipelineRequests = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200/80">
-              {requests.map((r, idx) => {
+              {sortedRequests.map((r, idx) => {
                 const isScheduled = allocatedReqIds.has(r.request_id);
                 return (
                   <tr key={idx} className="hover:bg-slate-50">

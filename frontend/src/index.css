@@ -182,11 +182,21 @@ html, body {
   overflow-y: auto;
 }
 
-.input-field {
+.input-field,
+.select-field,
+.textarea-field,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
   width: 100%;
   background: #e9eff7;
   box-shadow: inset 3px 3px 6px rgba(160, 175, 196, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(210, 220, 235, 0.5);
+  border: 1px solid rgba(210, 220, 235, 0.7);
   border-radius: 0.75rem;
   padding: 10px 14px;
   color: #1a2638;
@@ -195,7 +205,21 @@ html, body {
   transition: all 0.2s ease;
 }
 
-.input-field:focus {
+.input-field:hover,
+.select-field:hover,
+.textarea-field:hover,
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #94a3b8;
+}
+
+.input-field:focus,
+.select-field:focus,
+.textarea-field:focus,
+input:focus,
+select:focus,
+textarea:focus {
   border-color: #2e63f6;
   box-shadow: inset 3px 3px 6px rgba(160, 175, 196, 0.2), 0 0 0 3px rgba(46, 99, 246, 0.2);
 }
