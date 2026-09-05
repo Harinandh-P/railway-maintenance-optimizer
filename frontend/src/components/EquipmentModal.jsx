@@ -30,7 +30,7 @@ export const EquipmentModal = ({ isOpen, onClose, blockId, assignedEquipment = [
         </div>
 
         {/* Equipment List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
+        <div className="custom-sidebar-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px', maxHeight: '55vh', overflowY: 'auto', paddingRight: '6px' }}>
           {assignedEquipment.map((eq, idx) => (
             <div key={idx} style={{
               background: '#f8fafc',

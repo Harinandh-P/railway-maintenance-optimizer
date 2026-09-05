@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye, Activity, Radio, Search, Filter, Upload, Download, ShieldCheck, Database, Cpu, ChevronRight } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { Plus, TrainTrack, Clock, Users, Wrench, ShieldAlert, CheckCircle, AlertTriangle, FileText, Layers, CalendarCheck, Eye, Activity, Radio, Search, Filter, Upload, Download, ShieldCheck, Database, Cpu, ChevronRight, ArrowRight } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { GroupDetailModal } from '../components/GroupDetailModal';
@@ -53,13 +54,13 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   const [formData, setFormData] = useState(initialFormState);
 
+  // Determine view mode based on props & URL query params
+  const searchParams = new URLSearchParams(window.location.search);
+  const isCreateAction = searchParams.get('action') === 'create' || activeTab === 'create';
+  const currentView = isCreateAction ? 'create' : activeTab;
+
   useEffect(() => {
     fetchData();
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('action') === 'create') {
-      setShowFormModal(true);
-      setFormStep(1);
-    }
   }, []);
 
   const fetchData = async () => {
@@ -148,7 +149,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   return (
     <div className="space-y-6 select-none">
-      {/* Modals */}
+      {/* Shared Modals */}
       <GroupDetailModal
         isOpen={!!selectedGroupModal}
         onClose={() => setSelectedGroupModal(null)}
@@ -171,7 +172,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         assignedEquipment={selectedEquipBlock?.assigned_equipment_details || []}
       />
 
-      {/* Hero Dataset Banner & Info Tiles */}
+      {/* Hero Dataset Banner */}
       <section className="tactile-card rounded-2xl p-7 mb-6 grid grid-cols-1 xl:grid-cols-3 gap-6 items-center shadow-neu-flat" data-purpose="dataset-header">
         <div className="xl:col-span-2 space-y-2">
           <div className="flex items-center gap-3">
@@ -182,7 +183,10 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
             </span>
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 font-display uppercase">
-            ENGINEER OPERATIONS PORTAL
+            {currentView === 'create' && 'CREATE MAINTENANCE REQUEST'}
+            {currentView === 'requests' && 'MY MAINTENANCE REQUESTS'}
+            {currentView === 'slots' && 'MY ALLOCATED SLOTS'}
+            {currentView === 'overview' && 'ENGINEER OPERATIONS PORTAL'}
           </h2>
           <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 font-medium">
             <span>Station-by-Station Movement & Maintenance Coordination Model</span>
@@ -227,108 +231,316 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         </div>
       )}
 
-      {/* KPI 3D Metric Cards Grid (Interactive 3D Tilt + Cursor Spotlight) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">DEPARTMENT REQUESTS</div>
-              <div className="text-3xl font-extrabold text-slate-900 font-display mt-1">{filteredRequests.length}</div>
-              <div className="text-[11px] text-slate-500 mt-1">Logged Items</div>
-            </div>
-            <div className="w-11 h-11 rounded-xl bg-blue-100/70 text-blue-600 flex items-center justify-center tactile-inset">
-              <TrainTrack size={22} />
-            </div>
-          </div>
-        </TiltCard>
-
-        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">PENDING OPTIMIZATION</div>
-              <div className="text-3xl font-extrabold text-blue-600 font-display mt-1">{filteredRequests.length}</div>
-              <div className="text-[11px] text-slate-500 mt-1">Awaiting Solver Run</div>
-            </div>
-            <div className="w-11 h-11 rounded-xl bg-cyan-100/70 text-cyan-600 flex items-center justify-center tactile-inset">
-              <Clock size={22} />
-            </div>
-          </div>
-        </TiltCard>
-
-        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">MY ALLOCATED SLOTS</div>
-              <div className="text-3xl font-extrabold text-emerald-600 font-display mt-1">{filteredAllocatedBlocks.length}</div>
-              <div className="text-[11px] text-slate-500 mt-1">Phase 3 Verified</div>
-            </div>
-            <div className="w-11 h-11 rounded-xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center tactile-inset">
-              <CalendarCheck size={22} />
-            </div>
-          </div>
-        </TiltCard>
-
-        <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">SYSTEM TELEMETRY</div>
-              <div className="text-base font-bold text-emerald-600 font-mono mt-2 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                SYSTEM ONLINE
+      {/* VIEW 1: DASHBOARD OVERVIEW (/operator) */}
+      {currentView === 'overview' && (
+        <div className="space-y-6">
+          {/* KPI 3D Metric Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">DEPARTMENT REQUESTS</div>
+                  <div className="text-3xl font-extrabold text-slate-900 font-display mt-1">{filteredRequests.length}</div>
+                  <div className="text-[11px] text-slate-500 mt-1">Logged Items</div>
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-blue-100/70 text-blue-600 flex items-center justify-center tactile-inset">
+                  <TrainTrack size={22} />
+                </div>
               </div>
-              <div className="text-[11px] text-slate-500 mt-1">Database Synced</div>
+            </TiltCard>
+
+            <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">PENDING OPTIMIZATION</div>
+                  <div className="text-3xl font-extrabold text-blue-600 font-display mt-1">{filteredRequests.length}</div>
+                  <div className="text-[11px] text-slate-500 mt-1">Awaiting Solver Run</div>
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-cyan-100/70 text-cyan-600 flex items-center justify-center tactile-inset">
+                  <Clock size={22} />
+                </div>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">MY ALLOCATED SLOTS</div>
+                  <div className="text-3xl font-extrabold text-emerald-600 font-display mt-1">{filteredAllocatedBlocks.length}</div>
+                  <div className="text-[11px] text-slate-500 mt-1">Phase 3 Verified</div>
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center tactile-inset">
+                  <CalendarCheck size={22} />
+                </div>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="tactile-card p-5 rounded-2xl shadow-neu-flat">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">SYSTEM TELEMETRY</div>
+                  <div className="text-base font-bold text-emerald-600 font-mono mt-2 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    SYSTEM ONLINE
+                  </div>
+                  <div className="text-[11px] text-slate-500 mt-1">Database Synced</div>
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-purple-100/70 text-purple-600 flex items-center justify-center tactile-inset">
+                  <Radio size={22} />
+                </div>
+              </div>
+            </TiltCard>
+          </div>
+
+          {/* Quick Summary Panels */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Requests Card */}
+            <div className="tactile-card rounded-2xl p-6 shadow-neu-flat space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Wrench size={18} className="text-blue-600" />
+                  <h3 className="text-sm font-bold text-slate-900 font-display uppercase tracking-wide">Recent Requests Summary</h3>
+                </div>
+                <NavLink to="/operator/requests" className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                  <span>View All ({filteredRequests.length})</span>
+                  <ArrowRight size={14} />
+                </NavLink>
+              </div>
+
+              <div className="space-y-3">
+                {filteredRequests.slice(0, 3).map((r, idx) => (
+                  <div key={idx} className="tactile-pill p-3 rounded-xl flex items-center justify-between text-xs font-mono">
+                    <div>
+                      <div className="font-bold text-slate-900">{r.request_id} — <span className="text-blue-600">{r.defect_type}</span></div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">{r.corridor_id} ({r.location}) • {r.required_duration_hours}h duration</div>
+                    </div>
+                    <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
+                      {r.defect_severity}
+                    </span>
+                  </div>
+                ))}
+
+                {filteredRequests.length === 0 && (
+                  <div className="text-center py-6 text-xs text-slate-400 font-mono">NO SUBMITTED REQUESTS YET.</div>
+                )}
+              </div>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-purple-100/70 text-purple-600 flex items-center justify-center tactile-inset">
-              <Radio size={22} />
+
+            {/* Allocated Slots Card */}
+            <div className="tactile-card rounded-2xl p-6 shadow-neu-flat space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <CalendarCheck size={18} className="text-emerald-600" />
+                  <h3 className="text-sm font-bold text-slate-900 font-display uppercase tracking-wide">My Allocated Slots Summary</h3>
+                </div>
+                <NavLink to="/operator/slots" className="text-xs font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
+                  <span>View All ({filteredAllocatedBlocks.length})</span>
+                  <ArrowRight size={14} />
+                </NavLink>
+              </div>
+
+              <div className="space-y-3">
+                {filteredAllocatedBlocks.slice(0, 2).map((block, idx) => (
+                  <div key={idx} className="tactile-pill p-3 rounded-xl space-y-1 text-xs">
+                    <div className="flex justify-between items-center font-bold text-slate-900 font-display">
+                      <span>{block.block_id} — Corridor {block.corridor}</span>
+                      <span className="badge badge-final">ALLOCATED</span>
+                    </div>
+                    <div className="font-mono text-[11px] text-blue-600">
+                      Date: {block.date} • Time: {block.block_start} — {block.block_end}
+                    </div>
+                  </div>
+                ))}
+
+                {filteredAllocatedBlocks.length === 0 && (
+                  <div className="text-center py-6 text-xs text-slate-400 font-mono">NO ALLOCATED SLOTS YET. CONTROL OFFICE WILL RUN OPTIMIZER.</div>
+                )}
+              </div>
             </div>
           </div>
-        </TiltCard>
-      </div>
 
-      {/* Action Toolbar */}
-      <section className="flex flex-wrap items-center justify-between gap-4 mb-5" data-purpose="action-toolbar">
-        <div className="flex items-center gap-3 flex-1 max-w-xl">
-          <div className="relative w-full tactile-inset rounded-full flex items-center px-3.5 py-2">
-            <Search size={16} className="text-slate-400 mr-2.5 shrink-0" />
-            <input
-              className="bg-transparent border-0 text-xs w-full text-slate-700 focus:outline-none focus:ring-0 placeholder-slate-400 p-0 font-sans"
-              placeholder="Search dataset by request ID, asset ID or defect type..."
-              type="text"
-            />
+          {/* Bottom Diagnostics Row */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-5" data-purpose="diagnostic-row">
+            <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Topology Integrity</span>
+                  <div className="w-9 h-9 rounded-xl bg-blue-100/60 text-blue-600 flex items-center justify-center tactile-inset">
+                    <ShieldCheck size={20} />
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-slate-900 font-display mb-1">PASS 1 READY</h4>
+                <p className="text-xs text-slate-500 leading-normal">
+                  Station mileage sequence validator loaded with 48 Sector points.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 flex justify-end">
+                <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Ingestion Protocols</span>
+                  <div className="w-9 h-9 rounded-xl bg-indigo-100/60 text-indigo-600 flex items-center justify-center tactile-inset">
+                    <Database size={20} />
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-slate-900 font-display mb-1">GTFS / CSV / JSON</h4>
+                <p className="text-xs text-slate-500 leading-normal">
+                  Standardized column auto-mapping enabled for Indian Railways CSV dumps.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 flex justify-end">
+                <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Arbitration Engine</span>
+                  <div className="w-9 h-9 rounded-xl bg-purple-100/60 text-purple-600 flex items-center justify-center tactile-inset">
+                    <Cpu size={20} />
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-slate-900 font-display mb-1">STANDBY MODE</h4>
+                <p className="text-xs text-slate-500 leading-normal">
+                  Sequence records directly feed Phase-2 gap window calculation.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 flex justify-end">
+                <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </TiltCard>
+          </section>
+        </div>
+      )}
+
+      {/* VIEW 2: CREATE MAINTENANCE REQUEST FORM WORKSTATION (/operator?action=create) */}
+      {currentView === 'create' && (
+        <div className="tactile-card rounded-2xl p-7 shadow-neu-flat space-y-6">
+          <div className="border-b border-slate-200/80 pb-4">
+            <h3 className="text-xl font-bold text-slate-900 font-display uppercase">New Maintenance Request Entry Form</h3>
+            <p className="text-xs text-slate-500 font-mono mt-1">
+              Phase 1 Raw Input Collection • Logged in Engineer: <strong className="text-slate-800">{user?.fullName}</strong> ({dept})
+            </p>
           </div>
-          <button className="tactile-pill px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 tactile-btn flex items-center justify-center shrink-0">
-            <Filter size={16} />
-          </button>
+
+          {errorMsg && (
+            <div className="p-4 bg-red-100 border border-red-200 text-red-700 rounded-xl text-xs flex items-center gap-2">
+              <AlertTriangle size={16} />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleCreateSubmit} className="space-y-5">
+            <div className="tactile-card p-5 rounded-xl space-y-4">
+              <h4 className="text-xs font-mono font-bold text-blue-600 uppercase">[1] REQUEST & LOCATION INFORMATION</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Request ID (Auto-Gen)</label>
+                  <input type="text" className="input-field opacity-60 cursor-not-allowed" value={formData.request_id} readOnly disabled />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Department Context</label>
+                  <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Corridor ID</label>
+                  <select className="input-field" value={formData.corridor_id} onChange={e => setFormData({ ...formData, corridor_id: e.target.value })}>
+                    <option value="C1">C1 (Salem - Chennai)</option>
+                    <option value="C2">C2 (Bangalore - Chennai)</option>
+                    <option value="C3">C3 (Trichy - Madurai)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Location (KM)</label>
+                  <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
+                </div>
+              </div>
+            </div>
+
+            <div className="tactile-card p-5 rounded-xl space-y-4">
+              <h4 className="text-xs font-mono font-bold text-indigo-600 uppercase">[2] ASSET & DEFECT DETAILS</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Asset ID</label>
+                  <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Asset Type</label>
+                  <select className="input-field" value={formData.asset_type} onChange={e => setFormData({ ...formData, asset_type: e.target.value })}>
+                    <option value="Signal">Signal</option>
+                    <option value="Track">Track</option>
+                    <option value="OHE">OHE</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Type</label>
+                  <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Severity</label>
+                  <select className="input-field" value={formData.defect_severity} onChange={e => setFormData({ ...formData, defect_severity: e.target.value })}>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="tactile-card p-5 rounded-xl space-y-4">
+              <h4 className="text-xs font-mono font-bold text-amber-600 uppercase">[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Required Duration (Hours)</label>
+                  <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Required Workers (Crew)</label>
+                  <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Required Equipment</label>
+                  <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Due Date</label>
+                  <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <NavLink to="/operator/requests" className="btn btn-secondary">Cancel</NavLink>
+              <button type="submit" disabled={submitting} className="btn btn-emerald">
+                {submitting ? 'Saving to Database...' : 'Confirm & Save Maintenance Request'}
+              </button>
+            </div>
+          </form>
         </div>
+      )}
 
-        <div className="flex items-center gap-3">
-          <button className="tactile-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-2 tactile-btn">
-            <Upload size={16} className="text-slate-500" />
-            <span>Import</span>
-          </button>
-
-          <button
-            onClick={() => { setShowFormModal(true); setFormStep(1); }}
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all"
-          >
-            <Plus size={16} strokeWidth={2.5} />
-            <span>Add Row</span>
-          </button>
-
-          <button className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 tactile-btn">
-            <Download size={16} className="text-slate-500" />
-            <span>CSV</span>
-          </button>
-        </div>
-      </section>
-
-      {/* TAB 1: REQUESTS VIEW */}
-      {(activeTab === 'overview' || activeTab === 'requests') && (
+      {/* VIEW 3: MY REQUESTS TAB (/operator/requests) */}
+      {currentView === 'requests' && (
         <div className="tactile-card rounded-2xl flex flex-col justify-between overflow-hidden shadow-neu-flat" data-purpose="table-container">
-          <div className="border-b border-slate-200/80 px-6 py-3 bg-slate-100/50">
-            <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
-              <span>{dept} Department Maintenance Requests ({filteredRequests.length})</span>
+          <div className="border-b border-slate-200/80 px-6 py-3.5 bg-slate-100/50 flex items-center justify-between">
+            <div className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider">
+              {dept} Department Maintenance Requests ({filteredRequests.length})
             </div>
+            <NavLink to="/operator?action=create" className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-semibold px-4 py-1.5 rounded-xl shadow-neu-btn-blue flex items-center gap-1.5">
+              <Plus size={14} /> Add New Request
+            </NavLink>
           </div>
 
           <div className="table-container border-0 shadow-none rounded-none">
@@ -386,8 +598,8 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         </div>
       )}
 
-      {/* TAB 2: MY ALLOCATED SLOTS VIEW */}
-      {(activeTab === 'overview' || activeTab === 'slots') && (
+      {/* VIEW 4: MY ALLOCATED SLOTS TAB (/operator/slots) */}
+      {currentView === 'slots' && (
         <section className="space-y-4">
           <h3 className="text-base font-bold text-slate-800 font-display uppercase tracking-wide">
             My Department Allocated Slots ({filteredAllocatedBlocks.length})
@@ -455,201 +667,6 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
             </div>
           )}
         </section>
-      )}
-
-      {/* Bottom Diagnostics Cards (3D Interactive Tilt) */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-5" data-purpose="diagnostic-row">
-        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Topology Integrity</span>
-              <div className="w-9 h-9 rounded-xl bg-blue-100/60 text-blue-600 flex items-center justify-center tactile-inset">
-                <ShieldCheck size={20} />
-              </div>
-            </div>
-            <h4 className="text-base font-bold text-slate-900 font-display mb-1">PASS 1 READY</h4>
-            <p className="text-xs text-slate-500 leading-normal">
-              Station mileage sequence validator loaded with 48 Sector points.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 flex justify-end">
-            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </TiltCard>
-
-        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Ingestion Protocols</span>
-              <div className="w-9 h-9 rounded-xl bg-indigo-100/60 text-indigo-600 flex items-center justify-center tactile-inset">
-                <Database size={20} />
-              </div>
-            </div>
-            <h4 className="text-base font-bold text-slate-900 font-display mb-1">GTFS / CSV / JSON</h4>
-            <p className="text-xs text-slate-500 leading-normal">
-              Standardized column auto-mapping enabled for Indian Railways CSV dumps.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 flex justify-end">
-            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </TiltCard>
-
-        <TiltCard className="tactile-card rounded-2xl p-5 flex flex-col justify-between shadow-neu-flat">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-mono tracking-wider font-bold text-slate-400 uppercase">Arbitration Engine</span>
-              <div className="w-9 h-9 rounded-xl bg-purple-100/60 text-purple-600 flex items-center justify-center tactile-inset">
-                <Cpu size={20} />
-              </div>
-            </div>
-            <h4 className="text-base font-bold text-slate-900 font-display mb-1">STANDBY MODE</h4>
-            <p className="text-xs text-slate-500 leading-normal">
-              Sequence records directly feed Phase-2 gap window calculation.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 flex justify-end">
-            <button className="w-7 h-7 rounded-full tactile-pill flex items-center justify-center text-slate-400 hover:text-slate-800 tactile-btn">
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </TiltCard>
-      </section>
-
-      {/* CREATE REQUEST MODAL */}
-      {showFormModal && (
-        <div className="modal-overlay">
-          <div className="modal-box max-w-3xl">
-            <h2 className="text-xl font-bold text-slate-900 font-display mb-1">
-              {formStep === 1 ? 'New Maintenance Request Entry Form' : 'Review & Confirm Request Submission'}
-            </h2>
-            <p className="text-xs text-slate-500 mb-6 font-mono">
-              Phase 1 Raw Input Collection • Logged in Engineer: <strong className="text-slate-800">{user?.fullName}</strong> ({dept})
-            </p>
-
-            {errorMsg && (
-              <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-xl mb-4 text-xs flex items-center gap-2">
-                <AlertTriangle size={16} />
-                <span>{errorMsg}</span>
-              </div>
-            )}
-
-            {formStep === 1 ? (
-              <form onSubmit={(e) => { e.preventDefault(); setFormStep(2); }} className="space-y-4">
-                <div className="tactile-card p-4 rounded-xl space-y-3">
-                  <h4 className="text-xs font-mono font-bold text-blue-600 uppercase">[1] REQUEST & LOCATION INFORMATION</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-600 mb-1">Request ID (Auto-Gen)</label>
-                      <input type="text" className="input-field opacity-60 cursor-not-allowed" value="[Auto-Generated Unique ID]" readOnly disabled />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Department Context</label>
-                      <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Corridor ID</label>
-                      <select className="input-field" value={formData.corridor_id} onChange={e => setFormData({ ...formData, corridor_id: e.target.value })}>
-                        <option value="C1">C1 (Salem - Chennai)</option>
-                        <option value="C2">C2 (Bangalore - Chennai)</option>
-                        <option value="C3">C3 (Trichy - Madurai)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Location (KM)</label>
-                      <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="tactile-card p-4 rounded-xl space-y-3">
-                  <h4 className="text-xs font-mono font-bold text-indigo-600 uppercase">[2] ASSET & DEFECT DETAILS</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Asset ID</label>
-                      <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Asset Type</label>
-                      <select className="input-field" value={formData.asset_type} onChange={e => setFormData({ ...formData, asset_type: e.target.value })}>
-                        <option value="Signal">Signal</option>
-                        <option value="Track">Track</option>
-                        <option value="OHE">OHE</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Type</label>
-                      <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Severity</label>
-                      <select className="input-field" value={formData.defect_severity} onChange={e => setFormData({ ...formData, defect_severity: e.target.value })}>
-                        <option value="Critical">Critical</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="tactile-card p-4 rounded-xl space-y-3">
-                  <h4 className="text-xs font-mono font-bold text-amber-600 uppercase">[3] RESOURCE REQUIREMENTS & DEADLINE</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Duration (Hours)</label>
-                      <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Workers (Crew)</label>
-                      <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Required Equipment</label>
-                      <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Due Date</label>
-                      <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3 pt-2">
-                  <button type="button" onClick={() => setShowFormModal(false)} className="btn btn-secondary">Cancel</button>
-                  <button type="submit" className="btn btn-primary">Proceed to Review →</button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-5">
-                <div className="tactile-inset p-4 rounded-xl space-y-2 text-xs font-mono text-slate-700">
-                  <h3 className="text-sm font-bold text-blue-600 font-display mb-2">Review Maintenance Request Details</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>Request ID: <strong>{formData.request_id}</strong></div>
-                    <div>Engineer: <strong>{user?.fullName}</strong></div>
-                    <div>Department: <strong>{formData.department}</strong></div>
-                    <div>Asset ID: <strong>{formData.asset_id}</strong></div>
-                    <div>Location: <strong>{formData.location}</strong></div>
-                    <div>Severity: <strong className="text-red-600">{formData.defect_severity}</strong></div>
-                    <div>Duration: <strong className="text-amber-600">{formData.required_duration_hours} hrs</strong></div>
-                    <div>Crew: <strong className="text-emerald-600">{formData.required_workers} workers</strong></div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between gap-3">
-                  <button type="button" onClick={() => setFormStep(1)} className="btn btn-secondary">← Back & Edit</button>
-                  <button type="button" onClick={handleCreateSubmit} disabled={submitting} className="btn btn-emerald">
-                    {submitting ? 'Submitting...' : 'Confirm & Save to Database'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
       )}
 
       {/* REQUEST DETAIL MODAL */}

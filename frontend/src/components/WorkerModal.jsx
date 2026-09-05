@@ -46,7 +46,7 @@ export const WorkerModal = ({ isOpen, onClose, blockId, workersRequired, workers
         </div>
 
         {/* Worker Cards List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
+        <div className="custom-sidebar-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px', maxHeight: '55vh', overflowY: 'auto', paddingRight: '6px' }}>
           {assignedWorkers.map((w, idx) => (
             <div key={idx} style={{
               background: '#f8fafc',

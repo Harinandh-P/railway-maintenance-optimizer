@@ -178,6 +178,8 @@ html, body {
   border-radius: 1.25rem;
   padding: 32px;
   width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
 }
 
 .input-field {
