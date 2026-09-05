@@ -24,6 +24,7 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   const dept = user?.department || 'TRACK';
 
@@ -54,6 +55,58 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   const [formData, setFormData] = useState(initialFormState);
 
+  const handleFieldChange = (field, value, isCodeField = false) => {
+    const val = isCodeField && typeof value === 'string' ? value.toUpperCase() : value;
+    setFormData(prev => ({ ...prev, [field]: val }));
+    if (formErrors[field]) {
+      setFormErrors(prev => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
+
+  const validateForm = (data) => {
+    const errors = {};
+    if (!data.department || !data.department.toString().trim()) {
+      errors.department = 'Department is required';
+    }
+    if (!data.corridor_id || !data.corridor_id.toString().trim()) {
+      errors.corridor_id = 'Corridor ID is required';
+    }
+    if (!data.location || !data.location.toString().trim()) {
+      errors.location = 'Location (KM) is required';
+    }
+    if (!data.asset_id || !data.asset_id.toString().trim()) {
+      errors.asset_id = 'Asset ID is required';
+    }
+    if (!data.asset_type || !data.asset_type.toString().trim()) {
+      errors.asset_type = 'Asset Type is required';
+    }
+    if (!data.defect_type || !data.defect_type.toString().trim()) {
+      errors.defect_type = 'Defect Type is required';
+    }
+    if (!data.defect_severity || !['Critical', 'High', 'Medium', 'Low'].includes(data.defect_severity)) {
+      errors.defect_severity = 'Valid Defect Severity is required';
+    }
+    const duration = parseFloat(data.required_duration_hours);
+    if (isNaN(duration) || duration <= 0) {
+      errors.required_duration_hours = 'Duration must be > 0 hours';
+    }
+    const workers = parseInt(data.required_workers, 10);
+    if (isNaN(workers) || workers < 1) {
+      errors.required_workers = 'Workers count must be at least 1';
+    }
+    if (!data.required_equipment || !data.required_equipment.toString().trim()) {
+      errors.required_equipment = 'Required Equipment must be selected';
+    }
+    if (!data.due_date || !data.due_date.toString().trim()) {
+      errors.due_date = 'Due Date is required';
+    }
+    return errors;
+  };
+
   // Determine view mode based on props & URL query params
   const searchParams = new URLSearchParams(window.location.search);
   const isCreateAction = searchParams.get('action') === 'create' || activeTab === 'create';
@@ -82,9 +135,18 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    setErrorMsg(null);
     setSuccessMsg(null);
+    setErrorMsg(null);
+
+    const errors = validateForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setErrorMsg('Please correct the highlighted errors before submitting the request.');
+      return;
+    }
+
+    setFormErrors({});
+    setSubmitting(true);
 
     try {
       const payload = {
@@ -103,7 +165,15 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
         request_id: `REQ${Math.floor(100 + Math.random() * 900)}`
       });
     } catch (err) {
-      setErrorMsg(err.response?.data?.detail?.message || err.response?.data?.detail || err.message);
+      console.error('Create maintenance request failed:', err);
+      const status = err.response?.status;
+      const detailMsg = err.response?.data?.detail;
+      const isAuthErr = status === 401 || status === 403 || detailMsg === 'Invalid credentials' || (typeof err.message === 'string' && err.message.includes('401'));
+      if (isAuthErr) {
+        setErrorMsg('Session expired. Please log in again.');
+      } else {
+        setErrorMsg(err.response?.data?.detail?.message || err.response?.data?.detail || err.message || 'Failed to submit maintenance request');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -451,19 +521,51 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Department Context</label>
-                  <input type="text" className="input-field" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} required />
+                  <input
+                    type="text"
+                    className={`input-field ${formErrors.department ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.department}
+                    onChange={e => handleFieldChange('department', e.target.value)}
+                    required
+                  />
+                  {formErrors.department && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.department}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Corridor ID</label>
-                  <select className="input-field" value={formData.corridor_id} onChange={e => setFormData({ ...formData, corridor_id: e.target.value })}>
+                  <select
+                    className={`input-field ${formErrors.corridor_id ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.corridor_id}
+                    onChange={e => handleFieldChange('corridor_id', e.target.value, true)}
+                  >
                     <option value="C1">C1 (Salem - Chennai)</option>
                     <option value="C2">C2 (Bangalore - Chennai)</option>
                     <option value="C3">C3 (Trichy - Madurai)</option>
                   </select>
+                  {formErrors.corridor_id && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.corridor_id}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Location (KM)</label>
-                  <input type="text" className="input-field" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
+                  <input
+                    type="text"
+                    className={`input-field ${formErrors.location ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.location}
+                    onChange={e => handleFieldChange('location', e.target.value, true)}
+                    placeholder="e.g. KM 128/2"
+                    required
+                  />
+                  {formErrors.location && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.location}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -473,28 +575,69 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Asset ID</label>
-                  <input type="text" className="input-field" value={formData.asset_id} onChange={e => setFormData({ ...formData, asset_id: e.target.value })} required />
+                  <input
+                    type="text"
+                    className={`input-field ${formErrors.asset_id ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.asset_id}
+                    onChange={e => handleFieldChange('asset_id', e.target.value, true)}
+                    placeholder="e.g. TRK003"
+                    required
+                  />
+                  {formErrors.asset_id && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.asset_id}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Asset Type</label>
-                  <select className="input-field" value={formData.asset_type} onChange={e => setFormData({ ...formData, asset_type: e.target.value })}>
+                  <select
+                    className={`input-field ${formErrors.asset_type ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.asset_type}
+                    onChange={e => handleFieldChange('asset_type', e.target.value)}
+                  >
                     <option value="Signal">Signal</option>
                     <option value="Track">Track</option>
                     <option value="OHE">OHE</option>
                   </select>
+                  {formErrors.asset_type && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.asset_type}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Type</label>
-                  <input type="text" className="input-field" value={formData.defect_type} onChange={e => setFormData({ ...formData, defect_type: e.target.value })} required />
+                  <input
+                    type="text"
+                    className={`input-field ${formErrors.defect_type ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.defect_type}
+                    onChange={e => handleFieldChange('defect_type', e.target.value)}
+                    required
+                  />
+                  {formErrors.defect_type && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.defect_type}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Defect Severity</label>
-                  <select className="input-field" value={formData.defect_severity} onChange={e => setFormData({ ...formData, defect_severity: e.target.value })}>
+                  <select
+                    className={`input-field ${formErrors.defect_severity ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.defect_severity}
+                    onChange={e => handleFieldChange('defect_severity', e.target.value)}
+                  >
                     <option value="Critical">Critical</option>
                     <option value="High">High</option>
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                   </select>
+                  {formErrors.defect_severity && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.defect_severity}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -504,19 +647,63 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Required Duration (Hours)</label>
-                  <input type="number" step="0.5" className="input-field" value={formData.required_duration_hours} onChange={e => setFormData({ ...formData, required_duration_hours: e.target.value })} required />
+                  <input
+                    type="number"
+                    step="0.5"
+                    className={`input-field ${formErrors.required_duration_hours ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.required_duration_hours}
+                    onChange={e => handleFieldChange('required_duration_hours', e.target.value)}
+                    required
+                  />
+                  {formErrors.required_duration_hours && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.required_duration_hours}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Required Workers (Crew)</label>
-                  <input type="number" className="input-field" value={formData.required_workers} onChange={e => setFormData({ ...formData, required_workers: e.target.value })} required />
+                  <input
+                    type="number"
+                    className={`input-field ${formErrors.required_workers ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.required_workers}
+                    onChange={e => handleFieldChange('required_workers', e.target.value)}
+                    required
+                  />
+                  {formErrors.required_workers && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.required_workers}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Required Equipment</label>
-                  <EquipmentSelect value={formData.required_equipment} onChange={val => setFormData({ ...formData, required_equipment: val })} required />
+                  <EquipmentSelect
+                    value={formData.required_equipment}
+                    onChange={val => handleFieldChange('required_equipment', val)}
+                    hasError={!!formErrors.required_equipment}
+                    required
+                  />
+                  {formErrors.required_equipment && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.required_equipment}</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Due Date</label>
-                  <input type="date" className="input-field" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} required />
+                  <input
+                    type="date"
+                    className={`input-field ${formErrors.due_date ? 'border-rose-500 ring-2 ring-rose-500/30' : ''}`}
+                    value={formData.due_date}
+                    onChange={e => handleFieldChange('due_date', e.target.value)}
+                    required
+                  />
+                  {formErrors.due_date && (
+                    <div className="text-xs text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span>❌</span> <span>{formErrors.due_date}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

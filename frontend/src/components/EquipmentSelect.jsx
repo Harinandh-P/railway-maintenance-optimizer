@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { Search, ChevronDown, Wrench, AlertCircle } from 'lucide-react';
 
-export const EquipmentSelect = ({ value, onChange, required = false, placeholder = "eg: EQ211 - Hydraulic Track Tamping Machine" }) => {
+export const EquipmentSelect = ({ value, onChange, required = false, placeholder = "eg: EQ211 - Hydraulic Track Tamping Machine", hasError = false }) => {
   const [equipmentList, setEquipmentList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,7 +41,15 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
       setEquipmentList(uniqueList);
     } catch (err) {
       console.error('Failed to load equipment list:', err);
-      setError('Failed to load equipment database');
+      const status = err.response?.status;
+      const detailMsg = err.response?.data?.detail;
+      const isAuthErr = status === 401 || status === 403 || detailMsg === 'Invalid credentials' || (typeof err.message === 'string' && err.message.includes('401'));
+      
+      if (isAuthErr) {
+        setError('Session expired. Please log in again.');
+      } else {
+        setError('Failed to load equipment database');
+      }
       setEquipmentList([]);
     } finally {
       setLoading(false);
@@ -73,12 +81,14 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
         style={{
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           background: '#ebf0f7',
-          border: '1px solid #334155',
+          border: hasError ? '1px solid #ef4444' : '1px solid #cbd5e1',
+          boxShadow: hasError ? '0 0 0 2px rgba(239, 68, 68, 0.2)' : 'none',
           borderRadius: '8px',
           padding: '10px 14px',
-          color: value ? 'white' : '#94a3b8',
+          color: value ? '#1a2638' : '#71829d',
+          fontWeight: value ? 600 : 400,
           cursor: 'pointer',
           fontSize: '0.9rem',
           minWidth: '220px'
@@ -90,7 +100,7 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             {value || placeholder}
           </span>
         </div>
-        <ChevronDown size={18} color="#94a3b8" style={{ flexShrink: 0 }} />
+        <ChevronDown size={18} color="#71829d" style={{ flexShrink: 0 }} />
       </div>
 
       {isOpen && (
@@ -101,10 +111,10 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             left: 0,
             right: 0,
             marginTop: '4px',
-            background: '#f8faff',
-            border: '1px solid #334155',
+            background: '#ffffff',
+            border: '1px solid #cbd5e1',
             borderRadius: '8px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6)',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
             zIndex: 1100,
             maxHeight: '320px',
             display: 'flex',
@@ -113,8 +123,8 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
           }}
         >
           {/* Search Input Box */}
-          <div style={{ padding: '10px 12px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '8px', background: '#ebf0f7' }}>
-            <Search size={16} color="#94a3b8" />
+          <div style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc' }}>
+            <Search size={16} color="#71829d" />
             <input
               type="text"
               autoFocus
@@ -132,23 +142,23 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
             />
           </div>
 
-          <div style={{ padding: '6px 12px', background: '#f1f5f9', fontSize: '0.75rem', color: '#71829d', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ padding: '6px 12px', background: '#f1f5f9', fontSize: '0.75rem', color: '#64748b', borderBottom: '1px solid #e2e8f0' }}>
             Available Equipment: <strong>{filteredEquipment.length}</strong> of {equipmentList.length}
           </div>
 
           {/* List Options */}
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {loading ? (
-              <div style={{ padding: '16px', color: '#71829d', fontSize: '0.85rem', textAlign: 'center' }}>
+              <div style={{ padding: '16px', color: '#64748b', fontSize: '0.85rem', textAlign: 'center' }}>
                 Loading full equipment database...
               </div>
             ) : error ? (
-              <div style={{ padding: '16px', color: '#EF4444', fontSize: '0.85rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <div style={{ padding: '16px', color: '#ef4444', fontSize: '0.85rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                 <AlertCircle size={16} />
                 <span>{error}</span>
               </div>
             ) : filteredEquipment.length === 0 ? (
-              <div style={{ padding: '16px', color: '#71829d', fontSize: '0.85rem', textAlign: 'center' }}>
+              <div style={{ padding: '16px', color: '#64748b', fontSize: '0.85rem', textAlign: 'center' }}>
                 No matching equipment found
               </div>
             ) : (
@@ -159,19 +169,19 @@ export const EquipmentSelect = ({ value, onChange, required = false, placeholder
                   style={{
                     padding: '10px 14px',
                     cursor: 'pointer',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                    borderBottom: '1px solid #f1f5f9',
                     transition: 'background 0.15s ease',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '2px'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f1f5f9'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 >
                   <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1a2638' }}>
                     {eq.equipment_id} — {eq.equipment_name}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#71829d' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
                     Type: <strong>{eq.equipment_type || 'General'}</strong> • Category: <strong>{eq.equipment_category || 'Maintenance'}</strong> • Corridor: <strong>{eq.corridor || 'All'}</strong>
                   </div>
                 </div>
