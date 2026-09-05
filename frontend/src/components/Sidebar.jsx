@@ -88,20 +88,20 @@ export const Sidebar = () => {
   const portalTitle = isAdmin ? 'RAILWAY OPERATIONS' : 'EMPLOYEE PORTAL';
 
   return (
-    <aside className="w-[282px] shrink-0 min-h-screen p-5 flex flex-col justify-between select-none bg-[#ebf0f7] border-r border-[#d2dceb] fixed left-0 top-0 z-50 overflow-y-auto" data-purpose="sidebar">
-      <div className="flex flex-col gap-6">
-        {/* App Brand / Header */}
-        <div className="flex items-center gap-3.5 px-2 py-1.5" data-purpose="app-branding">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/30 text-white">
-            <Train size={24} />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-tight font-display">AROHA</h1>
-            <p className="text-[10px] font-mono tracking-wider font-semibold text-slate-500 uppercase">{portalTitle}</p>
-          </div>
+    <aside className="w-[282px] shrink-0 h-screen max-h-screen p-5 flex flex-col justify-between select-none bg-[#ebf0f7] border-r border-[#d2dceb] fixed left-0 top-0 z-50 overflow-hidden" data-purpose="sidebar">
+      {/* App Brand / Header (Fixed Top) */}
+      <div className="shrink-0 pb-3 border-b border-slate-200/80 flex items-center gap-3.5 px-2" data-purpose="app-branding">
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/30 text-white shrink-0">
+          <Train size={24} />
         </div>
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-tight font-display">AROHA</h1>
+          <p className="text-[10px] font-mono tracking-wider font-semibold text-slate-500 uppercase">{portalTitle}</p>
+        </div>
+      </div>
 
-        {/* Navigation Links Container */}
+      {/* Navigation Links Scrollable Container (Independent Scroll) */}
+      <div className="flex-1 min-h-0 overflow-y-auto custom-sidebar-scroll my-3 pr-1">
         <nav aria-label="Main Navigation" className="space-y-5">
           {navGroups.map((group, gIdx) => (
             <div key={gIdx}>
@@ -155,8 +155,8 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      {/* System Status & User Profile Dropdown Pill Widget */}
-      <div className="space-y-3 mt-6 pt-3 border-t border-slate-200/80">
+      {/* System Status & User Profile Dropdown Pill Widget (Fixed Bottom) */}
+      <div className="shrink-0 pt-3 border-t border-slate-200/80 space-y-3">
         <div className="flex items-center justify-between px-3 py-1.5 rounded-xl tactile-inset text-[11px] font-mono font-medium text-slate-600">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
