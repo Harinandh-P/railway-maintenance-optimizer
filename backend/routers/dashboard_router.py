@@ -3,11 +3,13 @@ from fastapi import APIRouter, Depends
 from config import AppConfig
 from backend.auth import get_current_user, TokenData
 from backend.services.csv_service import CSVService
+from backend.services.schedule_sync_service import sync_schedule_statuses
 
 router = APIRouter(prefix="/api/dashboard", tags=["Dashboard Metrics"])
 
 @router.get("/metrics")
 def get_dashboard_metrics(current_user: TokenData = Depends(get_current_user)):
+    sync_schedule_statuses()
     requests = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     train_master = CSVService.read_csv(AppConfig.TRAIN_MASTER_CSV)
     workers = CSVService.read_csv(AppConfig.WORKER_DB_CSV)

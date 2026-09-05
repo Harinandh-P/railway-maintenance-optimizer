@@ -8,6 +8,7 @@ from backend.auth import get_current_user, require_admin, TokenData
 from backend.services.csv_service import CSVService
 from backend.services.excel_service import ExcelService
 from backend.services.audit_service import AuditService
+from backend.services.schedule_sync_service import sync_schedule_statuses
 
 router = APIRouter(prefix="/api/data/maintenance-requests", tags=["Maintenance Requests"])
 
@@ -54,6 +55,7 @@ class CreateMaintenanceRequestModel(BaseModel):
 @router.get("")
 @router.get("/")
 def get_maintenance_requests(current_user: TokenData = Depends(get_current_user)):
+    sync_schedule_statuses()
     records = CSVService.read_csv(AppConfig.REQUESTS_CSV)
     print(f"[API GET /maintenance-requests] User: '{current_user.username}', Role: '{current_user.role}', Dept: '{current_user.department}', Returned: {len(records)} records")
     return records

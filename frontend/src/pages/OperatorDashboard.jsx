@@ -203,9 +203,10 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   const allocatedBlocks = planData?.final_block_plan || [];
 
-  // Filter allocated blocks for operator department requests safely
+  // Filter allocated blocks for operator department requests safely (active SCHEDULED blocks only)
   const filteredAllocatedBlocks = (Array.isArray(allocatedBlocks) ? allocatedBlocks : []).filter(b => {
     if (!b || typeof b !== 'object') return false;
+    if (b.lifecycle_status === 'COMPLETED' || b.status === 'COMPLETED') return false;
     if (dept === 'ALL') return true;
     const reqDetails = b.request_details_in_group || [];
     return reqDetails.some(r => {
