@@ -83,6 +83,31 @@ def execute_full_pipeline(payload: Optional[PipelineRunModel] = None, current_us
         print(f"[PIPELINE] COMPLETED SUCCESSFULLY! Allocated: {p3.get('allocated_groups', 0)} groups | Unallocated: {p3.get('unallocated_groups', 0)} groups")
         print("==================================================")
 
+        # Synchronize allocated request statuses to 'SCHEDULED' in database/CSV
+        allocated_req_ids = set()
+        for block in p3.get("final_block_plan", []):
+            for t in (block.get("allocated_tasks") or block.get("requests_in_group") or []):
+                if t:
+                    allocated_req_ids.add(str(t).strip())
+            for r in block.get("request_details_in_group", []):
+                if isinstance(r, dict) and r.get("request_id"):
+                    allocated_req_ids.add(str(r["request_id"]).strip())
+
+        if allocated_req_ids:
+            from backend.services.csv_service import CSVService
+            existing_records = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+            updated_records = []
+            status_changed_count = 0
+            for r in existing_records:
+                rid = str(r.get("request_id", "")).strip()
+                if rid in allocated_req_ids and str(r.get("status", "")).upper() not in ("SCHEDULED", "ALLOCATED", "COMPLETED", "REJECTED"):
+                    r["status"] = "SCHEDULED"
+                    status_changed_count += 1
+                updated_records.append(r)
+            if status_changed_count > 0:
+                CSVService.write_csv(AppConfig.REQUESTS_CSV, updated_records, dataset_type="requests")
+                print(f"[PIPELINE] Synchronized database status to 'SCHEDULED' for {status_changed_count} allocated requests.")
+
         AuditService.log_action(
             current_user.username,
             current_user.role,

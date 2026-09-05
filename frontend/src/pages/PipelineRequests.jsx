@@ -5,6 +5,12 @@ import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
 import { SortControl, naturalSort } from '../components/SortControl';
 
+export const isRequestSelectable = (request) => {
+  if (!request || !request.request_id) return false;
+  const status = String(request.status || 'PENDING').trim().toUpperCase();
+  return !['SCHEDULED', 'ALLOCATED', 'COMPLETED', 'REJECTED'].includes(status);
+};
+
 export const PipelineRequests = () => {
   const [requests, setRequests] = useState([]);
   const [planData, setPlanData] = useState(null);
@@ -48,20 +54,9 @@ export const PipelineRequests = () => {
     return naturalSort(requests, sortField, sortOrder);
   }, [requests, sortField, sortOrder]);
 
-  const allocatedBlocks = planData?.final_block_plan || [];
-  const allocatedReqIds = useMemo(() => {
-    const set = new Set();
-    allocatedBlocks.forEach(b => {
-      (b.request_details_in_group || []).forEach(r => {
-        if (r && r.request_id) set.add(String(r.request_id).trim());
-      });
-    });
-    return set;
-  }, [allocatedBlocks]);
-
   const readyRequests = useMemo(() => {
-    return requests.filter(r => r && r.request_id && !allocatedReqIds.has(String(r.request_id).trim()));
-  }, [requests, allocatedReqIds]);
+    return requests.filter(isRequestSelectable);
+  }, [requests]);
 
   const handleToggleSelectAllPending = () => {
     const readyIds = readyRequests.map(r => String(r.request_id).trim());
@@ -128,7 +123,7 @@ export const PipelineRequests = () => {
   }
 
   const totalRequests = requests.length;
-  const scheduledCount = planData?.total_allocated || allocatedReqIds.size;
+  const scheduledCount = requests.filter(r => !isRequestSelectable(r)).length;
   const unallocatedCount = planData?.total_unallocated || (totalRequests > scheduledCount ? totalRequests - scheduledCount : 0);
   const allPendingSelected = readyRequests.length > 0 && readyRequests.every(r => selectedRequests.has(String(r.request_id).trim()));
 
@@ -214,7 +209,7 @@ export const PipelineRequests = () => {
         <TiltCard className="tactile-card p-4 rounded-2xl shadow-neu-flat">
           <div className="text-[11px] font-mono font-bold text-emerald-600 uppercase">SCHEDULED</div>
           <div className="text-2xl font-extrabold text-emerald-600 font-display mt-1">{scheduledCount}</div>
-          <div className="text-[10px] text-slate-500 mt-1">Phase 3 Allocated</div>
+          <div className="text-[10px] text-slate-500 mt-1">Locked in Database</div>
         </TiltCard>
 
         <TiltCard className="tactile-card p-4 rounded-2xl shadow-neu-flat">
@@ -297,8 +292,9 @@ export const PipelineRequests = () => {
             <tbody className="divide-y divide-slate-200/80">
               {sortedRequests.map((r, idx) => {
                 const reqId = String(r.request_id).trim();
-                const isScheduled = allocatedReqIds.has(reqId);
+                const selectable = isRequestSelectable(r);
                 const isSelected = selectedRequests.has(reqId);
+                const statusStr = String(r.status || 'PENDING').trim().toUpperCase();
 
                 return (
                   <tr
@@ -306,7 +302,7 @@ export const PipelineRequests = () => {
                     className={`transition-colors ${
                       isSelected
                         ? 'bg-blue-50/80 font-medium border-l-4 border-l-blue-600'
-                        : isScheduled
+                        : !selectable
                         ? 'hover:bg-slate-50 opacity-90'
                         : 'hover:bg-slate-50'
                     }`}
@@ -314,7 +310,7 @@ export const PipelineRequests = () => {
                     <td className="text-center">
                       <input
                         type="checkbox"
-                        disabled={isScheduled}
+                        disabled={!selectable}
                         checked={isSelected}
                         onChange={() => handleToggleSelectRequest(reqId)}
                         className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -334,14 +330,14 @@ export const PipelineRequests = () => {
                     <td className="text-slate-600">{r.required_equipment}</td>
                     <td className="font-mono text-slate-500">{r.due_date}</td>
                     <td>
-                      {isScheduled ? (
-                        <span className="badge badge-final">
-                          SCHEDULED
-                        </span>
+                      {statusStr === 'SCHEDULED' || statusStr === 'ALLOCATED' ? (
+                        <span className="badge badge-final">SCHEDULED</span>
+                      ) : statusStr === 'COMPLETED' ? (
+                        <span className="badge badge-final">COMPLETED</span>
+                      ) : statusStr === 'REJECTED' ? (
+                        <span className="badge badge-critical">REJECTED</span>
                       ) : (
-                        <span className="badge badge-candidate">
-                          READY FOR PIPELINE
-                        </span>
+                        <span className="badge badge-candidate">READY FOR PIPELINE</span>
                       )}
                     </td>
                     <td className="text-right">
@@ -389,18 +385,21 @@ export const PipelineRequests = () => {
               <div>Crew Required: <strong>{selectedReq.required_workers}</strong></div>
               <div>Equipment: <strong>{selectedReq.required_equipment}</strong></div>
               <div>Due Date: <strong>{selectedReq.due_date}</strong></div>
+              <div>Database Status: <strong>{selectedReq.status || 'PENDING'}</strong></div>
             </div>
 
             <div className="flex justify-end gap-3 border-t border-slate-200 pt-3">
-              <button
-                onClick={() => {
-                  setSelectedReq(null);
-                  handleToggleSelectRequest(selectedReq.request_id);
-                }}
-                className="btn btn-primary"
-              >
-                {selectedRequests.has(String(selectedReq.request_id).trim()) ? 'Remove from Selection' : 'Add to Pipeline Selection'}
-              </button>
+              {isRequestSelectable(selectedReq) && (
+                <button
+                  onClick={() => {
+                    setSelectedReq(null);
+                    handleToggleSelectRequest(selectedReq.request_id);
+                  }}
+                  className="btn btn-primary"
+                >
+                  {selectedRequests.has(String(selectedReq.request_id).trim()) ? 'Remove from Selection' : 'Add to Pipeline Selection'}
+                </button>
+              )}
             </div>
           </div>
         </div>
