@@ -14,10 +14,7 @@ import {
   BarChart3,
   GitCommit,
   Clock,
-  ArrowRight,
-  CheckSquare,
-  Square,
-  RotateCcw
+  ArrowRight
 } from 'lucide-react';
 import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
@@ -32,15 +29,9 @@ export const Dashboard = () => {
   const [pipelineSuccess, setPipelineSuccess] = useState(null);
   const [runningPipeline, setRunningPipeline] = useState(false);
 
-  // Request Selection State for Controlled Pipeline
-  const [selectedRequests, setSelectedRequests] = useState(new Set());
-
-  // Sorting States
+  // Sorting State for Upcoming Schedule
   const [scheduleSortField, setScheduleSortField] = useState('date');
   const [scheduleSortOrder, setScheduleSortOrder] = useState('asc');
-
-  const [pendingSortField, setPendingSortField] = useState('request_id');
-  const [pendingSortOrder, setPendingSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchDashboardData();
@@ -100,54 +91,6 @@ export const Dashboard = () => {
     return naturalSort(allocatedBlocks, scheduleSortField, scheduleSortOrder);
   }, [allocatedBlocks, scheduleSortField, scheduleSortOrder]);
 
-  // Sorted Pending Requests
-  const sortedPendingRequests = useMemo(() => {
-    return naturalSort(pendingRequests, pendingSortField, pendingSortOrder);
-  }, [pendingRequests, pendingSortField, pendingSortOrder]);
-
-  // Checkbox handlers
-  const toggleSelectRequest = (reqId) => {
-    setSelectedRequests(prev => {
-      const next = new Set(prev);
-      if (next.has(reqId)) {
-        next.delete(reqId);
-      } else {
-        next.add(reqId);
-      }
-      return next;
-    });
-  };
-
-  const handleSelectAllPending = () => {
-    const allIds = pendingRequests.map(r => String(r.request_id).trim());
-    setSelectedRequests(new Set(allIds));
-  };
-
-  const handleClearSelection = () => {
-    setSelectedRequests(new Set());
-  };
-
-  // Pipeline Execution Handlers
-  const handleRunSelectedPipeline = async () => {
-    if (selectedRequests.size === 0) return;
-    setRunningPipeline(true);
-    setPipelineSuccess(null);
-    setErrorBanner(null);
-
-    const selectedIds = Array.from(selectedRequests);
-    try {
-      const res = await api.post('/run/full-pipeline', { request_ids: selectedIds });
-      setPipelineSuccess(`Optimization Pipeline executed successfully for ${selectedIds.length} selected request(s)! Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
-      setSelectedRequests(new Set());
-      await fetchDashboardData();
-    } catch (err) {
-      console.error('Failed to run selected pipeline:', err);
-      setErrorBanner(err.response?.data?.detail || err.message || 'Pipeline execution failed');
-    } finally {
-      setRunningPipeline(false);
-    }
-  };
-
   const handleRunFullPipeline = async () => {
     setRunningPipeline(true);
     setPipelineSuccess(null);
@@ -156,7 +99,6 @@ export const Dashboard = () => {
     try {
       const res = await api.post('/run/full-pipeline');
       setPipelineSuccess(`Full 3-Phase Optimization Pipeline executed successfully! Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
-      setSelectedRequests(new Set());
       await fetchDashboardData();
     } catch (err) {
       console.error('Failed to run full pipeline:', err);
@@ -206,14 +148,6 @@ export const Dashboard = () => {
     { label: 'Group / Block ID', value: 'block_id' }
   ];
 
-  const pendingSortOptions = [
-    { label: 'Request ID', value: 'request_id' },
-    { label: 'Defect Severity', value: 'defect_severity' },
-    { label: 'Due Date', value: 'due_date' },
-    { label: 'Corridor ID', value: 'corridor_id' },
-    { label: 'Department', value: 'department' }
-  ];
-
   return (
     <div className="space-y-6 select-none">
       {/* Page Banner */}
@@ -232,7 +166,7 @@ export const Dashboard = () => {
             RAILWAY OPERATIONS DASHBOARD
           </h1>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Real-Time Telemetry, Upcoming Maintenance Schedule & Controlled Pipeline Dispatcher
+            Real-Time Telemetry, Upcoming Maintenance Schedule & Operational Overview
           </p>
         </div>
 
@@ -307,7 +241,7 @@ export const Dashboard = () => {
             />
 
             <NavLink
-              to="/final-block-plan"
+              to="/final-plan"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-neu-btn-blue flex items-center gap-1.5"
             >
               <span>View Final Block Plan</span>
@@ -350,121 +284,29 @@ export const Dashboard = () => {
         )}
       </section>
 
-      {/* SECTION 2: PENDING MAINTENANCE REQUESTS & CONTROLLED PIPELINE DISPATCHER */}
-      <section className="tactile-card rounded-2xl p-6 shadow-neu-flat space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+      {/* SECTION 2: PENDING MAINTENANCE REQUESTS SUMMARY CARD */}
+      <section className="tactile-card rounded-2xl p-6 shadow-neu-flat">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <Layers size={20} className="text-blue-600" />
               <h2 className="text-lg font-extrabold text-slate-900 font-display uppercase tracking-tight">
-                PENDING MAINTENANCE REQUESTS (UNSCHEDULED QUEUE)
+                PENDING MAINTENANCE REQUESTS
               </h2>
             </div>
-            <p className="text-xs text-slate-500 font-mono mt-0.5">
-              Select specific requests to enter Phase 1 → Phase 2 → Phase 3 CP-SAT Optimization Solver.
+            <p className="text-xs text-slate-500 font-mono mt-1">
+              <strong className="text-blue-600 font-bold">{pendingRequests.length}</strong> maintenance request{pendingRequests.length === 1 ? '' : 's'} waiting for optimization pipeline dispatch.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
-            <SortControl
-              options={pendingSortOptions}
-              sortField={pendingSortField}
-              onSortFieldChange={setPendingSortField}
-              sortOrder={pendingSortOrder}
-              onSortOrderChange={setPendingSortOrder}
-            />
-          </div>
+          <NavLink
+            to="/pipeline-requests"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all"
+          >
+            <span>View Pipeline Requests</span>
+            <ArrowRight size={16} />
+          </NavLink>
         </div>
-
-        {/* Toolbar Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-100/60 p-3.5 rounded-xl border border-slate-200/80">
-          <div className="flex items-center gap-3 flex-wrap text-xs">
-            <button
-              onClick={handleSelectAllPending}
-              disabled={pendingRequests.length === 0}
-              className="tactile-pill px-3 py-1.5 rounded-xl font-semibold text-slate-700 hover:text-blue-600 flex items-center gap-1.5 tactile-btn disabled:opacity-50"
-            >
-              <CheckSquare size={15} className="text-blue-600" />
-              <span>Select All ({pendingRequests.length})</span>
-            </button>
-
-            <button
-              onClick={handleClearSelection}
-              disabled={selectedRequests.size === 0}
-              className="tactile-pill px-3 py-1.5 rounded-xl font-semibold text-slate-700 hover:text-rose-600 flex items-center gap-1.5 tactile-btn disabled:opacity-50"
-            >
-              <Square size={15} className="text-slate-400" />
-              <span>Clear Selection</span>
-            </button>
-
-            <span className="font-mono text-slate-500 font-bold">
-              Selected: <strong className="text-blue-600">{selectedRequests.size}</strong> of {pendingRequests.length}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleRunSelectedPipeline}
-              disabled={selectedRequests.size === 0 || runningPipeline}
-              className={`btn ${selectedRequests.size > 0 ? 'btn-primary' : 'bg-slate-300 text-slate-500 cursor-not-allowed'} text-xs px-4 py-2 flex items-center gap-1.5`}
-            >
-              <PlaySquare size={16} />
-              <span>{runningPipeline ? 'Optimizing...' : `Run Pipeline for Selected (${selectedRequests.size})`}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Pending Requests List */}
-        {sortedPendingRequests.length === 0 ? (
-          <div className="tactile-card p-8 rounded-xl text-center font-mono text-xs text-slate-500">
-            No pending maintenance requests awaiting optimization.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedPendingRequests.map((r, idx) => {
-              const reqId = String(r.request_id).trim();
-              const isSelected = selectedRequests.has(reqId);
-              return (
-                <div
-                  key={idx}
-                  onClick={() => toggleSelectRequest(reqId)}
-                  className={`tactile-card p-4 rounded-xl cursor-pointer transition-all space-y-2 text-xs border ${
-                    isSelected ? 'border-blue-500 bg-blue-50/40 shadow-neu-flat ring-2 ring-blue-500/30' : 'border-white/80 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 font-mono font-bold text-slate-900">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => {}} // handled by parent div onClick
-                        className="w-4 h-4 rounded text-blue-600 cursor-pointer"
-                      />
-                      <span>{r.request_id}</span>
-                    </div>
-                    <span className={`badge ${r.defect_severity === 'Critical' ? 'badge-critical' : 'badge-candidate'}`}>
-                      {r.defect_severity || 'Medium'}
-                    </span>
-                  </div>
-
-                  <div className="font-semibold text-slate-900 truncate">
-                    {r.defect_type} ({r.department})
-                  </div>
-
-                  <div className="font-mono text-[11px] text-slate-500">
-                    Location: <strong>{r.corridor_id}</strong> ({r.location})
-                  </div>
-
-                  <div className="flex justify-between items-center text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200/60">
-                    <span>Duration: <strong>{r.required_duration_hours}h</strong></span>
-                    <span>Workers: <strong>{r.required_workers}</strong></span>
-                    <span>Due: <strong>{r.due_date}</strong></span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </section>
 
       {/* Visual Distribution Charts Section */}

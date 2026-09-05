@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
-import { PlaySquare, Clock, CheckCircle2, AlertTriangle, Layers, CalendarCheck, Eye, ArrowRight, RefreshCw, TrainTrack } from 'lucide-react';
+import { PlaySquare, Clock, CheckCircle2, AlertTriangle, Layers, CalendarCheck, Eye, ArrowRight, RefreshCw, TrainTrack, CheckSquare, Square, XCircle } from 'lucide-react';
 import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
 import { SortControl, naturalSort } from '../components/SortControl';
@@ -11,6 +11,10 @@ export const PipelineRequests = () => {
   const [loading, setLoading] = useState(true);
   const [selectedReq, setSelectedReq] = useState(null);
   const [errorBanner, setErrorBanner] = useState(null);
+  const [successBanner, setSuccessBanner] = useState(null);
+  const [runningPipeline, setRunningPipeline] = useState(false);
+
+  const [selectedRequests, setSelectedRequests] = useState(new Set());
 
   const [sortField, setSortField] = useState('request_id');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -44,6 +48,68 @@ export const PipelineRequests = () => {
     return naturalSort(requests, sortField, sortOrder);
   }, [requests, sortField, sortOrder]);
 
+  const allocatedBlocks = planData?.final_block_plan || [];
+  const allocatedReqIds = useMemo(() => {
+    const set = new Set();
+    allocatedBlocks.forEach(b => {
+      (b.request_details_in_group || []).forEach(r => {
+        if (r && r.request_id) set.add(String(r.request_id).trim());
+      });
+    });
+    return set;
+  }, [allocatedBlocks]);
+
+  const readyRequests = useMemo(() => {
+    return requests.filter(r => r && r.request_id && !allocatedReqIds.has(String(r.request_id).trim()));
+  }, [requests, allocatedReqIds]);
+
+  const handleToggleSelectAllPending = () => {
+    const readyIds = readyRequests.map(r => String(r.request_id).trim());
+    const allSelected = readyIds.length > 0 && readyIds.every(id => selectedRequests.has(id));
+    
+    if (allSelected) {
+      setSelectedRequests(new Set());
+    } else {
+      setSelectedRequests(new Set(readyIds));
+    }
+  };
+
+  const handleToggleSelectRequest = (reqId) => {
+    const id = String(reqId).trim();
+    setSelectedRequests(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleClearSelection = () => {
+    setSelectedRequests(new Set());
+  };
+
+  const handleRunPipeline = async () => {
+    setRunningPipeline(true);
+    setErrorBanner(null);
+    setSuccessBanner(null);
+
+    try {
+      const payload = selectedRequests.size > 0 ? { request_ids: Array.from(selectedRequests) } : {};
+      const res = await api.post('/run/full-pipeline', payload);
+      setSuccessBanner(`3-Phase Optimization Pipeline executed successfully! ${selectedRequests.size > 0 ? `Processed ${selectedRequests.size} selected requests.` : 'Processed all pending requests.'} Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
+      setSelectedRequests(new Set());
+      await fetchData();
+    } catch (err) {
+      console.error('Pipeline execution error:', err);
+      setErrorBanner(err.response?.data?.detail || err.message || 'Pipeline execution failed');
+    } finally {
+      setRunningPipeline(false);
+    }
+  };
+
   const sortOptions = [
     { label: 'Request ID', value: 'request_id' },
     { label: 'Department', value: 'department' },
@@ -61,18 +127,10 @@ export const PipelineRequests = () => {
     );
   }
 
-  const allocatedBlocks = planData?.final_block_plan || [];
-  const allocatedReqIds = new Set();
-  allocatedBlocks.forEach(b => {
-    (b.request_details_in_group || []).forEach(r => {
-      if (r && r.request_id) allocatedReqIds.add(r.request_id);
-    });
-  });
-
   const totalRequests = requests.length;
-  const readyRequests = requests.filter(r => !allocatedReqIds.has(r.request_id));
   const scheduledCount = planData?.total_allocated || allocatedReqIds.size;
   const unallocatedCount = planData?.total_unallocated || (totalRequests > scheduledCount ? totalRequests - scheduledCount : 0);
+  const allPendingSelected = readyRequests.length > 0 && readyRequests.every(r => selectedRequests.has(String(r.request_id).trim()));
 
   return (
     <div className="space-y-6 select-none">
@@ -92,23 +150,30 @@ export const PipelineRequests = () => {
             PIPELINE REQUESTS
           </h1>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Maintenance requests awaiting optimization, conflict resolution and CP-SAT block allocation.
+            Select maintenance requests and run 3-phase optimization pipeline with conflict resolution & CP-SAT solver.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <button onClick={fetchData} className="tactile-pill px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-2 tactile-btn">
             <RefreshCw size={15} className="text-slate-500" />
             <span>Refresh Queue</span>
           </button>
 
-          <NavLink
-            to="/pipeline"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all"
+          <button
+            onClick={handleRunPipeline}
+            disabled={runningPipeline}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-neu-btn-blue flex items-center gap-2 transform active:scale-95 transition-all disabled:opacity-50"
           >
             <PlaySquare size={16} strokeWidth={2.5} />
-            <span>Run Optimization Pipeline →</span>
-          </NavLink>
+            <span>
+              {runningPipeline
+                ? 'Running Pipeline...'
+                : selectedRequests.size > 0
+                ? `Run Pipeline for Selected (${selectedRequests.size})`
+                : 'Run Full Optimization Pipeline'}
+            </span>
+          </button>
         </div>
       </section>
 
@@ -116,6 +181,13 @@ export const PipelineRequests = () => {
         <div className="tactile-pill border-l-4 border-rose-500 p-4 rounded-xl text-xs text-rose-700 font-semibold flex items-center gap-2">
           <AlertTriangle size={16} />
           <span>Notice: {errorBanner}</span>
+        </div>
+      )}
+
+      {successBanner && (
+        <div className="tactile-pill border-l-4 border-emerald-500 p-4 rounded-xl text-xs text-emerald-700 font-semibold flex items-center gap-2">
+          <CheckCircle2 size={16} />
+          <span>{successBanner}</span>
         </div>
       )}
 
@@ -134,11 +206,9 @@ export const PipelineRequests = () => {
         </TiltCard>
 
         <TiltCard className="tactile-card p-4 rounded-2xl shadow-neu-flat">
-          <div className="text-[11px] font-mono font-bold text-amber-600 uppercase">PROCESSING</div>
-          <div className="text-2xl font-extrabold text-amber-600 font-display mt-1">
-            {planData ? 'STANDBY' : '0'}
-          </div>
-          <div className="text-[10px] text-slate-500 mt-1">Phase 1/2/3 Status</div>
+          <div className="text-[11px] font-mono font-bold text-indigo-600 uppercase">SELECTED</div>
+          <div className="text-2xl font-extrabold text-indigo-600 font-display mt-1">{selectedRequests.size}</div>
+          <div className="text-[10px] text-slate-500 mt-1">Targeted Batch</div>
         </TiltCard>
 
         <TiltCard className="tactile-card p-4 rounded-2xl shadow-neu-flat">
@@ -152,6 +222,33 @@ export const PipelineRequests = () => {
           <div className="text-2xl font-extrabold text-purple-600 font-display mt-1">{unallocatedCount}</div>
           <div className="text-[10px] text-slate-500 mt-1">Gap Capacity Limited</div>
         </TiltCard>
+      </div>
+
+      {/* Selection Control Bar */}
+      <div className="tactile-card rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-neu-flat bg-slate-50/80">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleToggleSelectAllPending}
+            className="tactile-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-blue-600 flex items-center gap-2"
+          >
+            {allPendingSelected ? <CheckSquare size={16} className="text-blue-600" /> : <Square size={16} className="text-slate-400" />}
+            <span>{allPendingSelected ? 'Deselect All Unscheduled' : 'Select All Unscheduled'}</span>
+          </button>
+
+          {selectedRequests.size > 0 && (
+            <button
+              onClick={handleClearSelection}
+              className="tactile-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1.5"
+            >
+              <XCircle size={15} />
+              <span>Clear Selection</span>
+            </button>
+          )}
+        </div>
+
+        <div className="text-xs font-mono text-slate-600 font-semibold">
+          Selected: <strong className="text-blue-600 font-bold">{selectedRequests.size}</strong> of {readyRequests.length} unscheduled requests
+        </div>
       </div>
 
       {/* Pipeline Requests Workstation Table */}
@@ -175,6 +272,15 @@ export const PipelineRequests = () => {
           <table className="custom-table w-full text-xs">
             <thead>
               <tr className="bg-slate-100/80 text-[11px] font-mono font-bold text-slate-500 uppercase">
+                <th className="w-10 text-center">
+                  <input
+                    type="checkbox"
+                    checked={allPendingSelected}
+                    onChange={handleToggleSelectAllPending}
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    title="Select/Deselect All Unscheduled Requests"
+                  />
+                </th>
                 <th>REQUEST ID</th>
                 <th>DEPARTMENT</th>
                 <th>LOCATION</th>
@@ -190,9 +296,30 @@ export const PipelineRequests = () => {
             </thead>
             <tbody className="divide-y divide-slate-200/80">
               {sortedRequests.map((r, idx) => {
-                const isScheduled = allocatedReqIds.has(r.request_id);
+                const reqId = String(r.request_id).trim();
+                const isScheduled = allocatedReqIds.has(reqId);
+                const isSelected = selectedRequests.has(reqId);
+
                 return (
-                  <tr key={idx} className="hover:bg-slate-50">
+                  <tr
+                    key={idx}
+                    className={`transition-colors ${
+                      isSelected
+                        ? 'bg-blue-50/80 font-medium border-l-4 border-l-blue-600'
+                        : isScheduled
+                        ? 'hover:bg-slate-50 opacity-90'
+                        : 'hover:bg-slate-50'
+                    }`}
+                  >
+                    <td className="text-center">
+                      <input
+                        type="checkbox"
+                        disabled={isScheduled}
+                        checked={isSelected}
+                        onChange={() => handleToggleSelectRequest(reqId)}
+                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                      />
+                    </td>
                     <td className="font-mono font-bold text-slate-900">{r.request_id}</td>
                     <td className="font-semibold text-slate-700">{r.department}</td>
                     <td className="text-slate-700">{r.corridor_id || 'C1'} ({r.location})</td>
@@ -222,9 +349,6 @@ export const PipelineRequests = () => {
                         <button onClick={() => setSelectedReq(r)} className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-slate-700 hover:text-blue-600">
                           View
                         </button>
-                        <NavLink to="/pipeline" className="tactile-pill px-3 py-1 rounded-lg text-xs font-semibold text-blue-600 hover:text-blue-800">
-                          Run Solver
-                        </NavLink>
                       </div>
                     </td>
                   </tr>
@@ -233,7 +357,7 @@ export const PipelineRequests = () => {
 
               {requests.length === 0 && (
                 <tr>
-                  <td colSpan={11} className="text-center py-12 text-slate-500 font-mono text-xs">
+                  <td colSpan={12} className="text-center py-12 text-slate-500 font-mono text-xs">
                     NO MAINTENANCE REQUESTS CURRENTLY IN PIPELINE QUEUE.
                   </td>
                 </tr>
@@ -268,9 +392,15 @@ export const PipelineRequests = () => {
             </div>
 
             <div className="flex justify-end gap-3 border-t border-slate-200 pt-3">
-              <NavLink to="/pipeline" className="btn btn-primary">
-                Proceed to Optimization Pipeline →
-              </NavLink>
+              <button
+                onClick={() => {
+                  setSelectedReq(null);
+                  handleToggleSelectRequest(selectedReq.request_id);
+                }}
+                className="btn btn-primary"
+              >
+                {selectedRequests.has(String(selectedReq.request_id).trim()) ? 'Remove from Selection' : 'Add to Pipeline Selection'}
+              </button>
             </div>
           </div>
         </div>

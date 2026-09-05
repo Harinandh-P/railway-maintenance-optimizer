@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Search, Bell, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { AdminNotificationBox } from './AdminNotificationBox';
 
 export const HeaderBar = () => {
   const { user } = useAuth();
@@ -98,11 +99,8 @@ export const HeaderBar = () => {
           <div className="text-[10px] text-slate-400 tracking-wider">ZONE: NR-HQ / DLI</div>
         </div>
 
-        {/* Notification Bell */}
-        <button className="tactile-pill w-10 h-10 rounded-full flex items-center justify-center text-slate-600 hover:text-slate-900 relative transition-transform tactile-btn">
-          <Bell size={16} />
-          <span className="absolute top-1 right-1 w-4 h-4 bg-indigo-600 text-white rounded-full text-[9px] font-mono font-bold flex items-center justify-center ring-2 ring-white">1</span>
-        </button>
+        {/* Interactive Admin Notification Box */}
+        <AdminNotificationBox />
 
         {/* User Account Icon */}
         <div className="tactile-pill w-10 h-10 rounded-full flex items-center justify-center text-slate-600 font-bold text-xs uppercase font-mono">
