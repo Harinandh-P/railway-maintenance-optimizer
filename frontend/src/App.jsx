@@ -7,6 +7,7 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { OperatorDashboard } from './pages/OperatorDashboard';
 import { PipelineRunner } from './pages/PipelineRunner';
+import { PipelineRequests } from './pages/PipelineRequests';
 import { FinalBlockPlan } from './pages/FinalBlockPlan';
 import { Phase1Results } from './pages/Phase1Results';
 import { Phase2Results } from './pages/Phase2Results';
@@ -59,6 +60,7 @@ const ProtectedLayout = () => {
 
           {/* ADMIN ROUTES (Railway Control Officers) */}
           <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
+          <Route path="/pipeline-requests" element={<AdminRoute><PipelineRequests /></AdminRoute>} />
           <Route path="/pipeline" element={<AdminRoute><PipelineRunner /></AdminRoute>} />
           <Route path="/final-plan" element={<AdminRoute><FinalBlockPlan /></AdminRoute>} />
           <Route path="/phase1-results" element={<AdminRoute><Phase1Results /></AdminRoute>} />

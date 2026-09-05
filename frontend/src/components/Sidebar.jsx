@@ -15,7 +15,8 @@ import {
   History,
   FileText,
   Train,
-  PlusCircle
+  PlusCircle,
+  ListOrdered
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileDropdown } from './ProfileDropdown';
@@ -33,12 +34,13 @@ export const Sidebar = () => {
       ]
     },
     {
-      title: 'PHASE EXECUTION',
+      title: 'PIPELINE OPERATIONS',
       items: [
+        { name: 'Pipeline Requests', path: '/pipeline-requests', icon: ListOrdered, badge: 'Queue', badgeType: 'admin' },
         { name: 'Run Phase 1', path: '/pipeline?phase=1', icon: Activity },
         { name: 'Run Phase 2', path: '/pipeline?phase=2', icon: Layers },
         { name: 'Run Phase 3', path: '/pipeline?phase=3', icon: Sliders },
-        { name: 'Run Full Pipeline', path: '/pipeline', icon: PlaySquare, badge: 'Admin', badgeType: 'admin' },
+        { name: 'Run Full Pipeline', path: '/pipeline', icon: PlaySquare, badge: 'Solver', badgeType: 'admin' },
       ]
     },
     {
@@ -49,17 +51,22 @@ export const Sidebar = () => {
         { name: 'Equipment', path: '/equipment', icon: HardHat },
         { name: 'Train Master', path: '/train-master', icon: TrainTrack },
         { name: 'Train Routes', path: '/train-routes', icon: MapPin },
-        { name: 'Station KM Mapping', path: '/station-km', icon: MapPin },
+        { name: 'Station / KM Mapping', path: '/station-km', icon: MapPin },
         { name: 'Corridors', path: '/corridors', icon: MapPin },
         { name: 'Maintenance History', path: '/history', icon: History },
       ]
     },
     {
-      title: 'SYSTEM',
+      title: 'ANALYSIS / RESULTS',
       items: [
         { name: 'Phase 1 Results', path: '/phase1-results', icon: Activity },
         { name: 'Phase 2 Results', path: '/phase2-results', icon: Layers },
         { name: 'Phase 3 Results', path: '/phase3-results', icon: Sliders },
+      ]
+    },
+    {
+      title: 'SYSTEM',
+      items: [
         { name: 'Audit Log', path: '/audit-log', icon: FileText },
       ]
     }
@@ -95,13 +102,13 @@ export const Sidebar = () => {
         </div>
 
         {/* Navigation Links Container */}
-        <nav aria-label="Main Navigation" className="space-y-6">
+        <nav aria-label="Main Navigation" className="space-y-5">
           {navGroups.map((group, gIdx) => (
             <div key={gIdx}>
               <div className="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase font-mono">
                 {group.title}
               </div>
-              <ul className="space-y-1.5 font-medium text-sm">
+              <ul className="space-y-1 font-medium text-sm">
                 {group.items.map((item, iIdx) => {
                   const Icon = item.icon;
                   return (
@@ -109,7 +116,7 @@ export const Sidebar = () => {
                       <NavLink
                         to={item.path}
                         className={({ isActive }) =>
-                          `sidebar-nav-item flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-150 ${
+                          `sidebar-nav-item flex items-center justify-between px-3.5 py-2 rounded-xl transition-all duration-150 ${
                             isActive
                               ? 'nav-active-card text-blue-600 font-bold'
                               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
@@ -127,10 +134,10 @@ export const Sidebar = () => {
                               ) : (
                                 <Icon size={16} className="text-slate-500" />
                               )}
-                              <span className="tracking-tight">{item.name}</span>
+                              <span className="tracking-tight text-xs">{item.name}</span>
                             </div>
                             {item.badge && (
-                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase text-white shadow-sm ${
+                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase text-white shadow-sm ${
                                 item.badgeType === 'admin' ? 'bg-gradient-to-r from-indigo-500 to-purple-600' : 'bg-blue-500'
                               }`}>
                                 {item.badge}
@@ -149,7 +156,7 @@ export const Sidebar = () => {
       </div>
 
       {/* System Status & User Profile Dropdown Pill Widget */}
-      <div className="space-y-3 mt-6">
+      <div className="space-y-3 mt-6 pt-3 border-t border-slate-200/80">
         <div className="flex items-center justify-between px-3 py-1.5 rounded-xl tactile-inset text-[11px] font-mono font-medium text-slate-600">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>

@@ -16,11 +16,14 @@ html, body {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
   background-color: #ebf0f7;
   color: #1a2638;
   line-height: 1.5;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Soft tactile ambient shadows from code.html */

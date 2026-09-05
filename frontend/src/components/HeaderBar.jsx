@@ -31,6 +31,7 @@ export const HeaderBar = () => {
       case '/operator/requests': return 'My Maintenance Requests';
       case '/operator/slots': return 'My Allocated Slots';
       case '/admin': return 'Control Office Dashboard';
+      case '/pipeline-requests': return 'Pipeline Requests Queue';
       case '/pipeline': return 'Run Optimization Pipeline';
       case '/final-plan': return 'Final Block Plan (Phase 3)';
       case '/phase1-results': return 'Phase 1 Analysis Results';
