@@ -22,24 +22,24 @@ export const GroupDetailModal = ({ isOpen, onClose, group }) => {
                 <Layers size={26} color={isUnallocated ? '#fb7185' : '#60a5fa'} />
               </div>
               <div>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#DFE2EE' }}>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1a2638' }}>
                   Group {group.group_id} — Work Content Breakdown
                 </h2>
-                <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
+                <div style={{ fontSize: '0.85rem', color: '#71829d', marginTop: '2px' }}>
                   Total Requests: <strong>{group.group_task_count || requests.length}</strong> • Corridor: <strong>{group.corridor || 'C1'}</strong> • Status: <span className={`badge ${isUnallocated ? 'badge-critical' : 'badge-final'}`}>{group.status || 'ALLOCATED'}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '6px' }}>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '6px' }}>
             <X size={24} />
           </button>
         </div>
 
         {/* Work Summary List */}
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#DFE2EE', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#1a2638', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileText size={18} color="#38bdf8" /> Tasks & Maintenance Work Included ({requests.length})
           </h3>
 
@@ -48,15 +48,15 @@ export const GroupDetailModal = ({ isOpen, onClose, group }) => {
               <div key={idx} style={{ background: 'rgba(30, 41, 59, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '18px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap', gap: '10px' }}>
                   <div>
-                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#DFE2EE' }}>{req.request_id} — {req.defect_type}</span>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1a2638' }}>{req.request_id} — {req.defect_type}</span>
                     <span className="badge badge-candidate" style={{ marginLeft: '10px', fontSize: '0.72rem' }}>{req.department}</span>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#71829d' }}>
                     Asset: <strong>{req.asset_id} ({req.asset_type})</strong> • Location: <strong>{req.location}</strong>
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', fontSize: '0.82rem', color: '#C2C6D6', background: 'rgba(15, 23, 42, 0.5)', padding: '12px', borderRadius: '6px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', fontSize: '0.82rem', color: '#71829d', background: 'rgba(15, 23, 42, 0.5)', padding: '12px', borderRadius: '6px' }}>
                   <div>Defect Cause: <strong>{req.defect_reason}</strong></div>
                   <div>Maintenance Type: <strong>{req.maintenance_type}</strong></div>
                   <div>Required Duration: <strong>{req.required_duration_minutes} min</strong></div>
@@ -68,9 +68,9 @@ export const GroupDetailModal = ({ isOpen, onClose, group }) => {
             ))}
 
             {requests.length === 0 && (
-              <div style={{ padding: '16px', background: '#151E2E', borderRadius: '8px', color: '#94A3B8' }}>
+              <div style={{ padding: '16px', background: '#f1f5f9', borderRadius: '8px', color: '#71829d' }}>
                 {group.group_work_summary?.map((w, i) => (
-                  <div key={i} style={{ padding: '6px 0', borderBottom: i < group.group_work_summary.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', color: '#DFE2EE' }}>
+                  <div key={i} style={{ padding: '6px 0', borderBottom: i < group.group_work_summary.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', color: '#1a2638' }}>
                     • {w}
                   </div>
                 )) || 'No detailed task list available.'}

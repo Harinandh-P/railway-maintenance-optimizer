@@ -33,10 +33,10 @@ export const Login = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(circle at top left, #151E2E 0%, #0B0F17 100%)',
+      background: 'linear-gradient(135deg, #ebf0f7 0%, #dbe4f0 100%)',
       padding: '20px'
     }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '40px', background: '#1A2438', border: '1px solid #24334D', borderRadius: '16px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
+      <div className="tactile-card" style={{ width: '100%', maxWidth: '440px', padding: '40px', background: '#f8faff', border: '1px solid rgba(255,255,255,0.8)', borderRadius: '16px', boxShadow: '7px 7px 20px rgba(168, 182, 202, 0.4), -7px -7px 20px rgba(255, 255, 255, 0.9)' }}>
         {/* Header Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
@@ -52,8 +52,8 @@ export const Login = () => {
           }}>
             <Train size={36} color="white" />
           </div>
-          <h1 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#DFE2EE', letterSpacing: '1px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>AROHA</h1>
-          <p style={{ fontSize: '0.80rem', color: '#94A3B8', marginTop: '4px', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <h1 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#1a2638', letterSpacing: '1px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>AROHA</h1>
+          <p style={{ fontSize: '0.80rem', color: '#71829d', marginTop: '4px', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Railway Maintenance Block Optimizer
           </p>
         </div>
@@ -67,11 +67,11 @@ export const Login = () => {
 
         <form onSubmit={handleSubmit} autoComplete="on">
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#C2C6D6', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#71829d', marginBottom: '8px' }}>
               Username
             </label>
             <div style={{ position: 'relative' }}>
-              <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
+              <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#71829d' }} />
               <input
                 type="text"
                 className="input-field"
@@ -86,11 +86,11 @@ export const Login = () => {
           </div>
 
           <div style={{ marginBottom: '28px' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#C2C6D6', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#71829d', marginBottom: '8px' }}>
               Password
             </label>
             <div style={{ position: 'relative' }}>
-              <Lock size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
+              <Lock size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#71829d' }} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 className="input-field"
@@ -111,7 +111,7 @@ export const Login = () => {
                   transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
-                  color: '#64748B',
+                  color: '#71829d',
                   cursor: 'pointer',
                   padding: '4px',
                   display: 'flex',

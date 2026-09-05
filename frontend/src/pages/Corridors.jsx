@@ -49,7 +49,7 @@ export const Corridors = () => {
     { key: 'maintenance_restrictions', label: 'Maintenance Restrictions', placeholder: 'eg: Night maintenance block only' }
   ];
 
-  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Corridors Dataset...</div>;
+  if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Corridors Dataset...</div>;
 
   return (
     <div>

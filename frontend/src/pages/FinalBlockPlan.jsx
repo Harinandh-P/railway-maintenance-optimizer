@@ -47,7 +47,7 @@ export const FinalBlockPlan = () => {
   };
 
   if (loading) {
-    return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Final Block Plan...</div>;
+    return <div style={{ color: '#71829d', padding: '40px' }}>Loading Final Block Plan...</div>;
   }
 
   const blocks = planData?.final_block_plan || [];
@@ -89,8 +89,8 @@ export const FinalBlockPlan = () => {
       {/* Header Banner */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Final Maintenance Block Schedule</h1>
-          <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1a2638' }}>Final Maintenance Block Schedule</h1>
+          <p style={{ fontSize: '0.9rem', color: '#71829d', marginTop: '4px' }}>
             Operational Block Timetable & Real Workforce / Equipment Assignments
           </p>
         </div>
@@ -104,12 +104,12 @@ export const FinalBlockPlan = () => {
 
       {/* Allocated Maintenance Blocks Section */}
       {blocks.length === 0 ? (
-        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#94A3B8' }}>
+        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: '#71829d' }}>
           No final maintenance blocks generated yet. Please execute the optimization pipeline.
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '32px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#DFE2EE' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1a2638' }}>
             Allocated Maintenance Blocks ({blocks.length})
           </h3>
 
@@ -122,10 +122,10 @@ export const FinalBlockPlan = () => {
                     <CalendarCheck size={26} color="#c084fc" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#DFE2EE', letterSpacing: '-0.3px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1a2638', letterSpacing: '-0.3px' }}>
                       {block.block_id} — Corridor {block.corridor} ({block.work_area})
                     </h3>
-                    <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ fontSize: '0.85rem', color: '#71829d', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span
                         onClick={() => setSelectedGroupDetail(block)}
                         style={{ cursor: 'pointer', color: '#3B82F6', textDecoration: 'underline', fontWeight: 700 }}
@@ -149,8 +149,8 @@ export const FinalBlockPlan = () => {
 
               {/* ENCAPSULATED WORK INCLUDED SECTION */}
               <div style={{
-                background: '#151E2E',
-                border: '1px solid #24334D',
+                background: '#f1f5f9',
+                border: '1px solid #e2e8f0',
                 borderRadius: '10px',
                 padding: '16px',
                 marginBottom: '18px'
@@ -161,7 +161,7 @@ export const FinalBlockPlan = () => {
                   </div>
                   <button
                     onClick={() => setSelectedGroupDetail(block)}
-                    style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '0.78rem', textDecoration: 'underline' }}
+                    style={{ background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', fontSize: '0.78rem', textDecoration: 'underline' }}
                   >
                     View Complete Tasks →
                   </button>
@@ -169,12 +169,12 @@ export const FinalBlockPlan = () => {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {block.group_work_summary?.map((w, wIdx) => (
-                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#1a2638', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#3B82F6' }}>•</span>
                       <span>{w}</span>
                     </div>
                   )) || (
-                    <div style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.88rem', color: '#1a2638', fontWeight: 600 }}>
                       • {block.allocated_tasks?.join(', ')}
                     </div>
                   )}
@@ -186,21 +186,21 @@ export const FinalBlockPlan = () => {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '16px',
-                background: '#101726',
+                background: '#e9eff7',
                 padding: '20px',
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 marginBottom: '20px'
               }}>
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>SCHEDULED DATE</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#DFE2EE', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#71829d', fontWeight: 700, letterSpacing: '0.5px' }}>SCHEDULED DATE</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1a2638', marginTop: '4px' }}>
                     {block.date}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>START — END TIME</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71829d', fontWeight: 700, letterSpacing: '0.5px' }}>START — END TIME</div>
                   <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#3B82F6', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Clock size={18} />
                     {block.block_start || '00:00'} — {block.block_end || '03:00'}
@@ -208,14 +208,14 @@ export const FinalBlockPlan = () => {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>ALLOCATED DURATION</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71829d', fontWeight: 700, letterSpacing: '0.5px' }}>ALLOCATED DURATION</div>
                   <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#F59E0B', marginTop: '4px' }}>
                     {block.allocated_duration_minutes} MINUTES
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.5px' }}>PRIORITY / RISK SCORE</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71829d', fontWeight: 700, letterSpacing: '0.5px' }}>PRIORITY / RISK SCORE</div>
                   <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#EF4444', marginTop: '4px' }}>
                     Prio: {block.priority} • Risk: {block.risk_score}
                   </div>
@@ -235,8 +235,8 @@ export const FinalBlockPlan = () => {
                   justifyContent: 'space-between'
                 }}>
                   <div>
-                    <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600 }}>WORKFORCE ASSIGNMENT</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#DFE2EE', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#71829d', fontWeight: 600 }}>WORKFORCE ASSIGNMENT</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a2638', marginTop: '2px' }}>
                       Required: {block.workers_required} • Available: {block.workers_available}
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#10B981', fontWeight: 800, marginTop: '2px' }}>
@@ -265,8 +265,8 @@ export const FinalBlockPlan = () => {
                   justifyContent: 'space-between'
                 }}>
                   <div>
-                    <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600 }}>EQUIPMENT RESERVATION</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#DFE2EE', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#71829d', fontWeight: 600 }}>EQUIPMENT RESERVATION</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a2638', marginTop: '2px' }}>
                       Machinery: {block.assigned_equipment?.join(', ') || 'Track Machine'}
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#F59E0B', fontWeight: 800, marginTop: '2px' }}>
@@ -286,8 +286,8 @@ export const FinalBlockPlan = () => {
               </div>
 
               {/* Rationale Footer */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: '#151E2E', padding: '12px 16px', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#94A3B8', flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: '#f1f5f9', padding: '12px 16px', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#71829d', flex: 1 }}>
                   <ShieldCheck size={16} color="#10b981" />
                   <span>{block.reason}</span>
                 </div>
@@ -315,7 +315,7 @@ export const FinalBlockPlan = () => {
               <div key={i} className="glass-panel" style={{ padding: '24px', borderLeft: '5px solid #f43f5e' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#DFE2EE' }}>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1a2638' }}>
                       Group {u.group_id} ({u.group_task_count || u.tasks?.length || 1} Tasks)
                     </h4>
                     <button
@@ -329,22 +329,22 @@ export const FinalBlockPlan = () => {
                 </div>
 
                 {/* UNALLOCATED WORK INCLUDED BOX */}
-                <div style={{ background: '#151E2E', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '8px', padding: '14px', marginBottom: '12px' }}>
+                <div style={{ background: '#f1f5f9', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '8px', padding: '14px', marginBottom: '12px' }}>
                   <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EF4444', textTransform: 'uppercase', marginBottom: '6px' }}>
                     Work Included (Unallocated)
                   </div>
                   {u.group_work_summary?.map((w, wIdx) => (
-                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600, marginTop: '2px' }}>
+                    <div key={wIdx} style={{ fontSize: '0.88rem', color: '#1a2638', fontWeight: 600, marginTop: '2px' }}>
                       • {w}
                     </div>
                   )) || (
-                    <div style={{ fontSize: '0.88rem', color: '#DFE2EE', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.88rem', color: '#1a2638', fontWeight: 600 }}>
                       • Tasks: {u.tasks?.join(', ')}
                     </div>
                   )}
                 </div>
 
-                <p style={{ fontSize: '0.88rem', color: '#94A3B8' }}>
+                <p style={{ fontSize: '0.88rem', color: '#71829d' }}>
                   <strong>Non-allocation Reason:</strong> {u.reason}
                 </p>
               </div>

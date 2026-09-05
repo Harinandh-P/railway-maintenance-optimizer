@@ -51,7 +51,7 @@ export const MaintenanceHistory = () => {
     { key: 'equipment_used', label: 'Equipment Used', placeholder: 'eg: Hydraulic Track Tamping Machine' }
   ];
 
-  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Maintenance History...</div>;
+  if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Maintenance History...</div>;
 
   return (
     <div>

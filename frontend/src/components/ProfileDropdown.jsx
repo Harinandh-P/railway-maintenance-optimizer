@@ -113,14 +113,14 @@ export const ProfileDropdown = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{
-          background: '#1E2B42',
-          border: '1px solid #24334D',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
           borderRadius: '12px',
           padding: '8px 14px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          color: '#DFE2EE',
+          color: '#1a2638',
           cursor: 'pointer',
           transition: 'all 0.18s ease',
           boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.08)'
@@ -139,8 +139,8 @@ export const ProfileDropdown = () => {
           <User size={18} color="white" />
         </div>
         <div style={{ textAlign: 'left' }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#DFE2EE', lineHeight: '1.2', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName || user?.username}</div>
-          <div style={{ fontSize: '0.70rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>{user?.role} ({user?.department || 'ALL'})</div>
+          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#1a2638', lineHeight: '1.2', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName || user?.username}</div>
+          <div style={{ fontSize: '0.70rem', color: '#71829d', fontFamily: "'JetBrains Mono', monospace" }}>{user?.role} ({user?.department || 'ALL'})</div>
         </div>
         <ChevronDown size={16} color="#94A3B8" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
       </button>
@@ -155,12 +155,12 @@ export const ProfileDropdown = () => {
           zIndex: 500,
           padding: '8px',
           boxShadow: '0 16px 40px rgba(0, 0, 0, 0.6)',
-          background: '#1A2438',
-          border: '1px solid #24334D'
+          background: '#f8faff',
+          border: '1px solid #e2e8f0'
         }}>
-          <div style={{ padding: '10px 12px', borderBottom: '1px solid #24334D', marginBottom: '4px' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#DFE2EE', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName}</div>
-            <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>Username: <strong>{user?.username}</strong></div>
+          <div style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', marginBottom: '4px' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1a2638', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.fullName}</div>
+            <div style={{ fontSize: '0.75rem', color: '#71829d', fontFamily: "'JetBrains Mono', monospace" }}>Username: <strong>{user?.username}</strong></div>
           </div>
 
           {isAdmin && (
@@ -175,7 +175,7 @@ export const ProfileDropdown = () => {
                   padding: '10px 12px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#C2C6D6',
+                  color: '#71829d',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   fontSize: '0.85rem',
@@ -196,7 +196,7 @@ export const ProfileDropdown = () => {
                   padding: '10px 12px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#C2C6D6',
+                  color: '#71829d',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   fontSize: '0.85rem',
@@ -209,7 +209,7 @@ export const ProfileDropdown = () => {
             </>
           )}
 
-          <div style={{ borderTop: '1px solid #24334D', marginTop: '4px', paddingTop: '4px' }}>
+          <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '4px', paddingTop: '4px' }}>
             <button
               onClick={() => { setIsOpen(false); logout(); }}
               style={{
@@ -238,10 +238,10 @@ export const ProfileDropdown = () => {
       {showUsernameModal && (
         <div className="modal-overlay">
           <div className="glass-panel modal-box" style={{ maxWidth: 'min(92vw, 480px)', border: '1px solid rgba(56, 189, 248, 0.4)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#DFE2EE', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1a2638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <KeyRound size={20} color="#38bdf8" /> Change Admin Username
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginBottom: '20px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#71829d', marginBottom: '20px' }}>
               Server-side passkey verification required.
             </p>
 
@@ -261,12 +261,12 @@ export const ProfileDropdown = () => {
 
             <form onSubmit={handleChangeUsername}>
               <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#94A3B8', display: 'block', marginBottom: '6px' }}>Current Username</label>
+                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Current Username</label>
                 <input type="text" className="input-field" value={user?.username || ''} readOnly style={{ opacity: 0.7 }} />
               </div>
 
               <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#C2C6D6', display: 'block', marginBottom: '6px' }}>New Username</label>
+                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>New Username</label>
                 <input type="text" className="input-field" value={newUsername} onChange={e => setNewUsername(e.target.value)} required placeholder="Enter new username" />
               </div>
 
@@ -290,10 +290,10 @@ export const ProfileDropdown = () => {
       {showPasswordModal && (
         <div className="modal-overlay">
           <div className="glass-panel modal-box" style={{ maxWidth: 'min(92vw, 480px)', border: '1px solid rgba(192, 132, 252, 0.4)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#DFE2EE', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1a2638', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Lock size={20} color="#c084fc" /> Change Admin Password
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginBottom: '20px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#71829d', marginBottom: '20px' }}>
               Update your account password.
             </p>
 
@@ -313,7 +313,7 @@ export const ProfileDropdown = () => {
 
             <form onSubmit={handleChangePassword}>
               <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#C2C6D6', display: 'block', marginBottom: '6px' }}>Current Password</label>
+                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Current Password</label>
                 <div style={{ position: 'relative' }}>
                   <input
                     type={showCurrPass ? 'text' : 'password'}
@@ -327,7 +327,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowCurrPass(!showCurrPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
                     title={showCurrPass ? 'Hide password' : 'Show password'}
                   >
                     {showCurrPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -336,7 +336,7 @@ export const ProfileDropdown = () => {
               </div>
 
               <div style={{ marginBottom: '16px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#C2C6D6', display: 'block', marginBottom: '6px' }}>New Password</label>
+                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>New Password</label>
                 <div style={{ position: 'relative' }}>
                   <input
                     type={showNewPass ? 'text' : 'password'}
@@ -350,7 +350,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowNewPass(!showNewPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
                     title={showNewPass ? 'Hide password' : 'Show password'}
                   >
                     {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -359,7 +359,7 @@ export const ProfileDropdown = () => {
               </div>
 
               <div style={{ marginBottom: '24px' }}>
-                <label className="label-text" style={{ fontSize: '0.82rem', color: '#C2C6D6', display: 'block', marginBottom: '6px' }}>Confirm New Password</label>
+                <label className="label-text" style={{ fontSize: '0.82rem', color: '#71829d', display: 'block', marginBottom: '6px' }}>Confirm New Password</label>
                 <div style={{ position: 'relative' }}>
                   <input
                     type={showConfirmPass ? 'text' : 'password'}
@@ -373,7 +373,7 @@ export const ProfileDropdown = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPass(!showConfirmPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#71829d', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
                     title={showConfirmPass ? 'Hide password' : 'Show password'}
                   >
                     {showConfirmPass ? <EyeOff size={16} /> : <Eye size={16} />}

@@ -50,7 +50,7 @@ export const StationKmMapping = () => {
     { key: 'track_id', label: 'Track', placeholder: 'eg: UP Main Line Track T1' }
   ];
 
-  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Station / KM Mapping...</div>;
+  if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Station / KM Mapping...</div>;
 
   return (
     <div>

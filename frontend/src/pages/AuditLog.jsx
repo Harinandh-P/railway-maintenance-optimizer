@@ -33,7 +33,7 @@ export const AuditLog = () => {
     { key: 'details', label: 'Details' }
   ];
 
-  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Audit Logs...</div>;
+  if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Audit Logs...</div>;
 
   return (
     <div>

@@ -37,13 +37,13 @@ export const Phase1Results = () => {
     { key: 'due_date', label: 'Due Date' }
   ];
 
-  if (loading) return <div style={{ color: '#94A3B8', padding: '40px' }}>Loading Phase 1 Output...</div>;
+  if (loading) return <div style={{ color: '#71829d', padding: '40px' }}>Loading Phase 1 Output...</div>;
 
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#DFE2EE' }}>Phase 1 Analysis Results</h1>
-        <p style={{ fontSize: '0.9rem', color: '#94A3B8', marginTop: '4px' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1a2638' }}>Phase 1 Analysis Results</h1>
+        <p style={{ fontSize: '0.9rem', color: '#71829d', marginTop: '4px' }}>
           Maintenance Priority & Risk Scoring Engine Output
         </p>
       </div>

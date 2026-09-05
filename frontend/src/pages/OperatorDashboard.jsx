@@ -55,6 +55,11 @@ export const OperatorDashboard = ({ activeTab = 'overview' }) => {
 
   useEffect(() => {
     fetchData();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'create') {
+      setShowFormModal(true);
+      setFormStep(1);
+    }
   }, []);
 
   const fetchData = async () => {

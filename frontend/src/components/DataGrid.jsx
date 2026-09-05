@@ -28,7 +28,6 @@ export const DataGrid = ({
     if (!isDirty) {
       setGridData(Array.isArray(data) ? data : []);
     } else {
-      // Preserve any active unsaved rows while syncing parent data
       const unsavedRows = (gridData || []).filter(r => r && r._isNew);
       setGridData([...unsavedRows, ...(Array.isArray(data) ? data : [])]);
     }
@@ -83,7 +82,6 @@ export const DataGrid = ({
     setSuccessMsg(null);
     try {
       if (onSave) {
-        // Strip temporary _isNew flag before sending to API
         const cleanData = gridData.map(({ _isNew, ...rest }) => rest);
         await onSave(cleanData);
         setIsDirty(false);
@@ -179,29 +177,28 @@ export const DataGrid = ({
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px', background: '#1A2438', border: '1px solid #24334D' }}>
+    <div className="tactile-card rounded-2xl p-6 mb-6 shadow-neu-flat select-none">
       {/* Header Toolbar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="flex items-center justify-between mb-5 flex-wrap gap-4">
         <div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#DFE2EE', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{title}</h2>
-          <span style={{ fontSize: '0.80rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>
-            Showing <strong style={{ color: '#3B82F6' }}>{existingCount}</strong> existing records
-            {unsavedCount > 0 && <span style={{ color: '#F59E0B', marginLeft: '8px' }}>+ {unsavedCount} unsaved row{unsavedCount > 1 ? 's' : ''}</span>}
-            {isDirty && <span style={{ color: '#06B6D4', marginLeft: '8px' }}>• (UNSAVED CHANGES)</span>}
+          <h2 className="text-xl font-bold text-slate-900 font-display uppercase tracking-tight">{title}</h2>
+          <span className="text-xs font-mono text-slate-500">
+            Showing <strong className="text-blue-600">{existingCount}</strong> existing records
+            {unsavedCount > 0 && <span className="text-amber-600 ml-2 font-bold">+ {unsavedCount} unsaved row{unsavedCount > 1 ? 's' : ''}</span>}
+            {isDirty && <span className="text-cyan-600 ml-2 font-bold">• (UNSAVED CHANGES)</span>}
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div className="flex items-center gap-3 flex-wrap">
           {/* Search Box */}
-          <div style={{ position: 'relative', width: '240px' }}>
-            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} />
+          <div className="relative w-60">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search dataset..."
-              className="input-field"
+              className="input-field pl-9 py-2 text-xs"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: '36px', height: '40px' }}
             />
           </div>
 
@@ -209,21 +206,21 @@ export const DataGrid = ({
           {!readOnly && (
             <>
               {importCsvUrl && (
-                <label className="btn btn-secondary" style={{ cursor: 'pointer' }} title="Import CSV File">
-                  <Upload size={16} color="#94A3B8" /> Import
-                  <input type="file" accept=".csv" onChange={handleFileUpload} style={{ display: 'none' }} />
+                <label className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 cursor-pointer flex items-center gap-1.5 tactile-btn" title="Import CSV File">
+                  <Upload size={15} className="text-slate-500" /> Import
+                  <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
                 </label>
               )}
-              <button onClick={handleAddRow} className="btn btn-primary" title="Add Row">
-                <Plus size={16} /> Add Row
+              <button onClick={handleAddRow} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-neu-btn-blue flex items-center gap-1.5 transform active:scale-95 transition-all" title="Add Row">
+                <Plus size={15} strokeWidth={2.5} /> Add Row
               </button>
               {isDirty && (
                 <>
-                  <button onClick={handleReset} className="btn btn-secondary" title="Discard Changes">
-                    <RotateCcw size={16} /> Reset
+                  <button onClick={handleReset} className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 tactile-btn" title="Discard Changes">
+                    <RotateCcw size={15} /> Reset
                   </button>
-                  <button onClick={handleSave} disabled={saving} className="btn btn-emerald">
-                    <Save size={16} /> {saving ? 'Saving...' : 'Save Changes'}
+                  <button onClick={handleSave} disabled={saving} className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5">
+                    <Save size={15} /> {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                 </>
               )}
@@ -231,13 +228,13 @@ export const DataGrid = ({
           )}
 
           {exportCsvUrl && (
-            <a href={exportCsvUrl} className="btn btn-secondary" title="Export CSV" download>
-              <Download size={16} color="#94A3B8" /> CSV
+            <a href={exportCsvUrl} className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 tactile-btn" title="Export CSV" download>
+              <Download size={15} className="text-slate-500" /> CSV
             </a>
           )}
           {exportExcelUrl && (
-            <a href={exportExcelUrl} className="btn btn-secondary" style={{ borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34D399' }} title="Export Excel" download>
-              <FileSpreadsheet size={16} color="#10B981" /> Excel
+            <a href={exportExcelUrl} className="tactile-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5 tactile-btn" title="Export Excel" download>
+              <FileSpreadsheet size={15} className="text-emerald-600" /> Excel
             </a>
           )}
         </div>
@@ -245,36 +242,36 @@ export const DataGrid = ({
 
       {/* Success Message */}
       {successMsg && (
-        <div style={{ padding: '10px 14px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#34D399', borderRadius: '10px', marginBottom: '16px', fontSize: '0.88rem' }}>
-          <CheckCircle size={16} style={{ display: 'inline', marginRight: '8px' }} />
-          {successMsg}
+        <div className="tactile-pill border-l-4 border-emerald-500 p-3 rounded-xl text-xs text-emerald-700 font-semibold mb-4 flex items-center gap-2">
+          <CheckCircle size={16} />
+          <span>{successMsg}</span>
         </div>
       )}
 
       {/* Error Message */}
       {errorMsg && (
-        <div style={{ padding: '10px 14px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', color: '#FCA5A5', borderRadius: '10px', marginBottom: '16px', fontSize: '0.88rem' }}>
+        <div className="tactile-pill border-l-4 border-rose-500 p-3 rounded-xl text-xs text-rose-700 font-semibold mb-4">
           <strong>Error:</strong> {errorMsg}
         </div>
       )}
 
-      {/* Table Grid */}
-      <div className="table-container" style={{ background: '#1A2438', border: '1px solid #24334D' }}>
-        <table className="custom-table" style={{ width: '100%', minWidth: 'max-content' }}>
+      {/* Table Grid (Light 3D Neumorphic) */}
+      <div className="table-container rounded-xl overflow-x-auto shadow-neu-flat bg-gradient-to-br from-[#f8faff] to-[#edf2f8] border border-white/70">
+        <table className="custom-table w-full text-left font-sans text-xs">
           <thead>
-            <tr>
+            <tr className="bg-slate-100/80 border-b-2 border-slate-200 text-[11px] font-mono font-bold text-slate-500 uppercase tracking-wider">
               {columns.map(col => (
-                <th key={col.key} onClick={() => handleSort(col.key)} style={{ cursor: 'pointer', minWidth: getColMinWidth(col), background: '#151E2E', borderBottom: '2px solid #24334D', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {col.label}
+                <th key={col.key} onClick={() => handleSort(col.key)} className="py-3 px-4 cursor-pointer hover:text-slate-800" style={{ minWidth: getColMinWidth(col) }}>
+                  <div className="flex items-center gap-1.5">
+                    <span>{col.label}</span>
                     {sortCol === col.key && (sortDir === 'asc' ? ' ▲' : ' ▼')}
                   </div>
                 </th>
               ))}
-              {!readOnly && <th style={{ width: '80px', minWidth: '80px', background: '#151E2E', borderBottom: '2px solid #24334D', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>ACTIONS</th>}
+              {!readOnly && <th className="py-3 px-4 text-right w-20">ACTIONS</th>}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-200/80">
             {sortedData.map((row, rowIdx) => {
               const isNumericOrId = (key) => {
                 const k = (key || '').toLowerCase();
@@ -282,38 +279,32 @@ export const DataGrid = ({
               };
 
               return (
-                <tr key={rowIdx} style={row._isNew ? { background: 'rgba(59, 130, 246, 0.15)', borderLeft: '3px solid #3B82F6' } : {}}>
+                <tr key={rowIdx} className={`transition-colors ${row._isNew ? 'bg-blue-50/80 border-l-4 border-l-blue-500' : 'bg-white hover:bg-slate-50 even:bg-slate-50/50'}`}>
                   {columns.map(col => (
-                    <td key={col.key} style={{ minWidth: getColMinWidth(col), fontFamily: isNumericOrId(col.key) ? "'JetBrains Mono', monospace" : "'Inter', sans-serif" }}>
+                    <td key={col.key} className="py-2.5 px-4" style={{ minWidth: getColMinWidth(col) }}>
                       {!readOnly ? (
                         <input
                           type={col.type || 'text'}
-                          className="input-field"
+                          className="input-field py-1 px-2.5 text-xs text-slate-800"
                           value={row[col.key] ?? ''}
                           placeholder={col.placeholder || ''}
                           onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
                           style={{
-                            background: row._isNew ? '#101726' : 'transparent',
-                            border: row._isNew ? '1px solid #3B82F6' : '1px solid transparent',
-                            padding: '6px 10px',
-                            height: 'auto',
-                            width: '100%',
-                            fontSize: '0.88rem',
                             fontFamily: isNumericOrId(col.key) ? "'JetBrains Mono', monospace" : 'inherit'
                           }}
-                          onFocus={e => (e.target.style.border = '1px solid #3B82F6')}
-                          onBlur={e => (e.target.style.border = row._isNew ? '1px solid #3B82F6' : '1px solid transparent')}
                         />
                       ) : (
-                        <span>{row[col.key]}</span>
+                        <span className={isNumericOrId(col.key) ? 'font-mono text-slate-800 font-bold' : 'text-slate-800'}>
+                          {row[col.key]}
+                        </span>
                       )}
                     </td>
                   ))}
                   {!readOnly && (
-                    <td>
+                    <td className="py-2.5 px-4 text-right">
                       <button
                         onClick={() => handleDeleteRow(rowIdx)}
-                        style={{ background: 'transparent', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
+                        className="text-rose-600 hover:text-rose-800 p-1 transition-colors"
                         title={row._isNew ? 'Discard Unsaved Row' : 'Delete Row'}
                       >
                         <Trash2 size={16} />
@@ -323,25 +314,18 @@ export const DataGrid = ({
                 </tr>
               );
             })}
+
             {sortedData.length === 0 && (
               <tr>
-                <td colSpan={columns.length + (readOnly ? 0 : 1)} style={{ textAlign: 'center', padding: '48px 16px', background: '#1A2438' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    {/* Track Line Illustration */}
-                    <div style={{ position: 'relative', width: '120px', height: '70px', marginBottom: '16px' }}>
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%)', filter: 'blur(10px)' }}></div>
-                      <svg width="120" height="70" viewBox="0 0 120 70" fill="none" style={{ position: 'relative', zIndex: 2 }}>
-                        <line x1="10" y1="60" x2="50" y2="40" stroke="#3B82F6" strokeWidth="2" strokeDasharray="3 3" opacity="0.6" />
-                        <line x1="110" y1="60" x2="70" y2="40" stroke="#3B82F6" strokeWidth="2" strokeDasharray="3 3" opacity="0.6" />
-                        <rect x="40" y="15" width="40" height="35" rx="8" fill="#151E2E" stroke="#3B82F6" strokeWidth="2" />
-                        <circle cx="50" cy="38" r="3" fill="#3B82F6" />
-                        <circle cx="70" cy="38" r="3" fill="#3B82F6" />
-                      </svg>
+                <td colSpan={columns.length + (readOnly ? 0 : 1)} className="text-center py-12 px-4 bg-white">
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mb-2 tactile-inset">
+                      <Search size={24} />
                     </div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#DFE2EE', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 font-display">
                       NO RECORDS AVAILABLE IN DATASET
                     </h3>
-                    <p style={{ fontSize: '0.80rem', color: '#94A3B8', maxWidth: '420px', lineHeight: '1.4' }}>
+                    <p className="max-w-md text-xs text-slate-500 leading-relaxed font-sans">
                       Add a record manually using "+ Add Row" or import a CSV dataset to populate this matrix.
                     </p>
                   </div>
@@ -352,15 +336,15 @@ export const DataGrid = ({
         </table>
       </div>
 
-      {/* Footer Bar: Status & Telemetry Readout */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace", color: '#94A3B8', borderTop: '1px solid #24334D', paddingTop: '14px' }}>
+      {/* Footer Bar */}
+      <div className="border-t border-slate-200/80 pt-3 mt-4 flex items-center justify-between text-xs font-mono text-slate-500">
         <div>
-          <span style={{ fontWeight: 700, color: '#DFE2EE' }}>{existingCount} OF {existingCount} ENTRIES</span>
-          <span style={{ margin: '0 8px', color: '#64748B' }}>•</span>
-          <span style={{ color: '#64748B' }}>Engine ready for schedule ingestion</span>
+          <span className="font-bold text-slate-700">{existingCount} OF {existingCount} ENTRIES</span>
+          <span className="mx-2 text-slate-300">•</span>
+          <span>Engine ready for schedule ingestion</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10B981', fontWeight: 600 }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
+        <div className="flex items-center gap-1.5 text-emerald-600 font-semibold">
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
           <span>LIVE DB: CONNECTED</span>
         </div>
       </div>
