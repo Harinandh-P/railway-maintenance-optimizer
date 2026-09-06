@@ -37,9 +37,6 @@ export const Sidebar = () => {
       title: 'PIPELINE OPERATIONS',
       items: [
         { name: 'Pipeline Requests', path: '/pipeline-requests', icon: ListOrdered, badge: 'Queue', badgeType: 'admin' },
-        { name: 'Run Phase 1', path: '/pipeline?phase=1', icon: Activity },
-        { name: 'Run Phase 2', path: '/pipeline?phase=2', icon: Layers },
-        { name: 'Run Phase 3', path: '/pipeline?phase=3', icon: Sliders },
         { name: 'Run Full Pipeline', path: '/pipeline', icon: PlaySquare, badge: 'Solver', badgeType: 'admin' },
       ]
     },

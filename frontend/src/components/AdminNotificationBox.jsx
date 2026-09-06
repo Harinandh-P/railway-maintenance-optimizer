@@ -89,9 +89,14 @@ export const AdminNotificationBox = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const handleNotificationClick = (notifId) => {
+    const targetNotif = notifications.find(n => n.id === notifId);
     setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
     setShowDropdown(false);
-    navigate('/pipeline-requests');
+    if (targetNotif && targetNotif.requestId) {
+      navigate(`/pipeline-requests?highlight=${encodeURIComponent(targetNotif.requestId)}`);
+    } else {
+      navigate('/pipeline-requests');
+    }
   };
 
   const handleMarkAllRead = () => {

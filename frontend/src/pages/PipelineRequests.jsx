@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { PlaySquare, Clock, CheckCircle2, AlertTriangle, Layers, CalendarCheck, Eye, ArrowRight, RefreshCw, TrainTrack, CheckSquare, Square, XCircle } from 'lucide-react';
 import api from '../services/api';
 import { TiltCard } from '../components/TiltCard';
@@ -12,6 +12,10 @@ export const isRequestSelectable = (request) => {
 };
 
 export const PipelineRequests = () => {
+  const [searchParams] = useSearchParams();
+  const highlightParam = searchParams.get('highlight');
+  const [highlightedId, setHighlightedId] = useState(null);
+
   const [requests, setRequests] = useState([]);
   const [planData, setPlanData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +32,23 @@ export const PipelineRequests = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (!loading && highlightParam && requests.length > 0) {
+      const cleanTarget = String(highlightParam).trim().toUpperCase();
+      const match = requests.find(r => String(r.request_id).trim().toUpperCase() === cleanTarget);
+      if (match) {
+        setHighlightedId(match.request_id);
+        setSelectedReq(match);
+        setTimeout(() => {
+          const el = document.getElementById(`req-row-${match.request_id}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 200);
+      }
+    }
+  }, [loading, highlightParam, requests]);
 
   const fetchData = async () => {
     try {
@@ -294,13 +315,17 @@ export const PipelineRequests = () => {
                 const reqId = String(r.request_id).trim();
                 const selectable = isRequestSelectable(r);
                 const isSelected = selectedRequests.has(reqId);
+                const isHighlighted = highlightedId && String(highlightedId).trim().toUpperCase() === reqId.toUpperCase();
                 const statusStr = String(r.status || 'PENDING').trim().toUpperCase();
 
                 return (
                   <tr
                     key={idx}
-                    className={`transition-colors ${
-                      isSelected
+                    id={`req-row-${reqId}`}
+                    className={`transition-all duration-300 ${
+                      isHighlighted
+                        ? 'bg-amber-100/90 font-bold border-l-4 border-l-amber-500 ring-2 ring-amber-400/60 shadow-sm'
+                        : isSelected
                         ? 'bg-blue-50/80 font-medium border-l-4 border-l-blue-600'
                         : !selectable
                         ? 'hover:bg-slate-50 opacity-90'
