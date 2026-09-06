@@ -98,3 +98,83 @@ def test_selective_post_pipeline_status_sync():
     # Selected requests must be either SCHEDULED/COMPLETED (if allocated) or PENDING (if unallocated)
     assert req_map.get("REQ002") in ("SCHEDULED", "COMPLETED", "PENDING")
     assert req_map.get("REQ004") in ("SCHEDULED", "COMPLETED", "PENDING")
+
+def test_feasibility_aware_grouping_split():
+    """
+    Grouping Fix Verification:
+    Oversized location groups are split into smaller manageable sub-groups.
+    Long-duration outlier tasks (e.g. 2880 min / 48h) are isolated into standalone groups.
+    Short tasks are not poisoned by long-duration outliers.
+    """
+    from phase3.grouping import create_maintenance_groups
+    from phase3.models import MaintenanceRequest
+
+    mock_tasks = []
+    # Create 8 short tasks at C1/KM128/2
+    for i in range(1, 9):
+        mock_tasks.append(MaintenanceRequest(
+            task_id=f"SHORT_{i:02d}",
+            department="Engineering",
+            work_area="KM 128/2",
+            corridor="C1",
+            required_duration=120,
+            priority=5,
+            risk_score=5,
+            workers_required=4,
+            equipment_required="Track Machine",
+            request_date="2026-08-28",
+            due_date="2026-08-30",
+            overdue_date="2026-08-30"
+        ))
+
+    # Add 1 long-duration 48-hour outlier (2880 minutes)
+    mock_tasks.append(MaintenanceRequest(
+        task_id="LONG_48H",
+        department="Engineering",
+        work_area="KM 128/2",
+        corridor="C1",
+        required_duration=2880,
+        priority=8,
+        risk_score=8,
+        workers_required=12,
+        equipment_required="Track Machine",
+        request_date="2026-08-28",
+        due_date="2026-08-30",
+        overdue_date="2026-08-30"
+    ))
+
+    groups = create_maintenance_groups(mock_tasks, max_group_duration=360, max_group_workers=25, max_group_tasks=5)
+
+    # Must produce multiple smaller groups, NOT 1 monolithic group
+    assert len(groups) > 1
+
+    # Identify group containing LONG_48H
+    long_groups = [g for g in groups if any(t.task_id == "LONG_48H" for t in g.tasks)]
+    assert len(long_groups) == 1
+    assert len(long_groups[0].tasks) == 1
+    assert long_groups[0].required_duration == 2880
+
+    # Short task groups must have duration <= 360 min and workers <= 25
+    short_groups = [g for g in groups if not any(t.task_id == "LONG_48H" for t in g.tasks)]
+    for g in short_groups:
+        assert g.required_duration <= 360
+        assert g.total_workers <= 25
+        assert len(g.tasks) <= 5
+
+def test_controlled_feasible_subset():
+    """
+    Controlled Subset Verification:
+    REQ001, REQ007, REQ018, REQ027 subset continues to form feasible groups and allocate cleanly.
+    """
+    all_reqs = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+    selected_ids = ["REQ001", "REQ007", "REQ018", "REQ027"]
+    selected_reqs = [r for r in all_reqs if str(r.get("request_id")).strip() in selected_ids]
+
+    if len(selected_reqs) == 4:
+        import pandas as pd
+        temp_csv = AppConfig.OUTPUT_DIR / "controlled_subset_test.csv"
+        pd.DataFrame(selected_reqs).to_csv(temp_csv, index=False)
+        p1 = run_phase1(requests_csv=temp_csv)
+        p2 = run_phase2()
+        p3 = run_phase3()
+        assert p3.get("allocated_groups", 0) >= 1
