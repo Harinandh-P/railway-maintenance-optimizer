@@ -8,7 +8,7 @@ import { SortControl, naturalSort } from '../components/SortControl';
 export const isRequestSelectable = (request) => {
   if (!request || !request.request_id) return false;
   const status = String(request.status || 'PENDING').trim().toUpperCase();
-  return !['SCHEDULED', 'ALLOCATED', 'COMPLETED', 'REJECTED'].includes(status);
+  return status === 'PENDING' || status === 'UNALLOCATED';
 };
 
 export const PipelineRequests = () => {
@@ -116,8 +116,8 @@ export const PipelineRequests = () => {
       const payload = selectedRequests.size > 0 ? { request_ids: Array.from(selectedRequests) } : {};
       const res = await api.post('/run/full-pipeline', payload);
       setSuccessBanner(`3-Phase Optimization Pipeline executed successfully! ${selectedRequests.size > 0 ? `Processed ${selectedRequests.size} selected requests.` : 'Processed all pending requests.'} Allocated: ${res.data?.phase3_allocated_groups || 0} block groups.`);
-      setSelectedRequests(new Set());
       await fetchData();
+      setSelectedRequests(new Set());
     } catch (err) {
       console.error('Pipeline execution error:', err);
       setErrorBanner(err.response?.data?.detail || err.message || 'Pipeline execution failed');

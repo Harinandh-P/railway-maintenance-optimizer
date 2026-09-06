@@ -9,7 +9,7 @@ from phase1.runner import run_phase1
 from phase2.runner import run_phase2
 from phase3.runner import run_phase3
 from config import AppConfig
-from backend.services.schedule_sync_service import sync_schedule_statuses
+from backend.services.schedule_sync_service import sync_schedule_statuses, sync_pipeline_execution_results
 
 router = APIRouter(prefix="/api/run", tags=["Pipeline Execution"])
 
@@ -59,6 +59,7 @@ def execute_full_pipeline(payload: Optional[PipelineRunModel] = None, current_us
         print("==================================================")
 
         temp_file = None
+        selected_ids_set = set()
         if payload and payload.request_ids and len(payload.request_ids) > 0:
             import pandas as pd
             from backend.services.csv_service import CSVService
@@ -70,10 +71,15 @@ def execute_full_pipeline(payload: Optional[PipelineRunModel] = None, current_us
             temp_file = AppConfig.OUTPUT_DIR / "selected_requests.csv"
             temp_file.parent.mkdir(parents=True, exist_ok=True)
             pd.DataFrame(selected_reqs).to_csv(temp_file, index=False)
+            selected_ids_set = {str(r.get("request_id")).strip() for r in selected_reqs}
             print(f"[PIPELINE] Executing Phase 1 Priority/Risk Scoring for {len(selected_reqs)} selected requests...")
             p1 = run_phase1(requests_csv=temp_file)
         else:
-            print("[PIPELINE] Executing Phase 1 Priority/Risk Scoring for ALL requests...")
+            from backend.services.csv_service import CSVService
+            reqs = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+            selected_reqs = [r for r in reqs if str(r.get("status", "PENDING")).upper().strip() in ("PENDING", "UNALLOCATED")]
+            selected_ids_set = {str(r.get("request_id")).strip() for r in selected_reqs}
+            print("[PIPELINE] Executing Phase 1 Priority/Risk Scoring for ALL eligible requests...")
             p1 = run_phase1()
 
         print("[PIPELINE] Executing Phase 2 Train Movement & Gap Analysis...")
@@ -87,7 +93,7 @@ def execute_full_pipeline(payload: Optional[PipelineRunModel] = None, current_us
         print("==================================================")
 
         # Synchronize lifecycle statuses in database and CSV via centralized service
-        sync_res = sync_schedule_statuses()
+        sync_res = sync_pipeline_execution_results(selected_ids_set)
         print(f"[PIPELINE] Centralized schedule status sync completed: {sync_res}")
 
         AuditService.log_action(

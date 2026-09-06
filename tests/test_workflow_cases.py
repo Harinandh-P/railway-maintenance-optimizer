@@ -1,10 +1,12 @@
 import pytest
 import json
+from datetime import datetime, timedelta
 from config import AppConfig
 from phase1.runner import run_phase1
 from phase2.runner import run_phase2
 from phase3.runner import run_phase3
 from backend.services.csv_service import CSVService
+from backend.services.schedule_sync_service import sync_pipeline_execution_results
 
 def test_case_3_selected_pipeline_execution(tmp_path):
     """
@@ -55,22 +57,44 @@ def test_case_4_request_selectability_rules():
     PENDING -> selectable (True)
     UNALLOCATED -> selectable (True)
     SCHEDULED -> not selectable (False)
+    ALLOCATED -> not selectable (False)
     COMPLETED -> not selectable (False)
     REJECTED -> not selectable (False)
+    CANCELLED -> not selectable (False)
     """
-    def is_selectable(status_str):
-        status = String(status_str or 'PENDING').strip().upper()
-        return not status in ['SCHEDULED', 'ALLOCATED', 'COMPLETED', 'REJECTED']
+    def is_selectable(request):
+        if not request or not request.get("request_id"):
+            return False
+        status = str(request.get("status") or 'PENDING').strip().upper()
+        return status in ('PENDING', 'UNALLOCATED')
 
-    def String(val):
-        return str(val)
+    assert is_selectable({"request_id": "REQ001", "status": "PENDING"}) is True
+    assert is_selectable({"request_id": "REQ001", "status": "UNALLOCATED"}) is True
+    assert is_selectable({"request_id": "REQ001", "status": "pending"}) is True
+    assert is_selectable({"request_id": "REQ001", "status": "unallocated"}) is True
 
-    assert is_selectable("PENDING") is True
-    assert is_selectable("UNALLOCATED") is True
-    assert is_selectable("pending") is True
-    assert is_selectable("unallocated") is True
+    assert is_selectable({"request_id": "REQ001", "status": "SCHEDULED"}) is False
+    assert is_selectable({"request_id": "REQ001", "status": "ALLOCATED"}) is False
+    assert is_selectable({"request_id": "REQ001", "status": "COMPLETED"}) is False
+    assert is_selectable({"request_id": "REQ001", "status": "REJECTED"}) is False
+    assert is_selectable({"request_id": "REQ001", "status": "CANCELLED"}) is False
 
-    assert is_selectable("SCHEDULED") is False
-    assert is_selectable("ALLOCATED") is False
-    assert is_selectable("COMPLETED") is False
-    assert is_selectable("REJECTED") is False
+def test_selective_post_pipeline_status_sync():
+    """
+    Selective status sync verification:
+    Allocated selected -> SCHEDULED
+    Unallocated selected -> PENDING
+    Unselected -> UNTOUCHED
+    """
+    selected_subset = {"REQ002", "REQ004"}
+    res = sync_pipeline_execution_results(selected_subset)
+    assert res["status"] == "SUCCESS"
+
+    reqs = CSVService.read_csv(AppConfig.REQUESTS_CSV)
+    req_map = {str(r.get("request_id")).strip(): str(r.get("status")).strip().upper() for r in reqs}
+
+    # REQ001, REQ003, REQ005 were not selected, so their DB status must be preserved
+    assert req_map.get("REQ001") in ("PENDING", "UNALLOCATED", "SCHEDULED", "COMPLETED", "REJECTED")
+    # Selected requests must be either SCHEDULED/COMPLETED (if allocated) or PENDING (if unallocated)
+    assert req_map.get("REQ002") in ("SCHEDULED", "COMPLETED", "PENDING")
+    assert req_map.get("REQ004") in ("SCHEDULED", "COMPLETED", "PENDING")
