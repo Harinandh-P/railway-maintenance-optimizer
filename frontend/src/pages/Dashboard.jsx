@@ -41,28 +41,31 @@ export const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const res = await api.get('/dashboard/metrics');
-      setMetrics(res.data || {});
+      if (res.data) setMetrics(res.data);
+      setErrorBanner(null);
 
       try {
         const reqRes = await api.get('/data/maintenance-requests');
         const list = Array.isArray(reqRes.data) ? reqRes.data : (Array.isArray(reqRes.data?.data) ? reqRes.data.data : (Array.isArray(reqRes.data?.records) ? reqRes.data.records : []));
-        setRequests(list);
+        if (list && list.length > 0) setRequests(list);
       } catch (e) {
-        setRequests([]);
+        // Retain existing requests
       }
 
       try {
         const planRes = await api.get('/results/final-plan');
-        setPlan(planRes.data || {});
+        if (planRes.data) setPlan(planRes.data);
       } catch (e) {
-        setPlan({});
+        // Retain existing plan
       }
     } catch (err) {
       console.error('Failed to load metrics:', err);
-      setErrorBanner(err.response?.data?.detail || err.message || 'Failed to connect to backend server');
-      setMetrics({});
-      setRequests([]);
-      setPlan({});
+      const is429 = err.response?.status === 429;
+      const msg = is429
+        ? 'Rate limit reached (429). Preserving current dashboard metrics.'
+        : (err.response?.data?.detail || err.message || 'Failed to connect to backend server');
+      setErrorBanner(msg);
+      // Preserve existing data instead of resetting to empty
     } finally {
       setLoading(false);
     }

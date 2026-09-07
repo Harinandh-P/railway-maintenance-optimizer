@@ -14,10 +14,12 @@ export const Corridors = () => {
     try {
       const res = await api.get('/data/corridors');
       const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
-      setData(list);
+      if (list && (list.length > 0 || data.length === 0)) {
+        setData(list);
+      }
     } catch (err) {
       console.error(err);
-      setData([]);
+      // Retain existing records on temporary error
     } finally {
       setLoading(false);
     }

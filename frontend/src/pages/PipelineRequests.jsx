@@ -55,17 +55,24 @@ export const PipelineRequests = () => {
       setLoading(true);
       const reqRes = await api.get('/data/maintenance-requests');
       const list = Array.isArray(reqRes.data) ? reqRes.data : (Array.isArray(reqRes.data?.data) ? reqRes.data.data : (Array.isArray(reqRes.data?.records) ? reqRes.data.records : []));
-      setRequests(list);
+      if (list && (list.length > 0 || requests.length === 0)) {
+        setRequests(list);
+      }
+      setErrorBanner(null);
 
       try {
         const planRes = await api.get('/results/final-plan');
-        setPlanData(planRes.data);
+        if (planRes.data) setPlanData(planRes.data);
       } catch (e) {
-        setPlanData(null);
+        // Retain existing planData
       }
     } catch (err) {
       console.error('Failed to load pipeline requests data:', err);
-      setErrorBanner(err.response?.data?.detail || err.message || 'Failed to connect to backend server');
+      const is429 = err.response?.status === 429;
+      const msg = is429
+        ? 'Rate limit reached (429). Retaining current pipeline requests queue.'
+        : (err.response?.data?.detail || err.message || 'Failed to connect to backend server');
+      setErrorBanner(msg);
     } finally {
       setLoading(false);
     }

@@ -1,19 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, AlertTriangle, ArrowRight, CheckCircle2, FileText, Wrench } from 'lucide-react';
-import api from '../services/api';
+import { Bell, ArrowRight, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
 
 export const AdminNotificationBox = () => {
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  
-  const [notifications, setNotifications] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Baseline tracking ref (to avoid baseline false alerts)
-  const knownReqIdsRef = useRef(null);
+  const {
+    notifications,
+    unreadCount,
+    showDropdown,
+    setShowDropdown,
+    rateLimited,
+    markAsRead,
+    markAllRead
+  } = useNotifications();
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -26,81 +30,20 @@ export const AdminNotificationBox = () => {
     };
     document.addEventListener('mousedown', handleClickOutside);
 
-    // Initial Baseline Fetch & Polling
-    fetchNotificationsBaseline();
-    const interval = setInterval(pollNewRequests, 10000); // 10s polling
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      clearInterval(interval);
     };
-  }, [isAdmin]);
-
-  const fetchNotificationsBaseline = async () => {
-    try {
-      const res = await api.get('/data/maintenance-requests');
-      const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
-      
-      // Store initial set of existing request IDs so baseline is established
-      const initialSet = new Set(list.map(r => String(r.request_id || '').trim()));
-      knownReqIdsRef.current = initialSet;
-    } catch (err) {
-      console.error('Failed to initialize notification baseline:', err);
-      knownReqIdsRef.current = new Set();
-    }
-  };
-
-  const pollNewRequests = async () => {
-    if (!knownReqIdsRef.current) return;
-
-    try {
-      const res = await api.get('/data/maintenance-requests');
-      const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
-
-      const newNotifications = [];
-      list.forEach(r => {
-        const reqId = String(r.request_id || '').trim();
-        if (reqId && !knownReqIdsRef.current.has(reqId)) {
-          // Mark as known so we don't duplicate
-          knownReqIdsRef.current.add(reqId);
-
-          newNotifications.push({
-            id: `${reqId}_${Date.now()}`,
-            requestId: reqId,
-            requester: r.created_by || r.department || 'Employee',
-            department: r.department || 'Engineering',
-            defectType: r.defect_type || 'Maintenance Issue',
-            severity: r.defect_severity || 'High',
-            location: r.location || 'KM 100',
-            date: r.request_datetime || new Date().toISOString().slice(0, 16).replace('T', ' '),
-            read: false
-          });
-        }
-      });
-
-      if (newNotifications.length > 0) {
-        setNotifications(prev => [...newNotifications, ...prev]);
-      }
-    } catch (err) {
-      // Silent error during background polling
-    }
-  };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
+  }, [isAdmin, setShowDropdown]);
 
   const handleNotificationClick = (notifId) => {
     const targetNotif = notifications.find(n => n.id === notifId);
-    setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
+    markAsRead(notifId);
     setShowDropdown(false);
     if (targetNotif && targetNotif.requestId) {
       navigate(`/pipeline-requests?highlight=${encodeURIComponent(targetNotif.requestId)}`);
     } else {
       navigate('/pipeline-requests');
     }
-  };
-
-  const handleMarkAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
   if (!isAdmin) return null;
@@ -134,13 +77,20 @@ export const AdminNotificationBox = () => {
 
             {unreadCount > 0 && (
               <button
-                onClick={handleMarkAllRead}
+                onClick={markAllRead}
                 className="text-[11px] font-mono font-semibold text-blue-600 hover:text-blue-800"
               >
                 Mark all read
               </button>
             )}
           </div>
+
+          {rateLimited && (
+            <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-mono flex items-center gap-1.5">
+              <AlertTriangle size={13} className="shrink-0 text-amber-600" />
+              <span>Polling temporarily paused (Rate Limit 429). Retrying automatically...</span>
+            </div>
+          )}
 
           <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
             {notifications.length === 0 ? (

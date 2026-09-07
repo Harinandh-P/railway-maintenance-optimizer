@@ -44,10 +44,15 @@ export const MaintenanceRequests = () => {
     try {
       const res = await api.get('/data/maintenance-requests');
       const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : (Array.isArray(res.data?.records) ? res.data.records : []));
-      setData(list);
+      if (list && (list.length > 0 || data.length === 0)) {
+        setData(list);
+      }
     } catch (err) {
       console.error(err);
-      setData([]);
+      if (err.response?.status === 429) {
+        setError('Rate limit reached (429). Retaining current maintenance request records.');
+      }
+      // Preserve existing data array on error instead of resetting to []
     } finally {
       setLoading(false);
     }
