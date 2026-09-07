@@ -21,12 +21,13 @@ class ValidationService:
         request_ids = set()
         for idx, row in df.iterrows():
             req_id = str(row.get("request_id", "")).strip()
+            req_id_clean = req_id.lower()
             if not req_id:
                 errors.append(f"Row {idx+1}: Empty request_id")
-            elif req_id in request_ids:
+            elif req_id_clean in request_ids:
                 errors.append(f"Row {idx+1}: Duplicate request_id '{req_id}'")
             else:
-                request_ids.add(req_id)
+                request_ids.add(req_id_clean)
 
             try:
                 dur = float(row.get("required_duration_hours", 0))
@@ -60,21 +61,23 @@ class ValidationService:
 
         for idx, row in df.iterrows():
             t_id = str(row.get("train_id", "")).strip()
+            t_id_clean = t_id.lower()
             t_num = str(row.get("train_number", "")).strip()
+            t_num_clean = t_num.lower()
 
             if not t_id:
                 errors.append(f"Row {idx+1}: Empty train_id")
-            elif t_id in train_ids:
+            elif t_id_clean in train_ids:
                 errors.append(f"Row {idx+1}: Duplicate train_id '{t_id}'")
             else:
-                train_ids.add(t_id)
+                train_ids.add(t_id_clean)
 
             if not t_num:
                 errors.append(f"Row {idx+1}: Empty train_number")
-            elif t_num in train_numbers:
+            elif t_num_clean in train_numbers:
                 errors.append(f"Row {idx+1}: Duplicate train_number '{t_num}'")
             else:
-                train_numbers.add(t_num)
+                train_numbers.add(t_num_clean)
 
             dir_val = str(row.get("direction", "")).strip()
             if dir_val not in ["A-B", "B-A", "Both"]:
@@ -140,12 +143,13 @@ class ValidationService:
         worker_ids = set()
         for idx, row in df.iterrows():
             w_id = str(row.get("worker_id", "")).strip()
+            w_id_clean = w_id.lower()
             if not w_id:
                 errors.append(f"Row {idx+1}: Empty worker_id")
-            elif w_id in worker_ids:
+            elif w_id_clean in worker_ids:
                 errors.append(f"Row {idx+1}: Duplicate worker_id '{w_id}'")
             else:
-                worker_ids.add(w_id)
+                worker_ids.add(w_id_clean)
 
             try:
                 s_level = int(row.get("skill_level", 1))
@@ -170,11 +174,12 @@ class ValidationService:
         eq_ids = set()
         for idx, row in df.iterrows():
             eq_id = str(row.get("equipment_id", "")).strip()
+            eq_id_clean = eq_id.lower()
             if not eq_id:
                 errors.append(f"Row {idx+1}: Empty equipment_id")
-            elif eq_id in eq_ids:
+            elif eq_id_clean in eq_ids:
                 errors.append(f"Row {idx+1}: Duplicate equipment_id '{eq_id}'")
             else:
-                eq_ids.add(eq_id)
+                eq_ids.add(eq_id_clean)
 
         return len(errors) == 0, errors

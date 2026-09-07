@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Download, FileSpreadsheet, Plus, Trash2, Save, RotateCcw, Upload, CheckCircle } from 'lucide-react';
 import api from '../services/api';
 import { SortControl, naturalSort } from './SortControl';
@@ -23,9 +23,52 @@ export const DataGrid = ({
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+  const [recentlyAddedIds, setRecentlyAddedIds] = useState(new Set());
 
-  // Sync if parent data changes
-  React.useEffect(() => {
+  // Determine Authoritative Primary Key or Key Type
+  const primaryKey = useMemo(() => {
+    if (columns.some(c => c.key === 'worker_id')) return 'worker_id';
+    if (columns.some(c => c.key === 'equipment_id')) return 'equipment_id';
+    if (columns.some(c => c.key === 'train_id') && !columns.some(c => c.key === 'sequence')) return 'train_id';
+    if (columns.some(c => c.key === 'request_id')) return 'request_id';
+    if (columns.some(c => c.key === 'mapping_id')) return 'mapping_id';
+    if (columns.some(c => c.key === 'task_id')) return 'task_id';
+    if (columns.some(c => c.key === 'corridor_id') && !columns.some(c => c.key === 'track_id')) return 'corridor_id';
+    const found = columns.find(c => (c.key || '').toLowerCase().endsWith('_id') || (c.key || '').toLowerCase().includes('id'));
+    return found ? found.key : (columns[0]?.key || null);
+  }, [columns]);
+
+  // Compute a normalized identifier string for any row (handles single & composite keys)
+  const getRowKeyString = (row) => {
+    if (!row || typeof row !== 'object') return '';
+    const hasTrainId = columns.some(c => c.key === 'train_id');
+    const hasSequence = columns.some(c => c.key === 'sequence');
+    const hasCorridorId = columns.some(c => c.key === 'corridor_id');
+    const hasTrackId = columns.some(c => c.key === 'track_id');
+
+    // Case A: Train Routes (Composite: train_id + sequence)
+    if (hasTrainId && hasSequence && !columns.some(c => c.key === 'worker_id')) {
+      const tid = String(row.train_id || '').trim().toLowerCase();
+      const seq = String(row.sequence || '').trim().toLowerCase();
+      return (tid && seq) ? `${tid}::seq_${seq}` : '';
+    }
+
+    // Case B: Corridor Data (Composite: corridor_id + track_id)
+    if (hasCorridorId && hasTrackId && !columns.some(c => c.key === 'worker_id') && !columns.some(c => c.key === 'request_id')) {
+      const cid = String(row.corridor_id || '').trim().toLowerCase();
+      const trk = String(row.track_id || '').trim().toLowerCase();
+      return (cid && trk) ? `${cid}::trk_${trk}` : '';
+    }
+
+    // Standard Single Primary Key
+    if (primaryKey && row[primaryKey] !== undefined && row[primaryKey] !== null) {
+      return String(row[primaryKey]).trim().toLowerCase();
+    }
+    return '';
+  };
+
+  // Sync when parent data updates, keeping drafts intact
+  useEffect(() => {
     if (!isDirty) {
       setGridData(Array.isArray(data) ? data : []);
     } else {
@@ -36,15 +79,33 @@ export const DataGrid = ({
 
   const handleCellChange = (rowIdx, colKey, value) => {
     const updated = [...gridData];
-    updated[rowIdx] = { ...updated[rowIdx], [colKey]: value };
+    const colDef = columns.find(c => c.key === colKey);
+    const isNumCol = (colDef && colDef.type === 'number') || (
+      colKey.includes('workers') || colKey.includes('duration') || colKey.includes('quantity') ||
+      colKey.includes('km') || colKey.includes('hours') || colKey.includes('level') || colKey.includes('capacity') || colKey.includes('sequence')
+    );
+
+    let parsedVal = value;
+    if (isNumCol && value !== '' && value !== null && value !== undefined) {
+      const num = Number(value);
+      if (!isNaN(num)) {
+        parsedVal = num;
+      }
+    }
+
+    updated[rowIdx] = { ...updated[rowIdx], [colKey]: parsedVal };
     setGridData(updated);
     setIsDirty(true);
   };
 
   const handleAddRow = () => {
-    const newRow = { _isNew: true };
+    const newRow = { _isNew: true, _createdTs: Date.now() };
     columns.forEach(col => {
-      newRow[col.key] = '';
+      if (col.key === 'request_id') {
+        newRow[col.key] = 'Auto-Generated on Submission';
+      } else {
+        newRow[col.key] = '';
+      }
     });
     setGridData([newRow, ...gridData]);
     setIsDirty(true);
@@ -81,17 +142,93 @@ export const DataGrid = ({
     setSaving(true);
     setErrorMsg(null);
     setSuccessMsg(null);
+
+    // REQUIREMENT 6 & 8: Dataset-Specific Duplicate Key Validation (INSERT vs UPDATE)
+    const hasTrainId = columns.some(c => c.key === 'train_id');
+    const hasSequence = columns.some(c => c.key === 'sequence');
+    const hasCorridorId = columns.some(c => c.key === 'corridor_id');
+    const hasTrackId = columns.some(c => c.key === 'track_id');
+
+    if (hasTrainId && hasSequence && !columns.some(c => c.key === 'worker_id')) {
+      // Train Routes: Duplicate sequence check per train
+      const seenSeqPerTrain = new Map();
+      for (let i = 0; i < gridData.length; i++) {
+        const row = gridData[i];
+        const tId = String(row.train_id || '').trim().toLowerCase();
+        const seq = String(row.sequence || '').trim();
+        if (tId && seq) {
+          const key = `${tId}::${seq}`;
+          if (seenSeqPerTrain.has(key)) {
+            setErrorMsg(`Duplicate Sequence ${seq} for Train '${row.train_id}' already exists.`);
+            setSaving(false);
+            return;
+          }
+          seenSeqPerTrain.set(key, i);
+        }
+      }
+    } else if (hasCorridorId && hasTrackId && !columns.some(c => c.key === 'worker_id') && !columns.some(c => c.key === 'request_id')) {
+      // Corridors: Composite check (corridor_id + track_id)
+      const seenCorridorTrack = new Map();
+      for (let i = 0; i < gridData.length; i++) {
+        const row = gridData[i];
+        const cId = String(row.corridor_id || '').trim().toLowerCase();
+        const trk = String(row.track_id || '').trim().toLowerCase();
+        if (cId && trk) {
+          const key = `${cId}::${trk}`;
+          if (seenCorridorTrack.has(key)) {
+            setErrorMsg(`Duplicate Corridor Track combination '${row.corridor_id}' / '${row.track_id}' already exists.`);
+            setSaving(false);
+            return;
+          }
+          seenCorridorTrack.set(key, i);
+        }
+      }
+    } else if (primaryKey && primaryKey !== 'request_id') {
+      // Standard Single Primary Key Datasets
+      const seenPks = new Map();
+      const colDef = columns.find(c => c.key === primaryKey);
+      const pkLabel = colDef ? colDef.label : primaryKey;
+
+      for (let i = 0; i < gridData.length; i++) {
+        const row = gridData[i];
+        const val = String(row[primaryKey] || '').trim();
+        if (val) {
+          const norm = val.toLowerCase();
+          if (seenPks.has(norm)) {
+            setErrorMsg(`Duplicate ${pkLabel}: '${val}' already exists.`);
+            setSaving(false);
+            return;
+          }
+          seenPks.set(norm, i);
+        }
+      }
+    }
+
     try {
       if (onSave) {
-        const cleanData = gridData.map(({ _isNew, ...rest }) => rest);
+        // Collect new row primary key IDs before cleanData strip
+        const newKeys = new Set();
+        gridData.forEach(r => {
+          if (r._isNew) {
+            const keyStr = getRowKeyString(r);
+            if (keyStr) newKeys.add(keyStr);
+          }
+        });
+
+        const cleanData = gridData.map(({ _isNew, _createdTs, ...rest }) => rest);
         await onSave(cleanData);
+
+        if (newKeys.size > 0) {
+          setRecentlyAddedIds(prev => new Set([...prev, ...newKeys]));
+        }
+
         setIsDirty(false);
         setSuccessMsg('Changes saved successfully to database!');
         setTimeout(() => setSuccessMsg(null), 3000);
         if (onRefresh) onRefresh();
       }
     } catch (err) {
-      const errDetails = err.response?.data?.detail?.errors || [err.response?.data?.detail || err.message];
+      const errDetails = err.response?.data?.detail?.errors || err.response?.data?.detail || err.message;
       setErrorMsg(Array.isArray(errDetails) ? errDetails.join(' | ') : String(errDetails));
     } finally {
       setSaving(false);
@@ -136,11 +273,30 @@ export const DataGrid = ({
     });
   }, [gridData, searchTerm]);
 
-  // Sort using naturalSort helper (handles REQ1, REQ2, REQ10, dates, numbers)
+  // REQUIREMENT 1, 3, 10, 11, 13: Top-Pinning + Natural Sort
   const sortedData = useMemo(() => {
-    if (!sortCol) return filteredData;
-    return naturalSort(filteredData, sortCol, sortDir);
-  }, [filteredData, sortCol, sortDir]);
+    const rows = filteredData || [];
+    if (!rows.length) return [];
+
+    const draftRows = [];
+    const recentlyAddedRows = [];
+    const existingRows = [];
+
+    rows.forEach(r => {
+      const keyStr = getRowKeyString(r);
+      if (r._isNew) {
+        draftRows.push(r);
+      } else if (keyStr && recentlyAddedIds.has(keyStr)) {
+        recentlyAddedRows.push(r);
+      } else {
+        existingRows.push(r);
+      }
+    });
+
+    // Pinned rows: draftRows (newest first) + recentlyAddedRows (newest first)
+    const sortedExisting = sortCol ? naturalSort(existingRows, sortCol, sortDir) : existingRows;
+    return [...draftRows, ...recentlyAddedRows, ...sortedExisting];
+  }, [filteredData, sortCol, sortDir, recentlyAddedIds]);
 
   const existingCount = useMemo(() => {
     return sortedData.filter(r => !r._isNew).length;
@@ -286,14 +442,19 @@ export const DataGrid = ({
                 return k.includes('id') || k.includes('km') || k.includes('no') || k.includes('seq') || k.includes('code') || k.includes('time') || k.includes('date');
               };
 
+              const keyStr = getRowKeyString(row);
+              const isPinned = row._isNew || (keyStr && recentlyAddedIds.has(keyStr));
+              const isServerGenIdCol = (colKey) => colKey === 'request_id' && row._isNew;
+
               return (
-                <tr key={rowIdx} className={`transition-colors ${row._isNew ? 'bg-blue-50/80 border-l-4 border-l-blue-500' : 'bg-white hover:bg-slate-50 even:bg-slate-50/50'}`}>
+                <tr key={rowIdx} className={`transition-colors ${isPinned ? 'bg-blue-50/80 border-l-4 border-l-blue-500' : 'bg-white hover:bg-slate-50 even:bg-slate-50/50'}`}>
                   {columns.map(col => (
                     <td key={col.key} className="py-2.5 px-4" style={{ minWidth: getColMinWidth(col) }}>
                       {!readOnly ? (
                         <input
                           type={col.type || 'text'}
-                          className="input-field py-1 px-2.5 text-xs text-slate-800"
+                          disabled={isServerGenIdCol(col.key)}
+                          className={`input-field py-1 px-2.5 text-xs text-slate-800 ${isServerGenIdCol(col.key) ? 'bg-slate-100 italic text-slate-400 font-mono' : ''}`}
                           value={row[col.key] ?? ''}
                           placeholder={col.placeholder || ''}
                           onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
