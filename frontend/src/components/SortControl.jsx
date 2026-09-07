@@ -40,15 +40,15 @@ export const SortControl = ({
   if (!options || options.length === 0) return null;
 
   return (
-    <div className={`flex items-center gap-2 flex-wrap ${className}`}>
+    <div className={`flex items-center gap-2 flex-wrap min-w-0 ${className}`}>
       {/* Field Selector */}
-      <div className="flex items-center gap-1.5 tactile-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700">
-        <ArrowUpDown size={14} className="text-blue-600 flex-shrink-0" />
-        <span className="text-[11px] font-mono text-slate-400 uppercase">Sort By:</span>
+      <div className="flex items-center gap-1.5 tactile-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 min-w-0 shrink-0">
+        <ArrowUpDown size={14} className="text-blue-600 shrink-0" />
+        <span className="text-[11px] font-mono text-slate-400 uppercase shrink-0">Sort By:</span>
         <select
           value={sortField || ''}
           onChange={(e) => onSortFieldChange(e.target.value)}
-          className="bg-transparent border-0 outline-none text-xs font-bold text-slate-800 cursor-pointer pr-1"
+          className="bg-transparent border-0 outline-none text-xs font-bold text-slate-800 cursor-pointer pr-1 max-w-[130px] sm:max-w-[170px] truncate"
         >
           {options.map((opt) => (
             <option key={opt.value} value={opt.value} className="bg-white text-slate-800 font-sans">
@@ -62,17 +62,17 @@ export const SortControl = ({
       <button
         type="button"
         onClick={() => onSortOrderChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-        className="tactile-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-blue-600 flex items-center gap-1.5 tactile-btn"
+        className="tactile-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-blue-600 flex items-center gap-1.5 tactile-btn shrink-0 whitespace-nowrap"
         title={`Click to change to ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
       >
         {sortOrder === 'asc' ? (
           <>
-            <ArrowUp size={14} className="text-emerald-600" />
+            <ArrowUp size={14} className="text-emerald-600 shrink-0" />
             <span>Ascending</span>
           </>
         ) : (
           <>
-            <ArrowDown size={14} className="text-amber-600" />
+            <ArrowDown size={14} className="text-amber-600 shrink-0" />
             <span>Descending</span>
           </>
         )}
