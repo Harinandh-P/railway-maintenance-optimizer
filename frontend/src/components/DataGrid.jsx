@@ -355,7 +355,7 @@ export const DataGrid = ({
           />
 
           {/* Search Box */}
-          <div className="relative min-w-[140px] max-w-[200px] sm:max-w-[240px] flex-1">
+          <div className="relative w-44 sm:w-52 min-w-[160px] max-w-[220px] shrink-0">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 shrink-0" />
             <input
               type="text"
